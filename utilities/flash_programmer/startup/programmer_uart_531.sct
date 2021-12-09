@@ -1,0 +1,31 @@
+LR_1 0x07FC0000 15*1024 {     ; load region size_region
+    ER_1 +0 {                 ; load address = execution address
+       *.o (RESET, +First)
+       *(InRoot$$Sections)                      ; All library sections that must be in a
+                                                ; root region, for example, __main.o,
+                                                ; __scatter*.o, __dc*.o, and * Region$$Table
+        .ANY (+RO)
+        .ANY (+RW)
+    }
+
+    ER_2 AlignExpr(+0,8) UNINIT {
+        *(non_init)
+    }
+
+; ***************************************************************************
+; From address 0x07FCB000 to 0x7FCBA00 the RAM shall not be used by the
+; programmer and shall remain uninitialized. The buffer used by the DA14531
+; TRNG software mechanism must use only uninitialized RAM space in order to
+; generate random seeds.
+; ***************************************************************************
+    ER_3 +0 (0x07FCB000 - ImageLimit(ER_2)) {
+        *(+ZI)
+    }
+
+; ***************************************************************************
+; Stack size is 0x600 bytes and is defined in startup_DA14531.s
+; ***************************************************************************
+    ER_4 0x7FCBA00 0x600 {
+        *(STACK, +Last)
+    }
+}

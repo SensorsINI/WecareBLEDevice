@@ -1,0 +1,12 @@
+CLEARED_WORKBENCH_2.0.16=true
+DEBUGGER_EXECUTABLE=Ozone.exe
+DEBUGGER_PATH=C\:\\Program Files (x86)\\SEGGER\\Ozone V2.32
+KEIL_FULL_PATH=D\:\\Keil_v5\\UV4\\UV4.exe
+SDK_TYPE=6.0.11
+SYSTEMVIEW_EXECUTABLE=SystemView.exe
+SYSTEMVIEW_PATH=C\:\\Program Files (x86)\\SEGGER\\SystemView_V242
+eclipse.preferences.version=1
+skip_keil=false
+skip_segger_ozone=false
+skip_segger_systemview=false
+skip_toolchain=false

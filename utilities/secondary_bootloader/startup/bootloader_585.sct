@@ -1,0 +1,14 @@
+LR_1 0x07FC0000 0x00008000 {    ; load region size_region
+    ER_1 +0 0x00002000 {        ; load address = execution address
+        *.o (RESET, +First)
+        *(InRoot$$Sections)
+        startup_DA14585_586.o
+        system_DA14585_586.o
+    }
+
+    ER_2 0x07FD4000 0x4000 {    ; push it to the end of SysRAM
+        .ANY (+RO)
+        .ANY (+RW +ZI)
+        .ANY (STACK)
+    }
+}

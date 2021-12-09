@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workspace>
+    <project>
+        <path>$WS_DIR$\prox_reporter.ewp</path>
+    </project>
+    <batchBuild>
+        <batchDefinition>
+            <name>prox_reporter</name>
+            <member>
+                <project>prox_reporter</project>
+                <configuration>DA14531</configuration>
+            </member>
+            <member>
+                <project>prox_reporter</project>
+                <configuration>DA14585</configuration>
+            </member>
+            <member>
+                <project>prox_reporter</project>
+                <configuration>DA14586</configuration>
+            </member>
+        </batchDefinition>
+    </batchBuild>
+</workspace>

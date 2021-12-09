@@ -1,0 +1,6 @@
+execUserPreload()
+{
+    __hwResetWithStrategy(0, 0);
+    __writeMemory32(((__readMemory32(0x50000012, "Memory") & (0xFFFC)) | 0x2), 0x50000012, "Memory");
+    __hwResetWithStrategy(0, 0);
+}

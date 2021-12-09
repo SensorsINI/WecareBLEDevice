@@ -1,0 +1,15 @@
+eclipse.preferences.version=1
+environment/project/ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.269867019/CWD/delimiter=;
+environment/project/ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.269867019/CWD/operation=replace
+environment/project/ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.269867019/CWD/value=E\:\\github_prjs\\wecare_prjs\\SDK_6.0.16.1144\\DA145xx_SDK\\6.0.16.1144\\projects\\target_apps\\ble_examples\\ble_my_own_test\\Eclipse\\DA14531
+environment/project/ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.269867019/PATH/delimiter=;
+environment/project/ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.269867019/PATH/operation=replace
+environment/project/ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.269867019/PATH/value=D\:\\DiaSemi\\SmartSnippetsStudio2.0.16\\Tools\\mingw32\\bin;D\:\\DiaSemi\\SmartSnippetsStudio2.0.16\\Tools\\msys2\\\\usr\\bin;D\:\\DiaSemi\\SmartSnippetsStudio2.0.16\\GCC\\7-2018-q2\\bin;D\:/DiaSemi/SmartSnippetsStudio2.0.16/jre/bin/client;D\:/DiaSemi/SmartSnippetsStudio2.0.16/jre/bin;C\:\\ProgramData\\Oracle\\Java\\javapath;C\:\\Windows\\system32;C\:\\Windows;C\:\\Windows\\System32\\Wbem;C\:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;D\:\\Program Files\\PuTTY\\;d\:\\Program Files\\Git\\cmd;d\:\\Program Files\\Git\\mingw64\\bin;d\:\\Program Files\\Git\\usr\\bin;C\:\\Users\\Min\\AppData\\Local\\Microsoft\\WindowsApps;C\:\\Users\\Min\\AppData\\Local\\GitHubDesktop\\bin;C\:\\Users\\Min\\Desktop
+environment/project/ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.269867019/PWD/delimiter=;
+environment/project/ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.269867019/PWD/operation=replace
+environment/project/ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.269867019/PWD/value=E\:\\github_prjs\\wecare_prjs\\SDK_6.0.16.1144\\DA145xx_SDK\\6.0.16.1144\\projects\\target_apps\\ble_examples\\ble_my_own_test\\Eclipse\\DA14531
+environment/project/ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.269867019/STUDIO/delimiter=;
+environment/project/ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.269867019/STUDIO/operation=replace
+environment/project/ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.269867019/STUDIO/value=D\:\\DiaSemi\\SmartSnippetsStudio2.0.16\\Tools\\mingw32\\bin;D\:\\DiaSemi\\SmartSnippetsStudio2.0.16\\Tools\\msys2\\\\usr\\bin
+environment/project/ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.269867019/append=true
+environment/project/ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.269867019/appendContributed=true

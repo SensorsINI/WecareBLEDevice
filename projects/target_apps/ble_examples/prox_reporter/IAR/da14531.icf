@@ -1,0 +1,102 @@
+/*This is an automatic generated section 2021-09-13 16:50:27 */
+define symbol CODE_AREA_BASE         = (0X07FC0000 + 0XC0 + 80);
+define symbol CODE_AREA_SIZE         = (((((((0X07FC9C00) + (((((0X0000033E) + (( (3 * 3) + (3 + 3)) * (262))) + ((8) * (262))) + (6)) - ((((0X0000033E) + (((5) + (((1))) + (3)) * ((((251)) | 0X01) + 4 + 7))) + ((8) * ((((251)) | 0X01) + 4 + 7))) + (6)))) & (0XFFFFC00)) - ((0) + (2200) + ( ((((((((244 + 4) + (248 + 4) + (148 + 4) + (28 + 4)) * ((1)))) + 3) / 4) * 4) + 12) + (((((1024) + 3) / 4) * 4) + 12) + (((((( 256 * (((1)) + 1) + 80 * ((1)) + 96 * (2 * ((1)) + 1) + 256 + 256 * ((1)) )) + 3) / 4) * 4) + 12) )))+3) & (~3)) - (0X07FC0000 + 0XC0 + 80));
+define symbol CODE_LOCATION_OTP      = 0;
+define symbol CODE_LOCATION_EXT      = 1;
+define symbol RET_MEM_BASE_ADDR      = ((((((0X07FC9C00) + (((((0X0000033E) + (( (3 * 3) + (3 + 3)) * (262))) + ((8) * (262))) + (6)) - ((((0X0000033E) + (((5) + (((1))) + (3)) * ((((251)) | 0X01) + 4 + 7))) + ((8) * ((((251)) | 0X01) + 4 + 7))) + (6)))) & (0XFFFFC00)) - ((0) + (2200) + ( ((((((((244 + 4) + (248 + 4) + (148 + 4) + (28 + 4)) * ((1)))) + 3) / 4) * 4) + 12) + (((((1024) + 3) / 4) * 4) + 12) + (((((( 256 * (((1)) + 1) + 80 * ((1)) + 96 * (2 * ((1)) + 1) + 256 + 256 * ((1)) )) + 3) / 4) * 4) + 12) )))+3) & (~3));
+define symbol CFG_RET_DATA_UNINIT    = (0);
+define symbol CFG_RET_DATA_SIZE      = (2200);
+define symbol RET_HEAP_SIZE          = ( ((((((((244 + 4) + (248 + 4) + (148 + 4) + (28 + 4)) * ((1)))) + 3) / 4) * 4) + 12) + (((((1024) + 3) / 4) * 4) + 12) + (((((( 256 * (((1)) + 1) + 80 * ((1)) + 96 * (2 * ((1)) + 1) + 256 + 256 * ((1)) )) + 3) / 4) * 4) + 12) );
+define symbol FREE_AREA_BASE_ADDR    = ((((((0X07FC9C00) + (((((0X0000033E) + (( (3 * 3) + (3 + 3)) * (262))) + ((8) * (262))) + (6)) - ((((0X0000033E) + (((5) + (((1))) + (3)) * ((((251)) | 0X01) + 4 + 7))) + ((8) * ((((251)) | 0X01) + 4 + 7))) + (6)))) & (0XFFFFC00)) + ((((0X0000033E) + (((5) + (((1))) + (3)) * ((((251)) | 0X01) + 4 + 7))) + ((8) * ((((251)) | 0X01) + 4 + 7))) + (6)))+3) & (~3));
+define symbol FREE_AREA_SIZE         = ((0X07FCB900) - ((((((0X07FC9C00) + (((((0X0000033E) + (( (3 * 3) + (3 + 3)) * (262))) + ((8) * (262))) + (6)) - ((((0X0000033E) + (((5) + (((1))) + (3)) * ((((251)) | 0X01) + 4 + 7))) + ((8) * ((((251)) | 0X01) + 4 + 7))) + (6)))) & (0XFFFFC00)) + ((((0X0000033E) + (((5) + (((1))) + (3)) * ((((251)) | 0X01) + 4 + 7))) + ((8) * ((((251)) | 0X01) + 4 + 7))) + (6)))+3) & (~3))) - ((8 + (4 * 4) + (16 * 4) + (1 + 7)) + (4));
+define symbol CHACHA_STATE_BASE_ADDR = ((((0X07FCB900) - (8 + (4 * 4) + (16 * 4) + (1 + 7)))+3) & (~3));
+define symbol TRNG_STATE_BASE_ADDR   = ((((0X07FCB900) - (8 + (4 * 4) + (16 * 4) + (1 + 7)) - (4))+3) & (~3));
+define symbol ROM_DATA_BASE_ADDR     = (0X07FCB900);
+define symbol RET_MEM_SIZE           = ((0) + (2200) + ( ((((((((244 + 4) + (248 + 4) + (148 + 4) + (28 + 4)) * ((1)))) + 3) / 4) * 4) + 12) + (((((1024) + 3) / 4) * 4) + 12) + (((((( 256 * (((1)) + 1) + 80 * ((1)) + 96 * (2 * ((1)) + 1) + 256 + 256 * ((1)) )) + 3) / 4) * 4) + 12) ));
+define symbol USE_TRNG               = 1;
+define symbol TRNG_STATE_SIZE        = (4);
+define symbol USE_CHACHA20_RAND      = 0;
+define symbol CHACHA_STATE_SIZE      = (8 + (4 * 4) + (16 * 4) + (1 + 7));
+
+/*End of section */
+
+/* Stack and Heap and patch symbol sizes */
+define symbol __ICFEDIT_size_cstack__     = 0x600;
+define symbol __ICFEDIT_size_heap__       = 0x100;
+define symbol __ICFEDIT_size_patch__      = 80;
+
+define memory mem with size = 4G;
+define region LR_IROM1                  = mem:[from 0x07FC0000             size 0xC0];
+define region LR_IROM2                  = mem:[from 0x07FC00C0             size 80];
+define region LR_IROM3                  = mem:[from CODE_AREA_BASE         size CODE_AREA_SIZE];
+define region LR_RETAINED_RAM           = mem:[from RET_MEM_BASE_ADDR      size RET_MEM_SIZE];
+define region LR_RETAINED_TRNG_STATE    = mem:[from TRNG_STATE_BASE_ADDR   size TRNG_STATE_SIZE];
+define region LR_RETAINED_CHACHA_STATE  = mem:[from CHACHA_STATE_BASE_ADDR size CHACHA_STATE_SIZE];
+
+
+/*  Free area resides between the Exchange memory and ROM data */
+define region LR_FREE         = mem:[from FREE_AREA_BASE_ADDR size FREE_AREA_SIZE];
+
+do not initialize  { section .noinit,
+                     section prodtest_uninit,
+                     section heap_mem_area_not_ret,
+                     section retention_mem_area_uninit,
+                     section heap_env_area,
+                     section heap_db_area,
+                     section heap_msg_area,
+                     section trng_state,
+                     section chacha20_state,
+                     section stateful_hibernation,
+                   };
+
+initialize by copy { readwrite };
+
+/* Stack and patch creation */
+define block CSTACK     with alignment = 8, size = __ICFEDIT_size_cstack__     { };
+define block HEAP       with alignment = 8, size = __ICFEDIT_size_heap__       { };
+define block PATCH      with alignment = 4, size = __ICFEDIT_size_patch__      { };
+
+"ER_ROM1":          place at address mem:0x07FC0000 { readonly section .intvec };
+"ER_ROM1":          place in LR_IROM1               { section otp_cs_booter };
+
+"ER_ROM2":          place in LR_IROM2               { block PATCH };
+
+"ER_ROM3":          place in LR_IROM3               { readonly };
+"ER_ROM3":          place in LR_IROM3               { readwrite };
+"ER_PRODTEST":      place in LR_IROM3               { section prodtest_uninit };
+
+"ER_ZI":            place in LR_IROM3               { zeroinit,
+                                                      block CSTACK,
+                                                      block HEAP,
+                                                    };
+
+"ER_NZI":           place in LR_IROM3               { section heap_mem_area_not_ret object jump_table.o };
+
+"ER_STATEFUL_HIBERNATION":
+                    place in LR_IROM3               { section stateful_hibernation };
+
+"RET_DATA_UNINIT":  place in LR_RETAINED_RAM        { section retention_mem_area_uninit };
+"RET_DATA":         place in LR_RETAINED_RAM        { section retention_mem_area0 };
+"RET_HEAP":         place in LR_RETAINED_RAM        { section heap_env_area object jump_table.o,
+                                                      section heap_db_area object jump_table.o,
+                                                      section heap_msg_area object jump_table.o
+                                                    };
+
+/* Free area to be used by the application */
+"ER_FREE_AREA":     place in LR_FREE         {section free_area};
+
+if (USE_TRNG == 1)
+{
+   "RET_DATA_UNINIT_TRNG_STATE": place in LR_RETAINED_TRNG_STATE { section trng_state object trng.o };
+}
+
+if (USE_CHACHA20_RAND == 1)
+{
+   "RET_DATA_UNINIT_CHACHA_STATE": place in LR_RETAINED_CHACHA_STATE { section chacha20_state object chacha20.o };
+}
+
+
+define symbol __ER_IROM3_BASE__ = CODE_AREA_BASE;
+export symbol __ER_IROM3_BASE__;
+define symbol __ER_IROM3_LENGTH__ = CODE_AREA_SIZE;
+export symbol __ER_IROM3_LENGTH__;

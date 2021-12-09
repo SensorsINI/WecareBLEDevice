@@ -1,0 +1,21 @@
+LR_1 0x07FC0000 15*1024 {     ; load region size_region
+    ER_1 +0 {                 ; load address = execution address
+       *.o (RESET, +First)
+       *(InRoot$$Sections)                      ; All library sections that must be in a
+                                                ; root region, for example, __main.o,
+                                                ; __scatter*.o, __dc*.o, and * Region$$Table
+        .ANY (+RO)
+        .ANY (+RW)
+    }
+
+    ER_2 AlignExpr(+0,8) UNINIT {
+        *(non_init)
+    }
+
+; The address space after 0x07FC7C00 is used by SmartSnippets Toolbox for commands and data
+; and must not be overwritten by application code
+    ER_3 +0 (0x07FC7C00 - ImageLimit(ER_2)) {
+        *(+ZI)
+        *(STACK, +Last)
+    }
+}
