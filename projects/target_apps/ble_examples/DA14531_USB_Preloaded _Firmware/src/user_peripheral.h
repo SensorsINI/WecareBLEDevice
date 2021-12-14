@@ -127,6 +127,14 @@ void user_app_adv_undirect_complete(uint8_t status);
 
 /**
  ****************************************************************************************
+ * @brief Database initialization completion function.
+ * @return void
+ ****************************************************************************************
+*/
+void user_app_db_init_complete(void);
+
+/**
+ ****************************************************************************************
  * @brief Disconnection function.
  * @param[in] param Pointer to GAPC_DISCONNECT_IND message
  * @return void

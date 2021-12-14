@@ -51,6 +51,11 @@
 #include "co_bt.h"
 #include "uart_utils.h"
 
+// TEST: set adc_val_2 in db
+#include "custs1.h"
+#include "attm_db.h"
+#include "prf_utils.h"
+
 /*
  * TYPE DEFINITIONS
  ****************************************************************************************
@@ -282,6 +287,44 @@ void user_app_adv_undirect_complete(uint8_t status)
     {
         user_app_adv_start();
     }
+}
+
+void user_app_db_init_complete(void)
+{
+    ////////////////////////////////////////////////////////////////
+    // TEST: set adc_val_2 in db
+    
+    // ---------------- Method 1: attmdb_att_set_value() ----------------
+
+    // Dummy sample value
+    static uint16_t sample = 0x55AA;
+
+    // Need to include: "custs1.h" "prf_utils.h" "attm_db.h"
+    struct custs1_env_tag *custs1_env = PRF_ENV_GET(CUSTS1, custs1);
+    attmdb_att_set_value(custs1_env->shdl + SVC1_IDX_ADC_VAL_2_VAL, DEF_SVC1_ADC_VAL_2_CHAR_LEN, 0, (uint8_t *)&sample);
+    
+    // ---------------- Method 2: ke_msg_send() ----------------
+
+    // // Dummy sample value
+    // static uint16_t sample      __SECTION_ZERO("retention_mem_area0");
+    // sample = 0x55AA;
+
+    // struct custs1_val_set_req *req = KE_MSG_ALLOC_DYN(CUSTS1_VAL_SET_REQ,
+    //                                                   prf_get_task_from_id(TASK_ID_CUSTS1),
+    //                                                   TASK_APP,
+    //                                                   custs1_val_set_req,
+    //                                                   DEF_SVC1_ADC_VAL_2_CHAR_LEN);
+
+    // //req->conhdl = app_env->conhdl;
+    // req->handle = SVC1_IDX_ADC_VAL_2_VAL;
+    // req->length = DEF_SVC1_ADC_VAL_2_CHAR_LEN;
+    // memcpy(req->value, &sample, DEF_SVC1_ADC_VAL_2_CHAR_LEN);
+
+    // ke_msg_send(req);
+
+    ////////////////////////////////////////////////////////////////
+
+    user_app_adv_start();
 }
 
 void user_app_disconnect(struct gapc_disconnect_ind const *param)
