@@ -56,6 +56,10 @@
 #include "attm_db.h"
 #include "prf_utils.h"
 
+// TEST: SPI2
+#include "spi_531.h"
+#include "spi.h"
+
 /*
  * TYPE DEFINITIONS
  ****************************************************************************************
@@ -87,6 +91,10 @@ uint8_t stored_adv_data_len                     __SECTION_ZERO("retention_mem_ar
 uint8_t stored_scan_rsp_data_len                __SECTION_ZERO("retention_mem_area0"); //@RETENTION MEMORY
 uint8_t stored_adv_data[ADV_DATA_LEN]           __SECTION_ZERO("retention_mem_area0"); //@RETENTION MEMORY
 uint8_t stored_scan_rsp_data[SCAN_RSP_DATA_LEN] __SECTION_ZERO("retention_mem_area0"); //@RETENTION MEMORY
+
+// Test: SPI2 timer
+timer_hnd app_spi2_timer_used                   __SECTION_ZERO("retention_mem_area0");
+static void spi2_timer_cb(void);
 
 /*
  * FUNCTION DEFINITIONS
@@ -324,6 +332,9 @@ void user_app_db_init_complete(void)
 
     ////////////////////////////////////////////////////////////////
 
+    // Test: SPI2 timer start
+    app_spi2_timer_used = app_easy_timer(1, spi2_timer_cb);
+    
     user_app_adv_start();
 }
 
@@ -492,6 +503,29 @@ void user_catch_rest_hndl(ke_msg_id_t const msgid,
         default:
             break;
     }
+}
+
+/**
+ ****************************************************************************************
+ * @brief SPI2 test timer callback function.
+ * @return void
+ ****************************************************************************************
+*/
+static void spi2_timer_cb()
+{
+    // Test: SPI2 send
+    // uint8_t reg_val[16] = { 0x5A, 0x5A, 0x5A, 0x5A, 0x5A, 0x5A, 0x5A, 0x5A,
+    //                         0x5A, 0x5A, 0x5A, 0x5A, 0x5A, 0x5A, 0x5A, 0x5A };
+    uint8_t reg_val = 0x5A;
+    for (uint8_t i=0; i<0xFF; i++) {
+        reg_val = i;
+        spi_cs_low();
+        spi_send(&reg_val, 1, SPI_OP_BLOCKING);
+        spi_cs_high();
+    }
+
+    // Restart timer for the next SPI2 transaction
+    app_spi2_timer_used = app_easy_timer(1, spi2_timer_cb);
 }
 
 /// @} APP

@@ -105,6 +105,18 @@ void set_pad_functions(void)
 #endif
 
     GPIO_ConfigurePin(GPIO_LED_PORT, GPIO_LED_PIN, OUTPUT, PID_GPIO, false);
+
+    // Configure SPI2 Pad
+#if DEVELOPMENT_DEBUG
+    RESERVE_GPIO(SPI2_CLK, SPI2_CLK_PORT, SPI2_CLK_PIN, PID_SPI_CLK);
+    RESERVE_GPIO(SPI2_DO, SPI2_DO_PORT, SPI2_DO_PIN, PID_SPI_DO);
+    RESERVE_GPIO(SPI2_DI, SPI2_DI_PORT, SPI2_DI_PIN, PID_SPI_DI);
+    RESERVE_GPIO(SPI2_EN, SPI2_EN_PORT, SPI2_EN_PIN, PID_SPI_EN);
+#endif
+    GPIO_ConfigurePin(SPI2_CLK_PORT, SPI2_CLK_PIN, OUTPUT, PID_SPI_CLK, false);
+    GPIO_ConfigurePin(SPI2_DO_PORT, SPI2_DO_PIN, OUTPUT, PID_SPI_DO, false);
+    GPIO_ConfigurePin(SPI2_DI_PORT, SPI2_DI_PIN, INPUT, PID_SPI_DI, false);
+    GPIO_ConfigurePin(SPI2_EN_PORT, SPI2_EN_PIN, OUTPUT, PID_SPI_EN, true);
 }
 
 #if defined (CFG_PRINTF_UART2)
@@ -121,6 +133,18 @@ static const uart_cfg_t uart_cfg = {
     .intr_priority = 2,
 };
 #endif
+
+// Initialize SPI2 driver
+spi_cfg_t spi2_cfg = {  .spi_ms = SPI_MS_MODE_MASTER,
+                        .spi_cp = SPI_CP_MODE_3,            // SPI Mode 1,1
+                        .spi_speed = SPI_SPEED_MODE_16MHz,
+                        .spi_wsz = SPI_MODE_8BIT,
+                        .spi_cs = SPI_CS_0,                 // SPI_CS_GPIO
+                        .cs_pad.port = SPI2_EN_PORT,
+                        .cs_pad.pin = SPI2_EN_PIN
+#if defined(CFG_SPI_DMA_SUPPORT)
+#endif
+};
 
 void periph_init(void)
 {
@@ -142,6 +166,9 @@ void periph_init(void)
     // Initialize UART2
     uart_initialize(UART2, &uart_cfg);
 #endif
+
+    // Initialize SPI2
+    spi_initialize(&spi2_cfg);
 
     // Set pad functionality
     set_pad_functions();

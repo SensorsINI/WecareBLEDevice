@@ -133,6 +133,24 @@
     #define SPI_DI_PIN              GPIO_PIN_5
 #endif
 
+/****************************************************************************************/
+/* SPI2 configuration                                                                   */
+/****************************************************************************************/
+// Define SPI2 Pads
+#if defined (__DA14531__)
+    #define SPI2_EN_PORT            GPIO_PORT_0
+    #define SPI2_EN_PIN             GPIO_PIN_7  //5
+
+    #define SPI2_CLK_PORT           GPIO_PORT_0
+    #define SPI2_CLK_PIN            GPIO_PIN_8  //11
+
+    #define SPI2_DO_PORT            GPIO_PORT_0
+    #define SPI2_DO_PIN             GPIO_PIN_11 //9
+
+    #define SPI2_DI_PORT            GPIO_PORT_0
+    #define SPI2_DI_PIN             GPIO_PIN_6  //6
+#endif
+
 /***************************************************************************************/
 /* Production debug output configuration                                               */
 /***************************************************************************************/

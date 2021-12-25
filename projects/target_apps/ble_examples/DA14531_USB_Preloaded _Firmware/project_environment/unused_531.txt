@@ -1,4 +1,4 @@
-;#<FEEDBACK># ARM Linker, 5060960: Last Updated: Tue Dec 14 15:13:38 2021
+;#<FEEDBACK># ARM Linker, 5060960: Last Updated: Sat Dec 25 13:10:55 2021
 ;VERSION 0.2
 ;FILE adc_531.o
 adc_get_temp_async <= USED 0
@@ -152,21 +152,13 @@ rf_power_down <= USED 0
 ;FILE rwip.o
 ;FILE spi_531.o
 spi_access <= USED 0
-spi_cs_high <= USED 0
-spi_cs_low <= USED 0
 spi_disable <= USED 0
-spi_enable <= USED 0
-spi_initialize <= USED 0
 spi_master_transfer <= USED 0
 spi_receive <= USED 0
 spi_register_receive_cb <= USED 0
 spi_register_send_cb <= USED 0
 spi_register_transfer_cb <= USED 0
-spi_send <= USED 0
-spi_set_bitmode <= USED 0
-spi_set_cp_mode <= USED 0
 spi_set_cs_mode <= USED 0
-spi_set_speed <= USED 0
 spi_transaction <= USED 0
 spi_transfer <= USED 0
 ;FILE spi_flash.o
