@@ -1,0 +1,28 @@
+{
+   ExpandedHierarchyInLayout: "",
+   PinnedPorts: "",
+   guistr: "# # String gsaved with Nlview 6.8.5  2018-01-30 bk=1.4354 VDI=40 GEI=35 GUI=JA:1.6 non-TLS
+#  -string -flagsOSRD
+preplace port DDR -pg 1 -y 60 -defaultsOSRD
+preplace port SPI_MOSI -pg 1 -y 140 -defaultsOSRD -right
+preplace port SPI_SCK -pg 1 -y 110 -defaultsOSRD -right
+preplace port SPI_MISO -pg 1 -y 160 -defaultsOSRD
+preplace port FIXED_IO -pg 1 -y 80 -defaultsOSRD
+preplace port SPI_SS_0 -pg 1 -y 360 -defaultsOSRD -right
+preplace inst system_ila_0 -pg 1 -lvl 2 -y 260 -defaultsOSRD
+preplace inst processing_system7_0 -pg 1 -lvl 1 -y 150 -defaultsOSRD
+preplace netloc processing_system7_0_DDR 1 1 2 NJ 60 NJ
+preplace netloc SPI_SCK_1 1 1 2 340 110 NJ
+preplace netloc processing_system7_0_SPI0_MISO_O 1 1 2 320 160 NJ
+preplace netloc SPI_SS_0_1 1 1 2 310 360 NJ
+preplace netloc processing_system7_0_FIXED_IO 1 1 2 NJ 80 NJ
+preplace netloc SPI_MOSI_1 1 1 2 330 140 NJ
+preplace netloc processing_system7_0_FCLK_CLK1 1 1 1 N
+levelinfo -pg 1 0 160 430 560 -top 0 -bot 380
+",
+}
+{
+   da_board_cnt: "2",
+   da_clkrst_cnt: "5",
+   da_ps7_cnt: "1",
+}

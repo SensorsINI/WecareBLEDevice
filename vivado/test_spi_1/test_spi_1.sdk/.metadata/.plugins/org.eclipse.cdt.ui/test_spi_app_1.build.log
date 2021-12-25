@@ -1,0 +1,8 @@
+13:12:06 **** Incremental Build of configuration Debug for project test_spi_app_1 ****
+make pre-build main-build 
+a9-linaro-pre-build-step
+' '
+make: Nothing to be done for `main-build'.
+
+13:12:07 Build Finished (took 1s.179ms)
+
