@@ -47,10 +47,10 @@
 
 /*
  * Pinout:
- * ARJ4	IO7	N8	MOSI
- * 		IO5	R10	SS
- * 		IO4	N7 	SCK
- * 		IO3	R7	MISO
+ * ARJ4	IO7	N8	SCK
+ * 		IO6	P10	MOSI
+ * 		IO5	R10	MISO
+ * 		IO4	N7	SS
  */
 
 /***************************** Include Files *********************************/
