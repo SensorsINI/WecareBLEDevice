@@ -47,10 +47,10 @@
 
 /*
  * Pinout:
- * ARJ2	AD0	F14	MISO
- * 		AD1	F13	SCK
- * 		AD2	F12	SS
- * 		AD4	E12	MOSI
+ * ARJ4	IO7	N8	MOSI
+ * 		IO5	R10	SS
+ * 		IO4	N7 	SCK
+ * 		IO3	R7	MISO
  */
 
 /***************************** Include Files *********************************/
