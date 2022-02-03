@@ -1,0 +1,7 @@
+//arch = zynq; split = false; format = BIN
+the_ROM_image:
+{
+	[bootloader]E:\workspace\WecareBLEDevice\vivado\test_spi_1\test_spi_1.sdk\fsbl\Debug\fsbl.elf
+	E:\workspace\WecareBLEDevice\vivado\test_spi_1\test_spi_1.sdk\design_1_wrapper_hw_platform_0\design_1_wrapper.bit
+	E:\workspace\WecareBLEDevice\vivado\test_spi_1\test_spi_1.sdk\test_spi_app_1\Debug\test_spi_app_1.elf
+}

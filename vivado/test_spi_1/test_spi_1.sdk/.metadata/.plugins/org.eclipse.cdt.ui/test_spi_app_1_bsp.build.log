@@ -1,4 +1,4 @@
-23:43:26 **** Auto Build of project test_spi_app_1_bsp ****
+14:45:58 **** Auto Build of project test_spi_app_1_bsp ****
 make -k all 
 "Running Make include in ps7_cortexa9_0/libsrc/coresightps_dcc_v1_4/src"
 make -C ps7_cortexa9_0/libsrc/coresightps_dcc_v1_4/src -s include  "SHELL=CMD" "COMPILER=arm-none-eabi-gcc" "ARCHIVER=arm-none-eabi-ar" "COMPILER_FLAGS=  -O2 -c" "EXTRA_COMPILER_FLAGS=-mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -nostartfiles -g -Wall -Wextra"
@@ -26,6 +26,8 @@ make -C ps7_cortexa9_0/libsrc/standalone_v6_7/src -s include  "SHELL=CMD" "COMPI
 make -C ps7_cortexa9_0/libsrc/uartps_v3_6/src -s include  "SHELL=CMD" "COMPILER=arm-none-eabi-gcc" "ARCHIVER=arm-none-eabi-ar" "COMPILER_FLAGS=  -O2 -c" "EXTRA_COMPILER_FLAGS=-mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -nostartfiles -g -Wall -Wextra"
 "Running Make include in ps7_cortexa9_0/libsrc/xadcps_v2_2/src"
 make -C ps7_cortexa9_0/libsrc/xadcps_v2_2/src -s include  "SHELL=CMD" "COMPILER=arm-none-eabi-gcc" "ARCHIVER=arm-none-eabi-ar" "COMPILER_FLAGS=  -O2 -c" "EXTRA_COMPILER_FLAGS=-mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -nostartfiles -g -Wall -Wextra"
+"Running Make include in ps7_cortexa9_0/libsrc/xilffs_v3_9/src"
+make -C ps7_cortexa9_0/libsrc/xilffs_v3_9/src -s include  "SHELL=CMD" "COMPILER=arm-none-eabi-gcc" "ARCHIVER=arm-none-eabi-ar" "COMPILER_FLAGS=  -O2 -c" "EXTRA_COMPILER_FLAGS=-mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -nostartfiles -g -Wall -Wextra"
 "Running Make libs in ps7_cortexa9_0/libsrc/coresightps_dcc_v1_4/src"
 make -C ps7_cortexa9_0/libsrc/coresightps_dcc_v1_4/src -s libs  "SHELL=CMD" "COMPILER=arm-none-eabi-gcc" "ARCHIVER=arm-none-eabi-ar" "COMPILER_FLAGS=  -O2 -c" "EXTRA_COMPILER_FLAGS=-mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -nostartfiles -g -Wall -Wextra"
 "Compiling coresightps_dcc"
@@ -66,7 +68,45 @@ make -C ps7_cortexa9_0/libsrc/uartps_v3_6/src -s libs  "SHELL=CMD" "COMPILER=arm
 "Running Make libs in ps7_cortexa9_0/libsrc/xadcps_v2_2/src"
 make -C ps7_cortexa9_0/libsrc/xadcps_v2_2/src -s libs  "SHELL=CMD" "COMPILER=arm-none-eabi-gcc" "ARCHIVER=arm-none-eabi-ar" "COMPILER_FLAGS=  -O2 -c" "EXTRA_COMPILER_FLAGS=-mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -nostartfiles -g -Wall -Wextra"
 "Compiling xadcps"
+"Running Make libs in ps7_cortexa9_0/libsrc/xilffs_v3_9/src"
+make -C ps7_cortexa9_0/libsrc/xilffs_v3_9/src -s libs  "SHELL=CMD" "COMPILER=arm-none-eabi-gcc" "ARCHIVER=arm-none-eabi-ar" "COMPILER_FLAGS=  -O2 -c" "EXTRA_COMPILER_FLAGS=-mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -nostartfiles -g -Wall -Wextra"
+"Compiling XilFFs Library"
+diskio.c: In function 'disk_status':
+diskio.c:170:6: warning: unused variable 'DelayCount' [-Wunused-variable]
+  u32 DelayCount = 0;
+      ^~~~~~~~~~
+diskio.c:169:6: warning: unused variable 'StatusReg' [-Wunused-variable]
+  u32 StatusReg;
+      ^~~~~~~~~
+diskio.c: In function 'disk_initialize':
+diskio.c:258:6: warning: unused variable 'Status' [-Wunused-variable]
+  s32 Status;
+      ^~~~~~
+diskio.c: In function 'disk_read':
+diskio.c:357:9: warning: unused parameter 'buff' [-Wunused-parameter]
+   BYTE *buff, /* Pointer to the data buffer to store read data */
+         ^~~~
+diskio.c:358:9: warning: unused parameter 'sector' [-Wunused-parameter]
+   DWORD sector, /* Start sector number (LBA) */
+         ^~~~~~
+diskio.c: In function 'disk_ioctl':
+diskio.c:401:7: warning: unused parameter 'pdrv' [-Wunused-parameter]
+  BYTE pdrv,    /* Physical drive number (0) */
+       ^~~~
+diskio.c:402:7: warning: unused parameter 'cmd' [-Wunused-parameter]
+  BYTE cmd,    /* Control code */
+       ^~~
+diskio.c:403:8: warning: unused parameter 'buff' [-Wunused-parameter]
+  void *buff    /* Buffer to send/receive control data */
+        ^~~~
+diskio.c: In function 'disk_write':
+diskio.c:502:14: warning: unused parameter 'buff' [-Wunused-parameter]
+  const BYTE *buff, /* Data to be written */
+              ^~~~
+diskio.c:503:8: warning: unused parameter 'sector' [-Wunused-parameter]
+  DWORD sector,  /* Sector address (LBA) */
+        ^~~~~~
 'Finished building libraries'
 
-23:46:33 Build Finished (took 3m:6s.871ms)
+14:46:17 Build Finished (took 19s.144ms)
 

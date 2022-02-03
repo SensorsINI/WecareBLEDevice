@@ -81,7 +81,7 @@
 
 #if defined (__DA14531__)
     #define GPIO_ALERT_LED_PORT     GPIO_PORT_0
-    #define GPIO_ALERT_LED_PIN      GPIO_PIN_9
+    #define GPIO_ALERT_LED_PIN      GPIO_PIN_7        // The original pin is PIN 9, but used for SPI
     #define GPIO_BAT_LED_PORT       GPIO_PORT_0
     #define GPIO_BAT_LED_PIN        GPIO_PIN_8
 #else
@@ -96,7 +96,7 @@
 /****************************************************************************************/
 #if defined (__DA14531__)
     #define GPIO_LED_PORT           GPIO_PORT_0
-    #define GPIO_LED_PIN            GPIO_PIN_9
+    #define GPIO_LED_PIN            GPIO_PIN_7      // The original pin is PIN 9, but used for SPI
 #else
     #define GPIO_LED_PORT           GPIO_PORT_1
     #define GPIO_LED_PIN            GPIO_PIN_0
@@ -139,16 +139,16 @@
 // Define SPI2 Pads
 #if defined (__DA14531__)
     #define SPI2_EN_PORT            GPIO_PORT_0
-    #define SPI2_EN_PIN             GPIO_PIN_7  //5
+    #define SPI2_EN_PIN             GPIO_PIN_9  //5
 
     #define SPI2_CLK_PORT           GPIO_PORT_0
-    #define SPI2_CLK_PIN            GPIO_PIN_4  //11
+    #define SPI2_CLK_PIN            GPIO_PIN_11  //11
 
     #define SPI2_DO_PORT            GPIO_PORT_0
-    #define SPI2_DO_PIN             GPIO_PIN_1  //9
+    #define SPI2_DO_PIN             GPIO_PIN_0  //9
 
     #define SPI2_DI_PORT            GPIO_PORT_0
-    #define SPI2_DI_PIN             GPIO_PIN_3  //6
+    #define SPI2_DI_PIN             GPIO_PIN_6  //6
 #endif
 
 /***************************************************************************************/

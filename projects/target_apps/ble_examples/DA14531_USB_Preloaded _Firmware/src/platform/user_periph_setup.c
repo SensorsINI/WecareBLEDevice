@@ -167,6 +167,7 @@ void periph_init(void)
     uart_initialize(UART2, &uart_cfg);
 #endif
 
+	  GPIO_Disable_HW_Reset();
     // Initialize SPI2
     spi_initialize(&spi2_cfg);
 

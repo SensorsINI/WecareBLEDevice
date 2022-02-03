@@ -3,7 +3,7 @@
 <!--                                                         -->
 <!-- Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.   -->
 
-<Project Version="7" Minor="38" Path="D:/Workspace/Vivado/test_spi_1/test_spi_1.xpr">
+<Project Version="7" Minor="38" Path="E:/workspace/WecareBLEDevice/vivado/test_spi_1/test_spi_1.xpr">
   <DefaultLaunch Dir="$PRUNDIR"/>
   <Configuration>
     <Option Name="Id" Val="fd8b52319dd24ce88d8a18f0b62c8396"/>
@@ -66,11 +66,11 @@
           <Attr Name="UsedIn" Val="implementation"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
-        <CompFileExtendedInfo CompFileName="design_1.bd" FileRelPathName="ip/design_1_processing_system7_0_0/design_1_processing_system7_0_0.xci">
-          <Proxy FileSetName="design_1_processing_system7_0_0"/>
-        </CompFileExtendedInfo>
         <CompFileExtendedInfo CompFileName="design_1.bd" FileRelPathName="ip/design_1_system_ila_0_0/design_1_system_ila_0_0.xci">
           <Proxy FileSetName="design_1_system_ila_0_0"/>
+        </CompFileExtendedInfo>
+        <CompFileExtendedInfo CompFileName="design_1.bd" FileRelPathName="ip/design_1_processing_system7_0_0/design_1_processing_system7_0_0.xci">
+          <Proxy FileSetName="design_1_processing_system7_0_0"/>
         </CompFileExtendedInfo>
       </File>
       <File Path="$PSRCDIR/sources_1/bd/design_1/hdl/design_1_wrapper.v">
