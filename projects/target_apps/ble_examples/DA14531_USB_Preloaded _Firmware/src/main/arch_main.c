@@ -260,13 +260,13 @@ static void systick_isr(void)
 {	 
     if (i == 0)
     {
-        GPIO_SetActive(GPIO_LED_PORT, GPIO_LED_PIN);
+        // GPIO_SetActive(GPIO_LED_PORT, GPIO_LED_PIN);
         i = 1;
 		  timer0_general_test(TEST_LENGTH_SEC);
     }
     else
     {
-        GPIO_SetInactive(GPIO_LED_PORT, GPIO_LED_PIN);
+        // GPIO_SetInactive(GPIO_LED_PORT, GPIO_LED_PIN);
         i = 0;
 		    timer0_general_test(TEST_LENGTH_SEC);
     }

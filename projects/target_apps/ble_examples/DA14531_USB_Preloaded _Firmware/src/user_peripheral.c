@@ -333,7 +333,7 @@ void user_app_db_init_complete(void)
     ////////////////////////////////////////////////////////////////
 
     // Test: SPI2 timer start
-    app_spi2_timer_used = app_easy_timer(1, spi2_timer_cb);
+    app_spi2_timer_used = app_easy_timer(50, spi2_timer_cb);
     
     user_app_adv_start();
 }
@@ -505,6 +505,9 @@ void user_catch_rest_hndl(ke_msg_id_t const msgid,
     }
 }
 
+uint16_t reg_val_led2 = 0x0201;
+uint16_t reg_val_led3 = 0x0300;
+
 /**
  ****************************************************************************************
  * @brief SPI2 test timer callback function.
@@ -516,16 +519,23 @@ static void spi2_timer_cb()
     // Test: SPI2 send
     // uint8_t reg_val[16] = { 0x5A, 0x5A, 0x5A, 0x5A, 0x5A, 0x5A, 0x5A, 0x5A,
     //                         0x5A, 0x5A, 0x5A, 0x5A, 0x5A, 0x5A, 0x5A, 0x5A };
-    uint8_t reg_val = 0x5A;
-    for (uint8_t i=0; i<0xFF; i++) {
-        reg_val = i;
-        spi_cs_low();
-        spi_send(&reg_val, 1, SPI_OP_BLOCKING);
+    uint16_t reg_val = 0x5A;
+    // for (uint8_t i=0; i<0xFF; i++) {
+        reg_val_led2 ^= 1;
+				reg_val_led3 ^= 1;
+        // For LED 2      
+	      spi_cs_low();
+        spi_send(&reg_val_led2, 1, SPI_OP_BLOCKING);
         spi_cs_high();
-    }
+	
+				// For LED 3
+	      spi_cs_low();
+		    spi_send(&reg_val_led3, 1, SPI_OP_BLOCKING);
+        spi_cs_high();
+    // }
 
     // Restart timer for the next SPI2 transaction
-    app_spi2_timer_used = app_easy_timer(1, spi2_timer_cb);
+    app_spi2_timer_used = app_easy_timer(50, spi2_timer_cb);
 }
 
 /// @} APP

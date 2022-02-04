@@ -81,9 +81,9 @@
 
 #if defined (__DA14531__)
     #define GPIO_ALERT_LED_PORT     GPIO_PORT_0
-    #define GPIO_ALERT_LED_PIN      GPIO_PIN_7        // The original pin is PIN 9, but used for SPI
+    // #define GPIO_ALERT_LED_PIN      GPIO_PIN_9        // The original pin is PIN 9, but used for SPI
     #define GPIO_BAT_LED_PORT       GPIO_PORT_0
-    #define GPIO_BAT_LED_PIN        GPIO_PIN_8
+    // #define GPIO_BAT_LED_PIN        GPIO_PIN_8
 #else
     #define GPIO_ALERT_LED_PORT     GPIO_PORT_1
     #define GPIO_ALERT_LED_PIN      GPIO_PIN_0
@@ -96,7 +96,7 @@
 /****************************************************************************************/
 #if defined (__DA14531__)
     #define GPIO_LED_PORT           GPIO_PORT_0
-    #define GPIO_LED_PIN            GPIO_PIN_7      // The original pin is PIN 9, but used for SPI
+    // #define GPIO_LED_PIN            GPIO_PIN_9      // The original pin is PIN 9, but used for SPI
 #else
     #define GPIO_LED_PORT           GPIO_PORT_1
     #define GPIO_LED_PIN            GPIO_PIN_0
