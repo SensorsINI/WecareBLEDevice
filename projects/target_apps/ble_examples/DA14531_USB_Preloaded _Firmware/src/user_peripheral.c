@@ -332,7 +332,7 @@ void user_app_db_init_complete(void)
 
     ////////////////////////////////////////////////////////////////
 
-    // Test: SPI2 timer start
+// Test: SPI2 timer start. Delay time: 50*10ms = 500ms
     app_spi2_timer_used = app_easy_timer(50, spi2_timer_cb);
     
     user_app_adv_start();
@@ -505,7 +505,12 @@ void user_catch_rest_hndl(ke_msg_id_t const msgid,
     }
 }
 
+// LED2 on wecare board (MAX7317 P2)
+// The higest 8bits are port number (MSB for R/W_n)
+// The loweset 8bits are value.
+// On the board, '0' turns on the LED, '1' turns off.
 uint16_t reg_val_led2 = 0x0201;
+// LED3 on wecare board (MAX7317 P3)
 uint16_t reg_val_led3 = 0x0300;
 
 /**
@@ -523,6 +528,7 @@ static void spi2_timer_cb()
     // for (uint8_t i=0; i<0xFF; i++) {
         reg_val_led2 ^= 1;
 				reg_val_led3 ^= 1;
+	
         // For LED 2      
 	      spi_cs_low();
         spi_send(&reg_val_led2, 1, SPI_OP_BLOCKING);
@@ -534,7 +540,7 @@ static void spi2_timer_cb()
         spi_cs_high();
     // }
 
-    // Restart timer for the next SPI2 transaction
+    // Restart timer for the next SPI2 transaction. Delay time: 50*10ms = 500ms
     app_spi2_timer_used = app_easy_timer(50, spi2_timer_cb);
 }
 

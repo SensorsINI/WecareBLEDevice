@@ -119,8 +119,8 @@ void set_pad_functions(void)
     GPIO_ConfigurePin(SPI2_EN_PORT, SPI2_EN_PIN, OUTPUT, PID_SPI_EN, true);
 		
 		// Configure SPI extra CS
-		GPIO_ConfigurePin(GPIO_PORT_0, GPIO_PIN_7, OUTPUT, PID_GPIO, true);
-		GPIO_ConfigurePin(GPIO_PORT_0, GPIO_PIN_8, OUTPUT, PID_GPIO, true);
+		GPIO_ConfigurePin(SPI2_ADC1_PORT, SPI2_ADC1_PIN, OUTPUT, PID_GPIO, true);
+		GPIO_ConfigurePin(SPI2_ADC2_PORT, SPI2_ADC2_PIN, OUTPUT, PID_GPIO, true);
 }
 
 #if defined (CFG_PRINTF_UART2)
@@ -171,7 +171,10 @@ void periph_init(void)
     uart_initialize(UART2, &uart_cfg);
 #endif
 
+	  // Disable P0 used as Reset (default function)
+	  // We need P0 as the MOSI signal
 	  GPIO_Disable_HW_Reset();
+	
     // Initialize SPI2
     spi_initialize(&spi2_cfg);
 
