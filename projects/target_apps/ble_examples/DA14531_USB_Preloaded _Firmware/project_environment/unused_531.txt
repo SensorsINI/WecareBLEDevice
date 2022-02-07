@@ -1,4 +1,4 @@
-;#<FEEDBACK># ARM Linker, 5060960: Last Updated: Sun Feb 06 23:27:02 2022
+;#<FEEDBACK># ARM Linker, 5060750: Last Updated: Mon Feb 07 20:10:25 2022
 ;VERSION 0.2
 ;FILE adc_531.o
 adc_correct_sample <= USED 0
@@ -161,7 +161,6 @@ rf_power_down <= USED 0
 spi_access <= USED 0
 spi_disable <= USED 0
 spi_master_transfer <= USED 0
-spi_receive <= USED 0
 spi_register_receive_cb <= USED 0
 spi_register_send_cb <= USED 0
 spi_register_transfer_cb <= USED 0

@@ -158,8 +158,8 @@
     #define SPI2_ADC1_PORT            GPIO_PORT_0
     #define SPI2_ADC1_PIN             GPIO_PIN_8  
 		
-    #define SPI2_ADC2_PORT            GPIO_PORT_0
-    #define SPI2_ADC2_PIN             GPIO_PIN_7  
+    #define SPI2_DAC_PORT            GPIO_PORT_0
+    #define SPI2_DAC_PIN             GPIO_PIN_7  
 		
 /***************************************************************************************/
 /* Production debug output configuration                                               */

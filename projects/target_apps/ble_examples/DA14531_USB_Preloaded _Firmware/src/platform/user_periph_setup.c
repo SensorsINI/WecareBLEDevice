@@ -119,8 +119,8 @@ void set_pad_functions(void)
     GPIO_ConfigurePin(SPI2_EN_PORT, SPI2_EN_PIN, OUTPUT, PID_SPI_EN, true);
 		
 		// Configure SPI extra CS
-		GPIO_ConfigurePin(SPI2_ADC1_PORT, SPI2_ADC1_PIN, OUTPUT, PID_GPIO, true);
-		GPIO_ConfigurePin(SPI2_ADC2_PORT, SPI2_ADC2_PIN, OUTPUT, PID_GPIO, true);
+		GPIO_ConfigurePin(SPI2_ADC1_PORT, SPI2_ADC1_PIN, OUTPUT, PID_SPI_EN1, true);
+		GPIO_ConfigurePin(SPI2_DAC_PORT, SPI2_DAC_PIN, OUTPUT, PID_SPI_EN1, true);
 }
 
 #if defined (CFG_PRINTF_UART2)
@@ -141,11 +141,24 @@ static const uart_cfg_t uart_cfg = {
 // Initialize SPI2 driver
 spi_cfg_t spi2_cfg = {  .spi_ms = SPI_MS_MODE_MASTER,
                         .spi_cp = SPI_CP_MODE_0,            // SPI Mode 0,0
-                        .spi_speed = SPI_SPEED_MODE_16MHz,
+                        .spi_speed = SPI_SPEED_MODE_2MHz,
                         .spi_wsz = SPI_MODE_16BIT,
-                        .spi_cs = SPI_CS_0,                 // SPI_CS_GPIO
+                        .spi_cs = SPI_CS_0,                 // SPI_CS_0 for IO and on-board flash
                         .cs_pad.port = SPI2_EN_PORT,
                         .cs_pad.pin = SPI2_EN_PIN
+#if defined(CFG_SPI_DMA_SUPPORT)
+#endif
+};
+
+// Initialize SPI2 driver
+spi_cfg_t spi2_dac_cfg = {  
+	                      .spi_ms = SPI_MS_MODE_MASTER,
+                        .spi_cp = SPI_CP_MODE_1,            // SPI Mode 0,1
+                        .spi_speed = SPI_SPEED_MODE_2MHz,
+                        .spi_wsz = SPI_MODE_32BIT,
+                        .spi_cs = SPI_CS_1,                 // SPI_CS_1 for ADC and DAC. 
+                        .cs_pad.port = SPI2_DAC_PORT,
+                        .cs_pad.pin = SPI2_DAC_PIN
 #if defined(CFG_SPI_DMA_SUPPORT)
 #endif
 };
@@ -176,7 +189,8 @@ void periph_init(void)
 	  GPIO_Disable_HW_Reset();
 	
     // Initialize SPI2
-    spi_initialize(&spi2_cfg);
+    // spi_initialize(&spi2_cfg);
+    spi_initialize(&spi2_dac_cfg);
 
     // Set pad functionality
     set_pad_functions();

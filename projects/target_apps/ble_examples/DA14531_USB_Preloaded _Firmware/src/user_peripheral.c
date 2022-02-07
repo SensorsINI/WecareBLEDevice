@@ -96,6 +96,9 @@ uint8_t stored_scan_rsp_data[SCAN_RSP_DATA_LEN] __SECTION_ZERO("retention_mem_ar
 timer_hnd app_spi2_timer_used                   __SECTION_ZERO("retention_mem_area0");
 static void spi2_timer_cb(void);
 
+// Test: SPI2 DAC
+timer_hnd app_spi2_dac_timer_used                   __SECTION_ZERO("retention_mem_area0");
+static void spi2_dac_ctrl(void);
 /*
  * FUNCTION DEFINITIONS
  ****************************************************************************************
@@ -333,7 +336,8 @@ void user_app_db_init_complete(void)
     ////////////////////////////////////////////////////////////////
 
 // Test: SPI2 timer start. Delay time: 50*10ms = 500ms
-    app_spi2_timer_used = app_easy_timer(50, spi2_timer_cb);
+    // app_spi2_timer_used = app_easy_timer(50, spi2_timer_cb);
+		app_spi2_dac_timer_used = app_easy_timer(50, spi2_dac_ctrl);
     
     user_app_adv_start();
 }
@@ -515,16 +519,12 @@ uint16_t reg_val_led3 = 0x0300;
 
 /**
  ****************************************************************************************
- * @brief SPI2 test timer callback function.
+ * @brief SPI2 IO module (MAX7317) test timer callback function.
  * @return void
  ****************************************************************************************
 */
 static void spi2_timer_cb()
 {
-    // Test: SPI2 send
-    // uint8_t reg_val[16] = { 0x5A, 0x5A, 0x5A, 0x5A, 0x5A, 0x5A, 0x5A, 0x5A,
-    //                         0x5A, 0x5A, 0x5A, 0x5A, 0x5A, 0x5A, 0x5A, 0x5A };
-    uint16_t reg_val = 0x5A;
     // for (uint8_t i=0; i<0xFF; i++) {
         reg_val_led2 ^= 1;
 				reg_val_led3 ^= 1;
@@ -542,6 +542,69 @@ static void spi2_timer_cb()
 
     // Restart timer for the next SPI2 transaction. Delay time: 50*10ms = 500ms
     app_spi2_timer_used = app_easy_timer(50, spi2_timer_cb);
+}
+
+/**
+ ****************************************************************************************
+ * @brief SPI2 DAC (DAC70508M) control function.
+ * @return void
+ ****************************************************************************************
+*/
+static void spi2_dac_ctrl()
+{
+	uint32_t dac_command = 0x80000000;
+	uint32_t receiveBuf; 
+
+	
+	dac_command = 0x810000; // Read Device ID command
+	spi_cs_low();
+	spi_send(&dac_command, 1, SPI_OP_BLOCKING);
+	spi_cs_high();
+	
+	// Readback data
+  spi_cs_low();
+	spi_receive(&receiveBuf, 1, SPI_OP_BLOCKING);
+	spi_cs_high();
+	
+  printf_string(UART1, "DEVICE ID is: 0x");
+  print_word(UART1, receiveBuf);
+  printf_string(UART1, ".\r\n");
+	
+	dac_command = 0x820000; // Read SYNC register command
+	spi_cs_low();
+	spi_send(&dac_command, 1, SPI_OP_BLOCKING);
+	spi_cs_high();
+	
+	// Readback data
+	spi_cs_low();
+	spi_receive(&receiveBuf, 1, SPI_OP_BLOCKING);
+	spi_cs_high();
+
+  printf_string(UART1, "SYNC register data before writing is: 0x");
+  print_word(UART1, receiveBuf);
+  printf_string(UART1, ".\r\n");
+	
+	dac_command = 0x0200FF; // Write 0xFF to SYNC register command
+	spi_cs_low();
+	spi_send(&dac_command, 1, SPI_OP_BLOCKING);
+	spi_cs_high();	
+	
+	dac_command = 0x820000; // Read SYNC register command
+	spi_cs_low();
+	spi_send(&dac_command, 1, SPI_OP_BLOCKING);
+	spi_cs_high();
+	
+	// Readback data
+	spi_cs_low();
+	spi_receive(&receiveBuf, 1, SPI_OP_BLOCKING);
+	spi_cs_high();
+	
+  printf_string(UART1, "SYNC register data after writing is: 0x");
+  print_word(UART1, receiveBuf);
+  printf_string(UART1, ".\r\n");
+	
+	
+	app_spi2_dac_timer_used = app_easy_timer(50, spi2_dac_ctrl);
 }
 
 /// @} APP
