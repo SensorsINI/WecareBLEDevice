@@ -1056,7 +1056,7 @@ void timer0_general_test(uint32_t times_seconds)
     timer0_stop();
 
     // register callback function for SWTIM_IRQn irq
-    // timer0_register_callback(timer0_general_user_callback_function);
+    timer0_register_callback(timer0_general_user_callback_function);
 
     // Enable the Timer0/Timer2 input clock
     timer0_2_clk_enable();

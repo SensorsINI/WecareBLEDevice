@@ -134,13 +134,10 @@
 #endif
 
 /****************************************************************************************/
-/* SPI2 configuration (for MAX7317)                                                                   */
+/* SPI2 configuration (for IO, DAC and ADCs. MOSI, MISO and SCK are shared together)                                                                   */
 /****************************************************************************************/
 // Define SPI2 Pads
 #if defined (__DA14531__)
-    #define SPI2_EN_PORT            GPIO_PORT_0
-    #define SPI2_EN_PIN             GPIO_PIN_9  
-
     #define SPI2_CLK_PORT           GPIO_PORT_0
     #define SPI2_CLK_PIN            GPIO_PIN_11  
 
@@ -149,17 +146,19 @@
 
     #define SPI2_DI_PORT            GPIO_PORT_0
     #define SPI2_DI_PIN             GPIO_PIN_6  
+
+// SPI IO Max7317 CS
+		#define SPI2_IO_CS_PORT            GPIO_PORT_0
+    #define SPI2_IO_CS_PIN             GPIO_PIN_9  
+
+// Define extra SPI chip select signals: 1 DAC and 2 ADCs
+    #define SPI2_ADC1_CS_PORT            GPIO_PORT_0
+    #define SPI2_ADC1_CS_PIN             GPIO_PIN_8  
+		
+    #define SPI2_DAC_CS_PORT            GPIO_PORT_0
+    #define SPI2_DAC_CS_PIN             GPIO_PIN_7  
 #endif
 
-/****************************************************************************************/
-/* SPI2 configuration (for DAC and ADCs, MOSI, MISO and SCK are shared with MAX7317)                                                                   */
-/****************************************************************************************/
-// Define extra SPI chip select signals: 1 DAC and 2 ADCs
-    #define SPI2_ADC1_PORT            GPIO_PORT_0
-    #define SPI2_ADC1_PIN             GPIO_PIN_8  
-		
-    #define SPI2_DAC_PORT            GPIO_PORT_0
-    #define SPI2_DAC_PIN             GPIO_PIN_7  
 		
 /***************************************************************************************/
 /* Production debug output configuration                                               */

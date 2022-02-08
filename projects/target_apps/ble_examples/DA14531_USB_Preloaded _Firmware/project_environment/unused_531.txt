@@ -1,4 +1,4 @@
-;#<FEEDBACK># ARM Linker, 5060750: Last Updated: Mon Feb 07 20:10:25 2022
+;#<FEEDBACK># ARM Linker, 5060750: Last Updated: Tue Feb 08 13:59:12 2022
 ;VERSION 0.2
 ;FILE adc_531.o
 adc_correct_sample <= USED 0
@@ -226,7 +226,6 @@ systick_value <= USED 0
 systick_wait <= USED 0
 ;FILE timer0.o
 timer0_disable_irq <= USED 0
-timer0_register_callback <= USED 0
 timer0_release <= USED 0
 timer0_set <= USED 0
 ;FILE timer1.o
