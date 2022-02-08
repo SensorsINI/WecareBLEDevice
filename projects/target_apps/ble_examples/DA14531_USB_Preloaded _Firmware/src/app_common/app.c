@@ -264,6 +264,7 @@ bool app_db_init_next(void)
     return true;
 }
 
+#if !defined (__DA14531__) || defined (__EXCLUDE_ROM_APP_TASK__)
 bool app_db_init_start(void)
 {
     // Indicate if more services need to be added in the database
@@ -281,13 +282,12 @@ bool app_db_init(void)
 {
     // Indicate if more services need to be added in the database
     bool end_db_create;
-	
-	  printf_string(UART1, "I am in function app_db_init.\r\n");
 
     end_db_create = app_db_init_next();
 
     return end_db_create;
 }
+#endif
 
 /**
  ****************************************************************************************
@@ -1056,7 +1056,7 @@ void timer0_general_test(uint32_t times_seconds)
     timer0_stop();
 
     // register callback function for SWTIM_IRQn irq
-    timer0_register_callback(timer0_general_user_callback_function);
+    // timer0_register_callback(timer0_general_user_callback_function);
 
     // Enable the Timer0/Timer2 input clock
     timer0_2_clk_enable();

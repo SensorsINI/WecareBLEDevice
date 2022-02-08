@@ -43,6 +43,8 @@
 #include "uart.h"
 #include "syscntl.h"
 
+#include "timer0.h"
+#include "timer0_2.h"
 /*
  * GLOBAL VARIABLE DEFINITIONS
  ****************************************************************************************
@@ -138,6 +140,58 @@ static const uart_cfg_t uart_cfg = {
 };
 #endif
 
+//volatile uint8_t timeout_expiration;
+static tim0_2_clk_div_config_t clk_div_config =
+{
+    .clk_div  = TIM0_2_CLK_DIV_8
+};
+
+/**
+ ****************************************************************************************
+ * @brief Timer0 general user callback function
+ *
+ ****************************************************************************************
+ */
+static void timer0_user_callback_function(void)
+{
+  	// GPIO_SetActive(SPI2_IO_CS_PORT, SPI2_IO_CS_PIN);
+		// spi_ctrl_reg_spi_fifo_reset_setf(SPI_BIT_EN);
+	  timer0_2_clk_disable();
+}
+
+// Timer to control CS signal length
+void timer0_setup(uint32_t times_microseconds)
+{
+    // Stop timer for enter settings
+    timer0_stop();
+
+    // register callback function for SWTIM_IRQn irq
+    timer0_register_callback(timer0_user_callback_function);
+
+    // Enable the Timer0/Timer2 input clock
+    timer0_2_clk_enable();
+
+    // Set the Timer0/Timer2 input clock division factor to 8, so 16 MHz / 8 = 2 MHz input clock
+    timer0_2_clk_div_set(&clk_div_config);
+
+    // clear PWM settings register to not generate PWM
+    timer0_set_pwm_high_counter(0);
+    timer0_set_pwm_low_counter(0);
+
+    // Set timer with 2MHz source clock divided by 10 so Fclk = 2MHz/1 = 2MHz
+    timer0_init(TIM0_CLK_FAST, PWM_MODE_ONE, TIM0_CLK_NO_DIV);
+
+    // Clock is 2M, so multiple by 2 changes it to 1M
+    timer0_set_pwm_on_counter(times_microseconds * 2);
+
+    // Enable SWTIM_IRQn irq
+    // timer0_enable_irq(); 		
+
+    // Disable the Timer0/Timer2 input clock
+    timer0_2_clk_disable();
+}
+
+
 void periph_init(void)
 {
 #if defined (__DA14531__)
@@ -158,7 +212,7 @@ void periph_init(void)
     // Initialize UART2
     uart_initialize(UART2, &uart_cfg);
 #endif
-
+  
 	  // Disable P0 used as Reset (default function)
 	  // We need P0 as the MOSI signal
 	  GPIO_Disable_HW_Reset();
@@ -168,6 +222,9 @@ void periph_init(void)
 
     // Enable the pads
     GPIO_set_pad_latch_en(true);
+		
+		timer0_setup(25);
+
 }
 
 // Configuration struct for UART

@@ -260,7 +260,7 @@ static void systick_isr(void)
 {	 
     if (i == 0)
     {
-        // GPIO_SetActive(GPIO_LED_PORT, GPIO_LED_PIN);
+        //  GPIO_SetActive(GPIO_LED_PORT, GPIO_LED_PIN);
         i = 1;
 		  timer0_general_test(TEST_LENGTH_SEC);
     }
@@ -275,7 +275,7 @@ static void systick_isr(void)
 
 void systick_test(void)
 {
-    systick_register_callback(systick_isr);
+    // systick_register_callback(systick_isr);
     // Systick will be initialized to use a reference clock frequency of 1 MHz
     systick_start(SYSTICK_PERIOD_US, SYSTICK_EXCEPTION);
 }

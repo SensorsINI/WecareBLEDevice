@@ -61,7 +61,8 @@
 #include "spi.h"
 
 #include "user_periph_setup.h"
-
+#include "timer0.h"
+#include "timer0_2.h"
 /*
  * TYPE DEFINITIONS
  ****************************************************************************************
@@ -511,6 +512,7 @@ void user_catch_rest_hndl(ke_msg_id_t const msgid,
     }
 }
 
+
 // Initialize SPI2 IO driver
 spi_cfg_t spi2_cfg = {  .spi_ms = SPI_MS_MODE_MASTER,
                         .spi_cp = SPI_CP_MODE_0,            // SPI Mode 0,0
@@ -544,6 +546,8 @@ uint16_t reg_val_led2 = 0x0201;
 // LED3 on wecare board (MAX7317 P3)
 uint16_t reg_val_led3 = 0x0300;
 
+uint16_t globalCnt = 0;
+
 /**
  ****************************************************************************************
  * @brief SPI2 IO module (MAX7317) test timer callback function.
@@ -558,11 +562,21 @@ static void spi2_io_ctrl()
     reg_val_led2 ^= 1;
     reg_val_led3 ^= 1;
 
-    // For LED 2      
-    spi_cs_low();
-    spi_send(&reg_val_led2, 1, SPI_OP_BLOCKING);
-    spi_cs_high();
+    // For LED 2  
+    // spi_ctrl_reg_spi_fifo_reset_setf(SPI_BIT_DIS);	
+    // GPIO_SetInactive(SPI2_IO_CS_PORT, SPI2_IO_CS_PIN);	
+	  // timer0_2_clk_enable(); 
+    // Enable SWTIM_IRQn irq
+    // timer0_enable_irq(); 
+    // Start Timer0
+    // timer0_start();	
+	  // for(uint64_t i = 0; i < 5; i++);
+		// GPIO_SetActive(SPI2_IO_CS_PORT, SPI2_IO_CS_PIN);
 
+    spi_cs_low();
+	  spi_send(&reg_val_led2, 1, SPI_OP_BLOCKING);
+    spi_cs_high();
+		  
     // For LED 3
     spi_cs_low();
     spi_send(&reg_val_led3, 1, SPI_OP_BLOCKING);

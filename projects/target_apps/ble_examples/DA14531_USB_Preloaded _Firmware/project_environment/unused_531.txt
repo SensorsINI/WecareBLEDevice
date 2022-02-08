@@ -1,4 +1,4 @@
-;#<FEEDBACK># ARM Linker, 5060750: Last Updated: Tue Feb 08 13:59:12 2022
+;#<FEEDBACK># ARM Linker, 5060750: Last Updated: Tue Feb 08 20:40:54 2022
 ;VERSION 0.2
 ;FILE adc_531.o
 adc_correct_sample <= USED 0
@@ -33,6 +33,7 @@ app_easy_gap_undirected_advertise_with_timeout_start <= USED 0
 app_gattc_svc_changed_cmd_send <= USED 0
 app_set_prf_srv_perm <= USED 0
 app_timer_set <= USED 0
+timer0_general_test <= USED 0
 ;FILE app_customs.o
 app_custs1_init <= USED 0
 ;FILE app_customs_common.o
@@ -221,13 +222,16 @@ syscntl_por_vbat_low_cfg <= USED 0
 ;FILE system_da14531.o
 SystemCoreClockUpdate <= USED 0
 ;FILE systick.o
+systick_register_callback <= USED 0
 systick_stop <= USED 0
 systick_value <= USED 0
 systick_wait <= USED 0
 ;FILE timer0.o
 timer0_disable_irq <= USED 0
+timer0_enable_irq <= USED 0
 timer0_release <= USED 0
 timer0_set <= USED 0
+timer0_start <= USED 0
 ;FILE timer1.o
 timer1_count_config <= USED 0
 timer1_count_register_callback <= USED 0
