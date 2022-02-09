@@ -102,6 +102,10 @@ static void spi2_io_ctrl(void);
 // Test: SPI2 DAC
 timer_hnd app_spi2_dac_timer_used                   __SECTION_ZERO("retention_mem_area0");
 static void spi2_dac_ctrl(void);
+
+// Test: SPI2 ADC1
+timer_hnd app_spi2_adc1_timer_used                   __SECTION_ZERO("retention_mem_area0");
+static void spi2_adc1_ctrl(void);
 /*
  * FUNCTION DEFINITIONS
  ****************************************************************************************
@@ -339,8 +343,9 @@ void user_app_db_init_complete(void)
     ////////////////////////////////////////////////////////////////
 
 // Test: SPI2 timer start. Delay time: 50*10ms = 500ms
-    app_spi2_timer_used = app_easy_timer(50, spi2_io_ctrl);
-		app_spi2_dac_timer_used = app_easy_timer(50, spi2_dac_ctrl);
+    // app_spi2_timer_used = app_easy_timer(50, spi2_io_ctrl);
+		// app_spi2_dac_timer_used = app_easy_timer(50, spi2_dac_ctrl);
+		app_spi2_adc1_timer_used = app_easy_timer(50, spi2_adc1_ctrl);		
     
     user_app_adv_start();
 }
@@ -518,7 +523,7 @@ spi_cfg_t spi2_cfg = {  .spi_ms = SPI_MS_MODE_MASTER,
                         .spi_cp = SPI_CP_MODE_0,            // SPI Mode 0,0
                         .spi_speed = SPI_SPEED_MODE_2MHz,
                         .spi_wsz = SPI_MODE_16BIT,
-                        .spi_cs = SPI_CS_0,                 // SPI_CS_0 for IO and on-board flash
+                        .spi_cs = SPI_CS_0,                 
                         .cs_pad.port = SPI2_IO_CS_PORT,
                         .cs_pad.pin = SPI2_IO_CS_PIN
 #if defined(CFG_SPI_DMA_SUPPORT)
@@ -531,9 +536,22 @@ spi_cfg_t spi2_dac_cfg = {
                         .spi_cp = SPI_CP_MODE_1,            // SPI Mode 0,1
                         .spi_speed = SPI_SPEED_MODE_2MHz,
                         .spi_wsz = SPI_MODE_32BIT,
-                        .spi_cs = SPI_CS_1,                 // SPI_CS_1 for ADC and DAC. 
+                        .spi_cs = SPI_CS_1,                
                         .cs_pad.port = SPI2_DAC_CS_PORT,
                         .cs_pad.pin = SPI2_DAC_CS_PIN
+#if defined(CFG_SPI_DMA_SUPPORT)
+#endif
+};
+
+// Initialize SPI2 DAC driver
+spi_cfg_t spi2_adc1_cfg = {  
+	                      .spi_ms = SPI_MS_MODE_MASTER,
+                        .spi_cp = SPI_CP_MODE_3,            // SPI Mode 0,0
+                        .spi_speed = SPI_SPEED_MODE_1MHz,
+                        .spi_wsz = SPI_MODE_8BIT,
+                        .spi_cs = SPI_CS_1,                 
+                        .cs_pad.port = SPI2_ADC1_CS_PORT,
+                        .cs_pad.pin = SPI2_ADC1_CS_PIN
 #if defined(CFG_SPI_DMA_SUPPORT)
 #endif
 };
@@ -650,6 +668,40 @@ static void spi2_dac_ctrl()
 
 
     app_spi2_dac_timer_used = app_easy_timer(50, spi2_dac_ctrl);
+}
+
+
+/**
+ ****************************************************************************************
+ * @brief SPI2 ADC1 module (MCP3564R) test timer callback function.
+ * @return void
+ ****************************************************************************************
+*/
+static void spi2_adc1_ctrl()
+{
+    spi_initialize(&spi2_adc1_cfg);
+	  
+	  uint32_t adc1_command;
+	  uint32_t receiveBuf; 
+
+	  adc1_command = 0x76;
+	  uint32_t valToWrite = 0xa5;
+	  spi_cs_low();
+		spi_send(&adc1_command, 1, SPI_OP_BLOCKING);
+    spi_send(&valToWrite, 1, SPI_OP_BLOCKING);
+    spi_cs_high();
+	
+	  adc1_command = 0x75;
+	  spi_cs_low();
+		spi_send(&adc1_command, 1, SPI_OP_BLOCKING);
+    spi_receive(&receiveBuf, 1, SPI_OP_BLOCKING);
+    spi_cs_high();
+
+    printf_string(UART1, "LOCK register data is: 0x");
+    printf_byte(UART1, receiveBuf);
+    printf_string(UART1, ".\r\n");
+//	
+    app_spi2_adc1_timer_used = app_easy_timer(50, spi2_adc1_ctrl);
 }
 
 /// @} APP
