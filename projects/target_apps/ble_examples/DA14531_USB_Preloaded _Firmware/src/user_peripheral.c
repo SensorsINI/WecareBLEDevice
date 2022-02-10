@@ -63,6 +63,8 @@
 #include "user_periph_setup.h"
 #include "timer0.h"
 #include "timer0_2.h"
+
+#include "DAC70508M.h"
 /*
  * TYPE DEFINITIONS
  ****************************************************************************************
@@ -343,8 +345,8 @@ void user_app_db_init_complete(void)
     ////////////////////////////////////////////////////////////////
 
 // Test: SPI2 timer start. Delay time: 50*10ms = 500ms
-    // app_spi2_timer_used = app_easy_timer(50, spi2_io_ctrl);
-		// app_spi2_dac_timer_used = app_easy_timer(50, spi2_dac_ctrl);
+    app_spi2_timer_used = app_easy_timer(50, spi2_io_ctrl);
+		app_spi2_dac_timer_used = app_easy_timer(50, spi2_dac_ctrl);
 		app_spi2_adc1_timer_used = app_easy_timer(50, spi2_adc1_ctrl);		
     
     user_app_adv_start();
@@ -536,7 +538,7 @@ spi_cfg_t spi2_dac_cfg = {
                         .spi_cp = SPI_CP_MODE_1,            // SPI Mode 0,1
                         .spi_speed = SPI_SPEED_MODE_2MHz,
                         .spi_wsz = SPI_MODE_32BIT,
-                        .spi_cs = SPI_CS_1,                
+                        .spi_cs = SPI_CS_0,                
                         .cs_pad.port = SPI2_DAC_CS_PORT,
                         .cs_pad.pin = SPI2_DAC_CS_PIN
 #if defined(CFG_SPI_DMA_SUPPORT)
@@ -546,8 +548,8 @@ spi_cfg_t spi2_dac_cfg = {
 // Initialize SPI2 DAC driver
 spi_cfg_t spi2_adc1_cfg = {  
 	                      .spi_ms = SPI_MS_MODE_MASTER,
-                        .spi_cp = SPI_CP_MODE_3,            // SPI Mode 0,0
-                        .spi_speed = SPI_SPEED_MODE_1MHz,
+                        .spi_cp = SPI_CP_MODE_0,            // SPI Mode 0,0
+                        .spi_speed = SPI_SPEED_MODE_2MHz,
                         .spi_wsz = SPI_MODE_8BIT,
                         .spi_cs = SPI_CS_1,                 
                         .cs_pad.port = SPI2_ADC1_CS_PORT,
@@ -607,6 +609,43 @@ static void spi2_io_ctrl()
 
 /**
  ****************************************************************************************
+ * @brief SPI2 DAC (DAC70508M) write register function.
+ * @return void
+ ****************************************************************************************
+*/
+static void spi2_dac_write_register(uint16_t regAddr, uint16_t setVal)
+{
+	  if(regAddr >= 16) return;   // DAC70508M only have 16 registers.
+	  uint32_t dac_command = ((uint32_t)regAddr << 16) + setVal;
+	  spi_cs_low();
+    spi_send(&dac_command, 1, SPI_OP_BLOCKING);
+    spi_cs_high();
+}
+
+/**
+ ****************************************************************************************
+ * @brief SPI2 DAC (DAC70508M) read register function.
+ * @return void
+ ****************************************************************************************
+*/
+static void spi2_dac_read_register(uint16_t regAddr, uint16_t *readVal)
+{
+	  if(regAddr >= 16) return;   // DAC70508M only have 16 registers.
+	  uint32_t dac_command = ((uint32_t)regAddr << 16);
+	  dac_command ^= (1 << 23);  // Set bit 23 to 1 to indicate it is a read operation.
+	  spi_cs_low();
+    spi_send(&dac_command, 1, SPI_OP_BLOCKING);
+    spi_cs_high();
+	  // Readback data
+	  uint32_t receiveBuf; 
+    spi_cs_low();
+    spi_receive(&receiveBuf, 1, SPI_OP_BLOCKING);
+    spi_cs_high();
+	  *readVal = receiveBuf >> 8;     // Return bits 23 to 8 
+}	  
+
+/**
+ ****************************************************************************************
  * @brief SPI2 DAC (DAC70508M) control function.
  * @return void
  ****************************************************************************************
@@ -615,57 +654,23 @@ static void spi2_dac_ctrl()
 {
     spi_initialize(&spi2_dac_cfg);
 
-    uint32_t dac_command = 0x80000000;
-    uint32_t receiveBuf; 
+    uint16_t regData; 
 
-
-    dac_command = 0x810000; // Read Device ID command
-    spi_cs_low();
-    spi_send(&dac_command, 1, SPI_OP_BLOCKING);
-    spi_cs_high();
-
-    // Readback data
-    spi_cs_low();
-    spi_receive(&receiveBuf, 1, SPI_OP_BLOCKING);
-    spi_cs_high();
-
+    spi2_dac_read_register(DEVICE_ID, &regData); // Read Device ID 
     printf_string(UART1, "DEVICE ID is: 0x");
-    print_word(UART1, receiveBuf);
+    print_hword(UART1, regData);
     printf_string(UART1, ".\r\n");
 
-    dac_command = 0x820000; // Read SYNC register command
-    spi_cs_low();
-    spi_send(&dac_command, 1, SPI_OP_BLOCKING);
-    spi_cs_high();
-
-    // Readback data
-    spi_cs_low();
-    spi_receive(&receiveBuf, 1, SPI_OP_BLOCKING);
-    spi_cs_high();
-
+    spi2_dac_read_register(SYNC, &regData);  // Read SYNC register 
     printf_string(UART1, "SYNC register data before writing is: 0x");
-    print_word(UART1, receiveBuf);
+    print_hword(UART1, regData);
     printf_string(UART1, ".\r\n");
 
-    dac_command = 0x0200FF; // Write 0xFF to SYNC register command
-    spi_cs_low();
-    spi_send(&dac_command, 1, SPI_OP_BLOCKING);
-    spi_cs_high();	
-
-    dac_command = 0x820000; // Read SYNC register command
-    spi_cs_low();
-    spi_send(&dac_command, 1, SPI_OP_BLOCKING);
-    spi_cs_high();
-
-    // Readback data
-    spi_cs_low();
-    spi_receive(&receiveBuf, 1, SPI_OP_BLOCKING);
-    spi_cs_high();
-
+    spi2_dac_write_register(SYNC, 0xFF00); 
+    spi2_dac_read_register(SYNC, &regData); 
     printf_string(UART1, "SYNC register data after writing is: 0x");
-    print_word(UART1, receiveBuf);
+    print_hword(UART1, regData);
     printf_string(UART1, ".\r\n");
-
 
     app_spi2_dac_timer_used = app_easy_timer(50, spi2_dac_ctrl);
 }

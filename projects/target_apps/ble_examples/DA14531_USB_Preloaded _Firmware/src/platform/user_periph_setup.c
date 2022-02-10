@@ -122,7 +122,7 @@ void set_pad_functions(void)
 		// Configure SPI extra CS
 		GPIO_ConfigurePin(SPI2_IO_CS_PORT, SPI2_IO_CS_PIN, OUTPUT, PID_SPI_EN, true);
 		GPIO_ConfigurePin(SPI2_ADC1_CS_PORT, SPI2_ADC1_CS_PIN, OUTPUT, PID_SPI_EN1, true);
-		GPIO_ConfigurePin(SPI2_DAC_CS_PORT, SPI2_DAC_CS_PIN, OUTPUT, PID_SPI_EN1, true);
+		GPIO_ConfigurePin(SPI2_DAC_CS_PORT, SPI2_DAC_CS_PIN, OUTPUT, PID_SPI_EN, true);
 }
 
 #if defined (CFG_PRINTF_UART2)
