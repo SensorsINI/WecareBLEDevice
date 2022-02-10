@@ -344,8 +344,8 @@ void user_app_db_init_complete(void)
 
     ////////////////////////////////////////////////////////////////
 
-// Test: SPI2 timer start. Delay time: 50*10ms = 500ms
-    app_spi2_timer_used = app_easy_timer(50, spi2_io_ctrl);
+    // Test: SPI2 timer start. Delay time: 50*10ms = 500ms
+    // app_spi2_timer_used = app_easy_timer(50, spi2_io_ctrl);
 		app_spi2_dac_timer_used = app_easy_timer(50, spi2_dac_ctrl);
 		app_spi2_adc1_timer_used = app_easy_timer(50, spi2_adc1_ctrl);		
     
@@ -658,7 +658,14 @@ static int spi2_dac_write_register(uint16_t regAddr, uint16_t setVal)
 	
 		if(retStatus != 0 | tmpRead != setVal)
 		{
-			printf_string(UART1, "Write failed.");
+			printf_string(UART1, "Write failed.\r\n");
+		  printf_string(UART1, "The regester address is: ");
+			print_hword(UART1, regAddr);
+			printf_string(UART1, ". Read value is: 0x");
+			print_hword(UART1, tmpRead);
+			printf_string(UART1, ", but the data we want to write is: ");
+			print_hword(UART1, setVal);
+			printf_string(UART1, ".\r\n");
 			return -1;
 		}
 	  else return 0;	  
@@ -676,26 +683,60 @@ static void spi2_dac_ctrl()
 
     uint16_t regData; 
 
-    if(!spi2_dac_read_register(DEVICE_ID, &regData)) // Read Device ID 
+    if(!spi2_dac_read_register(DEVICE_ID, &regData)) 
 		{
 				printf_string(UART1, "DEVICE ID is: 0x");
 				print_hword(UART1, regData);
 				printf_string(UART1, ".\r\n");
 		}
 
-    if(!spi2_dac_read_register(SYNC, &regData))  // Read SYNC register 
+    if(!spi2_dac_read_register(GAIN, &regData)) 
 		{
-				printf_string(UART1, "SYNC register data before writing is: 0x");
+				printf_string(UART1, "GAIN register is: 0x");
+				print_hword(UART1, regData);
+				printf_string(UART1, ".\r\n");
+		}
+
+    if(!spi2_dac_read_register(STATUS, &regData))  
+		{
+				printf_string(UART1, "STATUS register is: 0x");
 				print_hword(UART1, regData);
 				printf_string(UART1, ".\r\n");
 		}
 		
-    if(!spi2_dac_write_register(SYNC, 0xFF00))
-		{			
-				printf_string(UART1, "SYNC register data after writing is: 0x");
-				print_hword(UART1, 0xFF00);
+//		spi2_dac_write_register(SYNC, 0x00FF);
+//    if(!spi2_dac_read_register(SYNC, &regData))  
+//		{
+//				printf_string(UART1, "SYNC register is: 0x");
+//				print_hword(UART1, regData);
+//				printf_string(UART1, ".\r\n");
+//		}		
+		
+		// spi2_dac_write_register(TRIGGER, 0xa);
+    
+//		if(!spi2_dac_read_register(SYNC, &regData))  
+//		{
+//				printf_string(UART1, "SYNC register after software reset is: 0x");
+//				print_hword(UART1, regData);
+//				printf_string(UART1, ".\r\n");
+//		}	
+//    if(!spi2_dac_read_register(STATUS, &regData))  
+//		{
+//				printf_string(UART1, "STATUS register after software reset is: 0x");
+//				print_hword(UART1, regData);
+//				printf_string(UART1, ".\r\n");
+//		}
+		
+		spi2_dac_write_register(GAIN, 0x1ff);
+    spi2_dac_write_register(BRDCAST, 0xb000);
+    if(!spi2_dac_read_register(DAC0, &regData))  
+		{
+				printf_string(UART1, "DAC channel 0 register is: 0x");
+				print_hword(UART1, regData);
 				printf_string(UART1, ".\r\n");
 		}
+	  spi2_dac_write_register(DAC3, 0xb000);
+		
     app_spi2_dac_timer_used = app_easy_timer(50, spi2_dac_ctrl);
 }
 
