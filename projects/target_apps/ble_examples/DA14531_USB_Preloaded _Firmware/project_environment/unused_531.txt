@@ -1,4 +1,4 @@
-;#<FEEDBACK># ARM Linker, 5060960: Last Updated: Fri Feb 11 11:32:52 2022
+;#<FEEDBACK># ARM Linker, 5060750: Last Updated: Fri Feb 11 19:05:50 2022
 ;VERSION 0.2
 ;FILE adc_531.o
 adc_correct_sample <= USED 0
@@ -82,6 +82,7 @@ battery_get_voltage <= USED 0
 ;FILE ble_arp.o
 ;FILE custs1.o
 ;FILE custs1_task.o
+;FILE dac70508m.o
 ;FILE diss.o
 ;FILE gpio.o
 GPIO_ConfigurePinPower <= USED 0
@@ -134,6 +135,7 @@ i2c_eeprom_write_page <= USED 0
 i2c_wait_until_eeprom_ready <= USED 0
 ;FILE jump_table.o
 dummyf <= USED 0
+;FILE mcr35614r.o
 ;FILE nmi_handler.o
 ;FILE otp_cs.o
 otp_cs_get_adc_offsh_ge <= USED 0
