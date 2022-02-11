@@ -641,40 +641,31 @@ static void spi2_dac_ctrl()
 				print_hword(UART1, regData);
 				printf_string(UART1, ".\r\n");
 		}
-		
-//		spi2_dac_write_register(SYNC, 0x00FF);
-//    if(!spi2_dac_read_register(SYNC, &regData))  
-//		{
-//				printf_string(UART1, "SYNC register is: 0x");
-//				print_hword(UART1, regData);
-//				printf_string(UART1, ".\r\n");
-//		}		
-		
-		// spi2_dac_write_register(TRIGGER, 0xa);
+				
+//		// Reset the device
+//		spi2_dac_write_register(TRIGGER, 0xa);
     
-//		if(!spi2_dac_read_register(SYNC, &regData))  
-//		{
-//				printf_string(UART1, "SYNC register after software reset is: 0x");
-//				print_hword(UART1, regData);
-//				printf_string(UART1, ".\r\n");
-//		}	
-//    if(!spi2_dac_read_register(STATUS, &regData))  
-//		{
-//				printf_string(UART1, "STATUS register after software reset is: 0x");
-//				print_hword(UART1, regData);
-//				printf_string(UART1, ".\r\n");
-//		}
-		
 		spi2_dac_write_register(GAIN, 0x1ff);
-    spi2_dac_write_register(BRDCAST, 0xb000);
-    if(!spi2_dac_read_register(DAC0, &regData))  
+    if(!spi2_dac_read_register(STATUS, &regData))  
 		{
-				printf_string(UART1, "DAC channel 0 register is: 0x");
+				printf_string(UART1, "STATUS register is: 0x");
 				print_hword(UART1, regData);
 				printf_string(UART1, ".\r\n");
 		}
-	  spi2_dac_write_register(DAC3, 0xb000);
+    
+		// spi2_dac_write_register(BRDCAST, 0xafff);
+    if(!spi2_dac_read_register(DAC4, &regData))  
+		{
+				printf_string(UART1, "DAC channel 4 register is: 0x");
+				print_hword(UART1, regData);
+				printf_string(UART1, ".\r\n");
+		}
+	  spi2_dac_write_register(DAC0, 0xafff);
+	  spi2_dac_write_register(DAC1, 0xafff);
+	  spi2_dac_write_register(DAC2, 0xafff);		
+	  spi2_dac_write_register(DAC3, 0xafff);
 		
+		// spi2_dac_write_register(CONFIG, 0x0ff);
     app_spi2_dac_timer_used = app_easy_timer(50, spi2_dac_ctrl);
 }
 		
