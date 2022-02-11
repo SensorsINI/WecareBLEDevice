@@ -65,6 +65,7 @@
 #include "timer0_2.h"
 
 #include "DAC70508M.h"
+#include "MCR35614R.h"
 /*
  * TYPE DEFINITIONS
  ****************************************************************************************
@@ -345,7 +346,7 @@ void user_app_db_init_complete(void)
     ////////////////////////////////////////////////////////////////
 
     // Test: SPI2 timer start. Delay time: 50*10ms = 500ms
-    // app_spi2_timer_used = app_easy_timer(50, spi2_io_ctrl);
+    app_spi2_timer_used = app_easy_timer(50, spi2_io_ctrl);
 		app_spi2_dac_timer_used = app_easy_timer(50, spi2_dac_ctrl);
 		app_spi2_adc1_timer_used = app_easy_timer(50, spi2_adc1_ctrl);		
     
@@ -740,6 +741,28 @@ static void spi2_dac_ctrl()
     app_spi2_dac_timer_used = app_easy_timer(50, spi2_dac_ctrl);
 }
 
+
+/**
+ ****************************************************************************************
+ * @brief SPI2 ADC (MCR35614R) read register function.
+ * @return int. 0: Success -1: Fail
+ ****************************************************************************************
+*/
+static int spi2_adc_read_register(uint16_t regAddr, uint16_t *readVal)
+{
+		
+}
+
+/**
+ ****************************************************************************************
+ * @brief SPI2 ADC (MCR35614R) write register function.
+ * @return int. 0: Success -1: Fail
+ ****************************************************************************************
+*/
+static int spi2_adc_write_register(uint16_t regAddr, uint16_t setVal)
+{
+		
+}
 
 /**
  ****************************************************************************************
