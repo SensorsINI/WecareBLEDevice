@@ -1,4 +1,4 @@
-;#<FEEDBACK># ARM Linker, 5060750: Last Updated: Fri Feb 11 20:39:47 2022
+;#<FEEDBACK># ARM Linker, 5060750: Last Updated: Sat Feb 12 17:25:17 2022
 ;VERSION 0.2
 ;FILE adc_531.o
 adc_correct_sample <= USED 0
@@ -83,6 +83,8 @@ battery_get_voltage <= USED 0
 ;FILE custs1.o
 ;FILE custs1_task.o
 ;FILE dac70508m.o
+spi2_dac_read_register <= USED 0
+spi2_dac_write_register <= USED 0
 ;FILE diss.o
 ;FILE gpio.o
 GPIO_ConfigurePinPower <= USED 0
@@ -136,6 +138,7 @@ i2c_wait_until_eeprom_ready <= USED 0
 ;FILE jump_table.o
 dummyf <= USED 0
 ;FILE mcr35614r.o
+spi2_adc_fast_command <= USED 0
 ;FILE nmi_handler.o
 ;FILE otp_cs.o
 otp_cs_get_adc_offsh_ge <= USED 0
@@ -260,6 +263,7 @@ uart_receive <= USED 0
 uart_register_err_cb <= USED 0
 uart_register_rx_cb <= USED 0
 ;FILE uart_utils.o
+print_hword <= USED 0
 ;FILE user_custs1_impl.o
 user_svc1_adc_val_1_ntf_cfm_handler <= USED 0
 user_svc1_button_ntf_cfm_handler <= USED 0
