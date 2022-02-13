@@ -349,8 +349,8 @@ void user_app_db_init_complete(void)
     ////////////////////////////////////////////////////////////////
 
     // Test: SPI2 timer start. Delay time: 50*10ms = 500ms
-    // app_spi2_timer_used = app_easy_timer(50, spi2_io_ctrl);
-		// app_spi2_dac_timer_used = app_easy_timer(50, spi2_dac_ctrl);
+    app_spi2_timer_used = app_easy_timer(50, spi2_io_ctrl);
+		app_spi2_dac_timer_used = app_easy_timer(50, spi2_dac_ctrl);
 		app_spi2_adc1_timer_used = app_easy_timer(50, spi2_adc1_ctrl);		
 
     user_app_adv_start();
@@ -664,7 +664,7 @@ static void spi2_dac_ctrl()
 				printf_string(UART1, ".\r\n");
 		}
 	  spi2_dac_write_register(DAC0, 0x1fff);
-	  spi2_dac_write_register(DAC1, 0xffff);
+	  spi2_dac_write_register(DAC1, 0x2fff);
 	  spi2_dac_write_register(DAC2, 0xffff);		
 	  spi2_dac_write_register(DAC3, 0xffff);
 		
@@ -745,9 +745,9 @@ static void spi2_adc1_ctrl()
 		if(initFlag)
 		{			
 				spi2_adc1_init();
-//				// Configure MUX register: Single-ended channel CH1
-//				sendBuf[0] = 0x18;
-//				spi2_adc_write_register(MUX, sendBuf, MUX_BYTES);			
+				// Configure MUX register: Single-ended channel CH0
+				sendBuf[0] = 0x08;
+				spi2_adc_write_register(MUX, sendBuf, MUX_BYTES);			
 				initFlag = false;
 		}
 		
