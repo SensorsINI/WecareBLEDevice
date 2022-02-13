@@ -51,7 +51,7 @@
 #define RESERVED2 14
 #define CRCCFG 15
 
-#define ADCDATA_BYTES 3
+#define ADCDATA_BYTES 4   // Use 32-bit data format
 #define CONFIG0_BYTES 1
 #define CONFIG1_BYTES 1
 #define CONFIG2_BYTES 1
@@ -68,7 +68,7 @@
 #define RESERVED2_BYTES 2
 #define CRCCFG_BYTES 2
 
-#define TOTAL_BYTES 30
+#define TOTAL_BYTES 31
 
 
 /**

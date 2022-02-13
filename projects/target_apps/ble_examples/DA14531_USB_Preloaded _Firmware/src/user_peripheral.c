@@ -663,7 +663,7 @@ static void spi2_dac_ctrl()
 				print_hword(UART1, regData);
 				printf_string(UART1, ".\r\n");
 		}
-	  spi2_dac_write_register(DAC0, 0x4fff);
+	  spi2_dac_write_register(DAC0, 0x1fff);
 	  spi2_dac_write_register(DAC1, 0xffff);
 	  spi2_dac_write_register(DAC2, 0xffff);		
 	  spi2_dac_write_register(DAC3, 0xffff);
@@ -672,40 +672,60 @@ static void spi2_dac_ctrl()
     app_spi2_dac_timer_used = app_easy_timer(50, spi2_dac_ctrl);
 }
 
+static bool initFlag = true;   // Make sure initilization only execute once
+/**
+ ****************************************************************************************
+ * @brief SPI2 ADC1 module (MCP3564R) init function.
+ * @return void
+ ****************************************************************************************
+*/
 static void spi2_adc1_init(void)
-{
-	  spi_initialize(&spi2_adc1_cfg);
-	
+{	
 	  uint32_t regVal;
 	  uint8_t sendBuf[TOTAL_BYTES] = {0};
 	  uint8_t receiveBuf[TOTAL_BYTES] = {0}; 
-    
-		// Readd all the register values.
-		spi2_adc_increment_read_register(ADCDATA, receiveBuf, TOTAL_BYTES);
+ 
+		// Full reset
+		// spi2_adc_fast_command(FAST_CMD_FULL_RESET);
 		
 		// Configure CONFIG0 register: Internal V_ref and internal master clock, no bias and ADC conversion mode.
 		sendBuf[0] = 0xF3;  // The first byte is the MSbs for registers have more than 8bits
 		// sendBuf[1] = 0x02;
 		// sendBuf[2] = 0x03;
 		spi2_adc_write_register(CONFIG0, sendBuf, CONFIG0_BYTES);
-		// Read RESERVED0 register.
+		// Read CONFIG0 register.
 		spi2_adc_static_read_register(CONFIG0, receiveBuf, CONFIG0_BYTES);	
 		regVal = swapBufToRealVal(receiveBuf, CONFIG0_BYTES);
-    printf_string(UART1, "CONFIG0 register data is: 0x");
-    print_word(UART1, regVal);
-    printf_string(UART1, ".\r\n");		
-		
-    // Configure CONFIG3 register: CONV_MODE('11'): Continous conversion in scan mode, DATA_FORMAT('11'): 32-bit with channel ID.
-		sendBuf[0] = 0xF0;  // The first byte is the MSbs for registers have more than 8bits
-		// sendBuf[1] = 0x02;
-		// sendBuf[2] = 0x03;
-		spi2_adc_write_register(CONFIG3, sendBuf, CONFIG3_BYTES);	
+		printf_string(UART1, "CONFIG0 register data is: 0x");
+		print_word(UART1, regVal);
+		printf_string(UART1, ".\r\n");
 
-		// Configure MUX register: Single-ended input for CH0
-		sendBuf[0] = 0x08;
+		// Configure CONFIG2 register: GAIN('000'): set gain to 1/3.
+		sendBuf[0] = 0x83; 
+		spi2_adc_write_register(CONFIG2, sendBuf, CONFIG2_BYTES);	
+	
+		// Configure CONFIG3 register: CONV_MODE('11'): Continous conversion in scan mode. DATA_FORMAT('11'): 32bit with channel ID.
+		sendBuf[0] = 0xF0; 
+		spi2_adc_write_register(CONFIG3, sendBuf, CONFIG3_BYTES);	
+	
+		// Configure IRQ regiseter: IRQ_Mode('01'): IRQ output and inactive state is logic high
+		// This configuration is important, because if we use the default configuration, then
+		// IRQ is in high-Z state and because we don't have external pull-up resistor on board.
+		// Therefore IRQ cannot generate falling edge and SDO cannot be updated resulting in 
+		// SPI reading on ADCDATA always 0.
+		sendBuf[0] = 0x07;
+		spi2_adc_write_register(IRQ, sendBuf, IRQ_BYTES);
+		
+		// Configure MUX register: AVDD reading
+		sendBuf[0] = 0x98;
 		spi2_adc_write_register(MUX, sendBuf, MUX_BYTES);
 		
-		// app_spi2_adc1_timer_init = app_easy_timer(50, spi2_adc1_init);
+//		// Configure SCAN register: Single-ended input for CH0
+//		sendBuf[0] = 0x00;
+//		sendBuf[1] = 0xFF;
+//		sendBuf[2] = 0xFF;
+//		spi2_adc_write_register(SCAN, sendBuf, SCAN_BYTES);
+//		spi2_adc_static_read_register(IRQ, receiveBuf, IRQ_BYTES);		
 }
 
 /**
@@ -718,35 +738,22 @@ static void spi2_adc1_ctrl()
 { 
     spi_initialize(&spi2_adc1_cfg);
 	
-    uint32_t regVal;	
+    uint32_t regVal = 0;	
 		uint8_t sendBuf[TOTAL_BYTES] = {0};	
     uint8_t receiveBuf[TOTAL_BYTES] = {0}; 
-    
-		// Configure CONFIG0 register: Internal V_ref and internal master clock, no bias and ADC conversion mode.
-		sendBuf[0] = 0xF3;  // The first byte is the MSbs for registers have more than 8bits
-		// sendBuf[1] = 0x02;
-		// sendBuf[2] = 0x03;
-		spi2_adc_write_register(CONFIG0, sendBuf, CONFIG0_BYTES);
-		// Read RESERVED0 register.
-		spi2_adc_static_read_register(CONFIG0, receiveBuf, CONFIG0_BYTES);	
-		regVal = swapBufToRealVal(receiveBuf, CONFIG0_BYTES);
-    printf_string(UART1, "CONFIG0 register data is: 0x");
-    print_word(UART1, regVal);
-    printf_string(UART1, ".\r\n");
-	
-		// Configure MUX register: Single-ended input for CH0
-		sendBuf[0] = 0x98;
-		spi2_adc_write_register(MUX, sendBuf, MUX_BYTES);
-
+ 
+		if(initFlag)
+		{			
+				spi2_adc1_init();
+//				// Configure MUX register: Single-ended channel CH1
+//				sendBuf[0] = 0x18;
+//				spi2_adc_write_register(MUX, sendBuf, MUX_BYTES);			
+				initFlag = false;
+		}
+		
 		// Read all the register values.
 		spi2_adc_increment_read_register(ADCDATA, receiveBuf, TOTAL_BYTES);
-		
-//		// Configure SCAN register: Single-ended input for CH0
-//		sendBuf[0] = 0x00;
-//		sendBuf[1] = 0xFF;
-//		sendBuf[2] = 0xFF;
-//		spi2_adc_write_register(SCAN, sendBuf, SCAN_BYTES);
-//		spi2_adc_static_read_register(IRQ, receiveBuf, IRQ_BYTES);
+
 //		uint8_t irqVal = swapBufToRealVal(receiveBuf, IRQ_BYTES);
 //		while((irqVal & 0x40) != 0)
 //		{
@@ -757,26 +764,10 @@ static void spi2_adc1_ctrl()
 		// STATIC Read ADCDATA
 		spi2_adc_static_read_register(ADCDATA, receiveBuf, ADCDATA_BYTES);	
 		regVal = swapBufToRealVal(receiveBuf, ADCDATA_BYTES);
-		if (regVal != 0)
-		{
-				printf_string(UART1, "#############################Finally got non zero ADCDATA###############################.\r\n");
-		}
     printf_string(UART1, "ADCDATA register data is: 0x");
     print_word(UART1, regVal);
-    printf_string(UART1, ".\r\n");
-
-		// Read all the register values.
-		spi2_adc_increment_read_register(ADCDATA, receiveBuf, TOTAL_BYTES);
+    printf_string(UART1, ".\r\n");		
 		
-		// Full reset
-		// spi2_adc_fast_command(FAST_CMD_FULL_RESET);
-		
-//	  // Read RESERVED0 register.
-//		spi2_adc_static_read_register(RESERVED0, receiveBuf, RESERVED0_BYTES);	
-//		regVal = swapBufToRealVal(receiveBuf, RESERVED0_BYTES);
-//    printf_string(UART1, "RESERVED0 register data after reset is: 0x");
-//    print_word(UART1, regVal);
-//    printf_string(UART1, ".\r\n");
 
     app_spi2_adc1_timer_used = app_easy_timer(50, spi2_adc1_ctrl);
 }
