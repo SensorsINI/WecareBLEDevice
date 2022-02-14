@@ -66,6 +66,8 @@
 
 #include "DAC70508M.h"
 #include "MCR35614R.h"
+
+#include <math.h>
 /*
  * TYPE DEFINITIONS
  ****************************************************************************************
@@ -611,6 +613,71 @@ static void spi2_io_ctrl()
     app_spi2_timer_used = app_easy_timer(50, spi2_io_ctrl);
 }
 
+/**
+ ****************************************************************************************
+ * @brief Following functions are the implementation of converting float to string.
+ * @return void
+ ****************************************************************************************
+*/
+// Reverses a string 'str' of length 'len'
+void reverse(char* str, int len)
+{
+	int i = 0, j = len - 1, temp;
+	while (i < j) {
+		temp = str[i];
+		str[i] = str[j];
+		str[j] = temp;
+		i++;
+		j--;
+	}
+}
+
+// Converts a given integer x to string str[].
+// d is the number of digits required in the output.
+// If d is more than the number of digits in x,
+// then 0s are added at the beginning.
+int intToStr(int x, char str[], int d)
+{
+	int i = 0;
+	while (x) {
+		str[i++] = (x % 10) + '0';
+		x = x / 10;
+	}
+
+	// If number of digits required is more, then
+	// add 0s at the beginning
+	while (i < d)
+		str[i++] = '0';
+
+	reverse(str, i);
+	str[i] = '\0';
+	return i;
+}
+// Converts a floating-point/double number to a string.
+void ftoa(float n, char* res, int afterpoint)
+{
+	// Extract integer part
+	int ipart = (int)n;
+	
+	// Extract floating part
+	float fpart = n - (float)ipart;
+		
+	// convert integer part to string
+	int i = intToStr(ipart, res, 1);
+
+	// check for display option after point
+	if (afterpoint != 0) {
+		res[i] = '.'; // add dot
+
+		// Get the value of fraction part upto given no.
+		// of points after dot. The third parameter
+		// is needed to handle cases like 233.007
+		fpart = fpart * pow(10, afterpoint);
+
+		intToStr((int)fpart, res + i + 1, afterpoint);
+	}
+}
+
 
 /**
  ****************************************************************************************
@@ -691,9 +758,9 @@ static void spi2_adc1_init(void)
 		// Read all the register values.
 		spi2_adc_increment_read_register(ADCDATA, receiveBuf, TOTAL_BYTES);
 
-		// Configure CONFIG2 register: GAIN('000'): set gain to 1/3.
-		sendBuf[0] = 0x83; 
-		spi2_adc_write_register(CONFIG2, sendBuf, CONFIG2_BYTES);	
+//		// Configure CONFIG2 register: GAIN('000'): set gain to 1/3.
+//		sendBuf[0] = 0x83; 
+//		spi2_adc_write_register(CONFIG2, sendBuf, CONFIG2_BYTES);	
 		
 		// Configure CONFIG3 register: CONV_MODE('11'): Continous conversion in scan mode. DATA_FORMAT('11'): 32bit with channel ID.
 		sendBuf[0] = 0xF0; 
@@ -702,7 +769,7 @@ static void spi2_adc1_init(void)
 		// Configure IRQ regiseter: IRQ_Mode('01'): IRQ output and inactive state is logic high
 		// This configuration is important, because if we use the default configuration, then
 		// IRQ is in high-Z state and because we don't have external pull-up resistor on board.
-		// Therefore IRQ cannot generate falling edge and SDO cannot be updated resulting in 
+		// Therefore, IRQ cannot generate falling edge and SDO cannot be updated resulting in 
 		// SPI reading on ADCDATA always 0.
 		sendBuf[0] = 0x07;
 		spi2_adc_write_register(IRQ, sendBuf, IRQ_BYTES);
@@ -750,9 +817,9 @@ static void spi2_adc1_ctrl()
 		if(initFlag)
 		{			
 				spi2_adc1_init();
-//				// Configure MUX register: Single-ended channel CH0
-//				sendBuf[0] = 0x08;
-//				spi2_adc_write_register(MUX, sendBuf, MUX_BYTES);			
+				// Configure MUX register: Single-ended channel CH0
+				sendBuf[0] = 0x08;
+				spi2_adc_write_register(MUX, sendBuf, MUX_BYTES);			
 				initFlag = false;
 		}
 		
@@ -766,13 +833,26 @@ static void spi2_adc1_ctrl()
 //				irqVal = swapBufToRealVal(receiveBuf, IRQ_BYTES);
 //		}			
 
+		spi2_adc_static_read_register(CONFIG2, receiveBuf, CONFIG2_BYTES);	
+		regVal = swapBufToRealVal(receiveBuf, CONFIG2_BYTES);
+    // Obtain the GAIN bits value
+		uint8_t gainReg = (regVal & 0x38) >> 3;
+	  // Convert it to the real gain
+		float gainFactor = 0.333;  // if gainReg == 0, then gainFactor is 1/3
+		if(gainReg != 0)
+		{
+			gainFactor = 1 << (gainReg - 1);
+		}		
+		
 		// STATIC Read ADCDATA
 		spi2_adc_static_read_register(ADCDATA, receiveBuf, ADCDATA_BYTES);	
 		regVal = swapBufToRealVal(receiveBuf, ADCDATA_BYTES);
-    printf_string(UART1, "ADCDATA register data is: 0x");
-    print_word(UART1, regVal);
-    printf_string(UART1, ".\r\n");		
-		
+		float voltage = regVal/(0x7fffff * gainFactor) * 2.4;    // The internal reference voltage is 2.4V
+		char voltageStr[20];
+		ftoa(voltage, voltageStr, 4);
+    printf_string(UART1, "The voltage is: ");		
+    printf_string(UART1, voltageStr);
+    printf_string(UART1, ".\r\n");			
 
     app_spi2_adc1_timer_used = app_easy_timer(50, spi2_adc1_ctrl);
 }
