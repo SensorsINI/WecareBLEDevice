@@ -47,7 +47,6 @@
 #include "app_utils.h"
 #include "user_callback_config.h"
 #include "user_modules_config.h"
-#include "uart_utils.h"
 
 /*
  * FUNCTION DEFINITIONS
@@ -98,10 +97,6 @@ static int gapm_cmp_evt_handler(ke_msg_id_t const msgid,
                                 ke_task_id_t const dest_id,
                                 ke_task_id_t const src_id)
 {
-    printf_string(UART1, "The param->operation of gapm_cmp_evt_handler is:");
-    printf_byte(UART1, param->operation);
-    printf_string(UART1, ".\r\n");
-
     switch(param->operation)
     {
         // reset completed
@@ -663,7 +658,6 @@ const struct ke_state_handler app_default_handler = KE_STATE_HANDLER(app_default
 
 #endif // (__EXCLUDE_ROM_APP_TASK__)
 
-
 // Only for using DA14531 and ROM app_task.c
 #if defined (__DA14531__) && !defined (__EXCLUDE_ROM_APP_TASK__)
 
@@ -706,39 +700,6 @@ extern int gapc_security_ind_handler_ROM(ke_msg_id_t msgid,
                                          struct gapc_security_ind *param,
                                          ke_task_id_t const dest_id,
                                          ke_task_id_t const src_id);
-/*
- ****************************************************************************************
- * @brief Handles GAPM_PROFILE_ADDED_IND event.
- * @param[in] msgid     Id of the message received.
- * @param[in] param     Pointer to the parameters of the message.
- * @param[in] dest_id   ID of the receiving task instance (TASK_GAP).
- * @param[in] src_id    ID of the sending task instance.
- * @return If the message was consumed or not.
- ****************************************************************************************
-*/
-static int gapm_profile_added_ind_handler(ke_msg_id_t msgid,
-                                          struct gapm_profile_added_ind *param,
-                                          ke_task_id_t const dest_id,
-                                          ke_task_id_t const src_id)
-{
-     // Current State
-     uint8_t state = ke_state_get(dest_id);
-
-     if (state == APP_DB_INIT)
-     {
-         // Add the next requested profile/service
-        if (app_db_init())
-        {
-            // Go to the connectable state
-            ke_state_set(TASK_APP, APP_CONNECTABLE);
-
-            // No profiles/services to add in the DB -> Start Advertising
-            CALLBACK_ARGS_0(user_app_callbacks.app_on_db_init_complete);
-        }
-     }
-
-    return (KE_MSG_CONSUMED);
-}
 
 static const struct ke_msg_handler app_gap_process_handlers[]=
 {
@@ -749,7 +710,7 @@ static const struct ke_msg_handler app_gap_process_handlers[]=
     {GAPC_DISCONNECT_IND,                   (ke_msg_func_t)gapc_disconnect_ind_handler},
     {GAPC_GET_DEV_INFO_REQ_IND,             (ke_msg_func_t)gapc_get_dev_info_req_ind_handler},
     {GAPC_SET_DEV_INFO_REQ_IND,             (ke_msg_func_t)gapc_set_dev_info_req_ind_handler_ROM},
-    {GAPM_PROFILE_ADDED_IND,                (ke_msg_func_t)gapm_profile_added_ind_handler},
+    {GAPM_PROFILE_ADDED_IND,                (ke_msg_func_t)gapm_profile_added_ind_handler_ROM},
     {GAPM_ADV_REPORT_IND,                   (ke_msg_func_t)gapm_adv_report_ind_handler_ROM},
     {GAPC_PARAM_UPDATE_REQ_IND,             (ke_msg_func_t)gapc_param_update_req_ind_handler_ROM},
     {GAPC_LE_PKT_SIZE_IND,                  (ke_msg_func_t)gapc_le_pkt_size_ind_handler_ROM},

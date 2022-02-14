@@ -28,7 +28,6 @@
 #include "attm_db_128.h"
 #include "gapc.h"
 #include "prf.h"
-#include "user_custs1_def.h"
 
 /*
  * GLOBAL VARIABLE DECLARATIONS
@@ -128,21 +127,6 @@ static uint8_t custs1_init(struct prf_task_env *env, uint16_t *start_hdl, uint16
         // profile is ready, go into an Idle state
         ke_state_set(env->task, CUSTS1_IDLE);
     }
-
-    struct custs1_val_set_req *req_set = KE_MSG_ALLOC_DYN(CUSTS1_VAL_SET_REQ,
-                                                              prf_get_task_from_id(TASK_ID_CUSTS1),
-                                                              TASK_APP,
-                                                              custs1_val_set_req,
-                                                              DEF_SVC1_ADC_VAL_1_CHAR_LEN);
-
-    // ADC value to be sampled
-    static uint16_t sample      __SECTION_ZERO("retention_mem_area0");
-    sample = 0x55aa;
-
-    req_set->handle = SVC1_IDX_ADC_VAL_1_VAL;
-    req_set->length = DEF_SVC1_ADC_VAL_1_CHAR_LEN;
-    memcpy(req_set->value, &sample, DEF_SVC1_ADC_VAL_1_CHAR_LEN);
-    ke_msg_send(req_set);
 
     return status;
 }

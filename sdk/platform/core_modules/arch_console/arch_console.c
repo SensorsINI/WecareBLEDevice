@@ -120,6 +120,20 @@ static int delete_msg(printf_msg *node)
 }
 
 
+/*
+ * String manipulation functions
+ */
+static uint32_t arch_strlen(const char *s)
+{
+    unsigned int length = 0;
+
+    while (s[length] != '\0')
+        length++;
+
+    return length;
+}
+
+
 static uint32_t arch_itoa(int32_t value, uint32_t radix, uint32_t uppercase,
                           char *buf, int32_t pad)
 {
@@ -453,105 +467,6 @@ void arch_printf_process(void)
 }
 
 #else
-
-/*
- * String manipulation functions
- */
-static uint32_t arch_strlen(const char *s)
-{
-    unsigned int length = 0;
-
-    while (s[length] != '\0')
-        length++;
-
-    return length;
-}
-
-static int delete_msg(printf_msg *node)
-{
-    if (!node)
-        return 0;
-
-    ke_free(node);
-
-    return 1;
-}
-
-
-static printf_msg *remove_from_list(printf_msg **list)
-{
-    printf_msg *node = NULL;
-
-    if (*list)
-    {
-        node = *list;
-        *list = node->pNext;
-        node->pNext = NULL;
-    }
-
-    return node;
-}
-
-
-/* Note: App should not modify the sleep mode until all messages have been printed out */
-static void uart_callback(uint8_t res)
-{
-    printf_msg* msg = remove_from_list(&printf_msg_list);
-    delete_msg(msg);
-
-    uart_busy = false;
-
-#if USE_UART1_ROM
-    uart_finish_transfers();
-#else
-    uart_wait_tx_finish(UART);
-#endif
-
-    if (printf_msg_list)
-    {
-        char *p = printf_msg_list->pBuf;
-
-        uart_busy = true;
-
-#if USE_UART1_ROM
-        uart_write((uint8_t *)p, arch_strlen(p), uart_callback);
-#else
-        uart_send(UART,(uint8_t *)p, arch_strlen(p), UART_OP);
-#endif
-    }
-    else
-    {
-        arch_restore_sleep_mode();
-    }
-}
-
-
-void arch_printf_process(void)
-{
-        // Submit pending message
-        if (current_msg_offset)
-        {
-            arch_printf_flush();
-        }
-        if (defer_sending)
-        {
-					  char * str = "Hello, are you ok.";
-            uart_send(UART, (uint8_t *) str, strlen(str), UART_OP);
-            arch_force_active_mode();
-
-            if (!uart_busy)
-            {
-    #if USE_UART1_ROM
-                uart_write((uint8_t *)printf_msg_list->pBuf, arch_strlen(printf_msg_list->pBuf), uart_callback);
-    #else
-                uart_register_tx_cb(UART, (uart_cb_t) uart_callback);
-                uart_send(UART,(uint8_t *) printf_msg_list->pBuf, arch_strlen(printf_msg_list->pBuf), UART_OP);
-    #endif
-                defer_sending = false;
-            }
-        }
-}
-
 
 static void uart_write_adapt(uint8_t *bufptr, uint32_t size, void (*callback) (uint8_t))
 {

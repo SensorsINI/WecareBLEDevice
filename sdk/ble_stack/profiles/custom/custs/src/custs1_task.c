@@ -30,7 +30,6 @@
 #include "attm_db.h"
 #include "prf_utils.h"
 #include "app_prf_types.h"
-#include "uart_utils.h"
 
 #if !defined (__DA14531__) || defined (__EXCLUDE_ROM_CUSTS1__)
 
@@ -465,7 +464,6 @@ static int gattc_read_req_ind_handler(ke_msg_id_t const msgid,
                                       ke_task_id_t const dest_id,
                                       ke_task_id_t const src_id)
 {
-    printf_string(UART1, "\r\nFunction gattc_read_req_ind_handler from custs1_task is called.\r\n");
     ke_state_t state = ke_state_get(dest_id);
 
     if(state == CUSTS1_IDLE)
@@ -487,7 +485,6 @@ static int gattc_read_req_ind_handler(ke_msg_id_t const msgid,
             if (callbacks->att_db[att_idx].uuid_size == ATT_UUID_16_LEN &&
                 *(uint16_t *)callbacks->att_db[att_idx].uuid == ATT_DESC_CLIENT_CHAR_CFG)
             {
-                printf_string(UART1, "Custs1 characteristic value is found in the database.\r\n");
                 ccc_val = custs1_get_ccc_value(conidx, att_idx);
                 length = 2;
             }
@@ -534,7 +531,7 @@ static int gattc_read_req_ind_handler(ke_msg_id_t const msgid,
     }
     // Postpone request if profile is in a busy state
     else
-    { 
+    {
         return (KE_MSG_SAVED);
     }
 }

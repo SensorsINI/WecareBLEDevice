@@ -29,7 +29,6 @@
 #include "app_prf_types.h"
 #include "app_prf_perm_types.h"
 #include "user_custs_config.h"
-#include "user_custs1_def.h"
 
 /*
  * FUNCTION DEFINITIONS
@@ -54,21 +53,7 @@ const struct cust_prf_func_callbacks *custs_get_func_callbacks(enum KE_API_ID ta
 #if (BLE_CUSTOM1_SERVER)
 void app_custs1_init(void)
 {
-    // Do something
-    struct custs1_val_set_req *req_set = KE_MSG_ALLOC_DYN(CUSTS1_VAL_SET_REQ,
-                                                              prf_get_task_from_id(TASK_ID_CUSTS1),
-                                                              TASK_APP,
-                                                              custs1_val_set_req,
-                                                              DEF_SVC1_ADC_VAL_1_CHAR_LEN);
-
-    // ADC value to be sampled
-    static uint16_t sample      __SECTION_ZERO("retention_mem_area0");
-    sample = 0x55aa;
-
-    req_set->handle = SVC1_IDX_ADC_VAL_1_VAL;
-    req_set->length = DEF_SVC1_ADC_VAL_1_CHAR_LEN;
-    memcpy(req_set->value, &sample, DEF_SVC1_ADC_VAL_1_CHAR_LEN);
-    ke_msg_send(req_set);
+    // Nothing to do
 }
 
 void app_custs1_create_db(void)

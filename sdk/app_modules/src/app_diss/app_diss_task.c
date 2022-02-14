@@ -38,7 +38,6 @@
 #include "app.h"
 #include "sdk_version.h"
 #include "user_profiles_config.h"
-#include "uart_utils.h"
 
 /*
  * LOCAL FUNCTION DEFINITIONS
@@ -50,10 +49,6 @@ static int diss_value_req_ind_handler(ke_msg_id_t const msgid,
                                       ke_task_id_t const dest_id,
                                       ke_task_id_t const src_id)
 {
-    printf_string(UART1, "The param->value of diss_value_req_ind_handler is:");
-    printf_byte(UART1, param->value);
-    printf_string(UART1, ".\r\n");
-
     // Initialize length
     uint8_t len = 0;
     // Pointer to the data

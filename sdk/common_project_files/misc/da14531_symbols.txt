@@ -1039,7 +1039,7 @@
 0x07f20c9d T arch_vprintf
 0x07f20cfd T arch_printf
 0x07f20d11 T arch_puts
-# 0x07f20d21 T arch_printf_process
+0x07f20d21 T arch_printf_process
 
 ; nvds.c (controlled by __EXCLUDE_ROM_NVDS__)
 0x07f20dcd T nvds_get_func
@@ -1071,11 +1071,11 @@
 0x07f2135f T prf_unpack_date_time
   
 ; diss.c (controlled by __EXCLUDE_ROM_DISS__)
-# 0x07f21381 T diss_compute_cfg_flag                    
-# 0x07f21453 T diss_handle_to_value                     
-# 0x07f21483 T diss_value_to_handle                     
-# 0x07f214b7 T diss_check_val_len                       
-# 0x07f214ed T diss_prf_itf_get 
+0x07f21381 T diss_compute_cfg_flag                    
+0x07f21453 T diss_handle_to_value                     
+0x07f21483 T diss_value_to_handle                     
+0x07f214b7 T diss_check_val_len                       
+0x07f214ed T diss_prf_itf_get 
 
 ; bass.c (controlled by __EXCLUDE_ROM_BASS__)
 0x07f2184b T bass_get_att_handle
@@ -1094,30 +1094,30 @@
 0x07f22449 T custs1_get_att_idx                       
 
 ; custs1.c (controlled by __EXCLUDE_ROM_CUSTS1__)
-# 0x07f22621 T custs1_prf_itf_get
+0x07f22621 T custs1_prf_itf_get
 
 ; custs1_task.c (controlled by __EXCLUDE_ROM_CUSTS1__)
-# 0x07f226d3 T custs1_init_ccc_values
-# 0x07f2270b T custs1_set_ccc_value
-# 0x07f22823 T gattc_cmp_evt_handler
-# 0x07f22837 T custs1_val_set_req_handler
-# 0x07f22857 T custs1_val_ntf_req_handler
-# 0x07f228b3 T custs1_val_ind_req_handler
-# 0x07f2290f T custs1_att_info_rsp_handler
-# 0x07f2294b T gattc_read_req_ind_handler
-# 0x07f22b57 T gattc_att_info_req_ind_handler
-# 0x07f22b99 T custs1_value_req_rsp_handler
+0x07f226d3 T custs1_init_ccc_values
+0x07f2270b T custs1_set_ccc_value
+0x07f22823 T gattc_cmp_evt_handler
+0x07f22837 T custs1_val_set_req_handler
+0x07f22857 T custs1_val_ntf_req_handler
+0x07f228b3 T custs1_val_ind_req_handler
+0x07f2290f T custs1_att_info_rsp_handler
+0x07f2294b T gattc_read_req_ind_handler
+0x07f22b57 T gattc_att_info_req_ind_handler
+0x07f22b99 T custs1_value_req_rsp_handler
 
 ; attm_db_128.c (controlled by __EXCLUDE_ROM_ATTM_DB_128__)
 0x07f22c19 T attm_svc_create_db_128
 
 ; app_entry_point.c (__EXCLUDE_ROM_APP_TASK__)
-# 0x07f232a9 T app_entry_point_handler                  
-# 0x07f232f1 T app_std_process_event     
+0x07f232a9 T app_entry_point_handler                  
+0x07f232f1 T app_std_process_event     
 
 ; app_utils.c - (controlled by __EXCLUDE_ROM_APP_UTILS__)
-# 0x07f23335 T app_get_address_type_ROM
-# 0x07f23361 T app_fill_random_byte_array_ROM
+0x07f23335 T app_get_address_type_ROM
+0x07f23361 T app_fill_random_byte_array_ROM
 
 ; ARM library stuff
 0x07f233f3 T __aeabi_ldivmod 
@@ -1126,24 +1126,24 @@
 0x07f23461 T __aeabi_uldivmod
 
 ; app.c (controlled by __EXCLUDE_ROM_APP_TASK__)
-# 0x07f234c1 T app_db_init_start
-# 0x07f234dd T app_db_init
-# 0x07f234e9 T app_easy_gap_confirm
-# 0x07f23515 T append_device_name                              
-# 0x07f23539 T app_easy_gap_update_adv_data 
-# 0x07f23581 T app_easy_gap_disconnect
-# 0x07f235bd T app_easy_gap_advertise_stop
-# 0x07f235d9 T active_conidx_to_conhdl
-# 0x07f23605 T active_conhdl_to_conidx
-# 0x07f23641 T app_timer_set
-# 0x07f2365d T app_easy_gap_set_data_packet_length
-# 0x07f23699 T get_user_prf_srv_perm
-# 0x07f236c1 T app_set_prf_srv_perm
-# 0x07f236f1 T prf_init_srv_perm
-# 0x07f23715 T app_gattc_svc_changed_cmd_send                
+0x07f234c1 T app_db_init_start
+0x07f234dd T app_db_init
+0x07f234e9 T app_easy_gap_confirm
+0x07f23515 T append_device_name                              
+0x07f23539 T app_easy_gap_update_adv_data 
+0x07f23581 T app_easy_gap_disconnect
+0x07f235bd T app_easy_gap_advertise_stop
+0x07f235d9 T active_conidx_to_conhdl
+0x07f23605 T active_conhdl_to_conidx
+0x07f23641 T app_timer_set
+0x07f2365d T app_easy_gap_set_data_packet_length
+0x07f23699 T get_user_prf_srv_perm
+0x07f236c1 T app_set_prf_srv_perm
+0x07f236f1 T prf_init_srv_perm
+0x07f23715 T app_gattc_svc_changed_cmd_send                
 
 ; (controlled by __EXCLUDE_ROM_APP_TASK__)
-# 0x07f23f58 D app_default_handler
+0x07f23f58 D app_default_handler
 
 ; (controlled by __EXCLUDE_ROM_GAP_CFG_DATA__)               
 0x07f23f60 D gap_cfg_user_var_struct
@@ -1152,7 +1152,7 @@
 0x07f23085 T gapm_adv_report_ind_handler_ROM
 0x07f2309f T gapc_security_ind_handler_ROM
 0x07f23185 T gapc_set_dev_info_req_ind_handler_ROM
-# 0x07f231c7 T gapm_profile_added_ind_handler_ROM
+0x07f231c7 T gapm_profile_added_ind_handler_ROM
 0x07f231f9 T gapc_param_update_req_ind_handler_ROM
 0x07f23239 T gapc_le_pkt_size_ind_handler_ROM
 0x07f23253 T gattc_svc_changed_cfg_ind_handler_ROM

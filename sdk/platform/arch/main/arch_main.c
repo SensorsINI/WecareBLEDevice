@@ -62,9 +62,6 @@
 
 #include "arch_ram.h"
 
-#include "uart_utils.h"
-#include "user_periph_setup.h"
-
 #if defined (__DA14531__)
 #include "otp_cs.h"
 #include "adc.h"
@@ -168,9 +165,6 @@ int main(void)
     //global initialise
     system_init();
 
-		// Setup UART1 pins and configuration
-    uart_periph_init(UART1);
-	
     /*
      ************************************************************************************
      * Platform initialization

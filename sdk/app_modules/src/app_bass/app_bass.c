@@ -77,8 +77,8 @@ void app_bass_create_db(void)
 
     // Set parameters
     db_cfg = (struct bass_db_cfg* ) req->param;
-    db_cfg->bas_nb = 2;
-    db_cfg->features[0] =  BAS_BATT_LVL_NTF_SUP;
+    db_cfg->bas_nb = 1;
+    db_cfg->features[0] = BAS_BATT_LVL_NTF_SUP;
     db_cfg->batt_level_pres_format[0].unit = 0x27AD;
     db_cfg->batt_level_pres_format[0].description = 0;
     db_cfg->batt_level_pres_format[0].format = 4;

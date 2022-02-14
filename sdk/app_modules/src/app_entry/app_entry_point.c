@@ -21,7 +21,6 @@
 #include "app_api.h"
 #include "user_callback_config.h"
 #include "user_modules_config.h"
-#include "uart_utils.h"
 
 #if (!EXCLUDE_DLG_GAP)
 #include "app_task.h"
@@ -194,15 +193,6 @@ int app_entry_point_handler(ke_msg_id_t const msgid,
                             ke_task_id_t const dest_id,
                             ke_task_id_t const src_id)
 {
-	  static int invokeCnt;
-    invokeCnt++;
-    printf_string(UART1, "\r\nThe function is called the:");
-    printf_byte_dec(UART1, invokeCnt);
-    printf_string(UART1, "th time.\r\n");
-    printf_string(UART1, "The message id is:");
-    print_word(UART1, msgid);
-    printf_string(UART1, ".\r\n");
-	
     int i = 0;
     enum ke_msg_status_tag process_msg_handling_result;
 
@@ -211,10 +201,6 @@ int app_entry_point_handler(ke_msg_id_t const msgid,
         ASSERT_ERROR(app_process_handlers[i]);
          if (app_process_handlers[i](msgid, param, dest_id, src_id, &process_msg_handling_result) == PR_EVENT_HANDLED)
          {
-             printf_string(UART1, "Found the correct handler.\r\n");
-             printf_string(UART1, "Process ");
-             printf_byte_dec(UART1, i);
-             printf_string(UART1, " is invoked.\r\n");
              return (process_msg_handling_result);
          }
          i++;
@@ -223,7 +209,6 @@ int app_entry_point_handler(ke_msg_id_t const msgid,
     //user cannot do anything else than consume the message
     if (app_process_catch_rest_cb != NULL)
     {
-			  printf_string(UART1, "No handler found. User should take care of it.\r\n");
         app_process_catch_rest_cb(msgid,param, dest_id, src_id);
     }
 
@@ -289,109 +274,6 @@ enum process_event_response app_std_process_event(ke_msg_id_t const msgid,
 }
 
 #else
-
-int app_entry_point_handler(ke_msg_id_t const msgid,
-                            void const *param,
-                            ke_task_id_t const dest_id,
-                            ke_task_id_t const src_id)
-{
-    static int invokeCnt;
-    invokeCnt++;
-    printf_string(UART1, "\r\nThe function is called the:");
-    printf_byte_dec(UART1, invokeCnt);
-    printf_string(UART1, "th time.\r\n");
-    printf_string(UART1, "The message id is:");
-    print_word(UART1, msgid);
-    printf_string(UART1, ".\r\n");
-
-    int i = 0;
-    enum ke_msg_status_tag process_msg_handling_result;
-
-    while (i < (sizeof(app_process_handlers) / sizeof(process_event_func_t)) - 1)
-    {
-         ASSERT_ERROR(app_process_handlers[i]);
-         if (app_process_handlers[i](msgid, param, dest_id, src_id, &process_msg_handling_result) == PR_EVENT_HANDLED)
-         {
-             printf_string(UART1, "Found the correct handler.\r\n");
-             printf_string(UART1, "Process ");
-             printf_byte_dec(UART1, i);
-             printf_string(UART1, " is invoked.\r\n");
-             return (process_msg_handling_result);
-         }
-         i++;
-         printf_string(UART1, "i = ");
-         printf_byte_dec(UART1, i);
-         printf_string(UART1, "\r\n");
-    }
-
-    //user cannot do anything else than consume the message
-    if (app_process_catch_rest_cb != NULL)
-    {
-        printf_string(UART1, "No handler found. User should take care of it.\r\n");
-        app_process_catch_rest_cb(msgid,param, dest_id, src_id);
-    }
-
-    return (KE_MSG_CONSUMED);
-};
-
-
-/**
- ****************************************************************************************
- * @brief Search for a message handler function.
- * @param[in] msg_id        Id of the message whose handler is under request
- * @param[in] handlers      Pointer to the message handler table
- * @param[in] handler_num   Range of the message handler table
- * @return The message handler function or null
- ****************************************************************************************
- */
-static ke_msg_func_t handler_search(ke_msg_id_t const msg_id,
-                                    const struct ke_msg_handler *handlers,
-                                    const int handler_num)
-{
-    //table is empty
-    if (handler_num == 0)
-    {
-        return NULL;
-    }
-
-    // Get the message handler function by parsing the message table
-    for (int i = (handler_num-1); 0 <= i; i--)
-    {
-        if ((handlers[i].id == msg_id)
-                || (handlers[i].id == KE_MSG_DEFAULT_HANDLER))
-        {
-            // If handler is NULL, message should not have been received in this state
-            ASSERT_ERROR(handlers[i].func);
-
-            return handlers[i].func;
-        }
-    }
-
-    // If we execute this line of code, it means that we did not find the handler
-    return NULL;
-}
-
-enum process_event_response app_std_process_event(ke_msg_id_t const msgid,
-                                                  void const *param,
-                                                  ke_task_id_t const src_id,
-                                                  ke_task_id_t const dest_id,
-                                                  enum ke_msg_status_tag *msg_ret,
-                                                  const struct ke_msg_handler *handlers,
-                                                  const int handler_num)
-{
-    ke_msg_func_t func = NULL;
-    func = handler_search(msgid, handlers, handler_num);
-
-    if (func != NULL)
-    {
-        *msg_ret = (enum ke_msg_status_tag) func(msgid, param, dest_id, src_id);
-        return PR_EVENT_HANDLED;
-    }
-    else
-    {
-        return PR_EVENT_UNHANDLED;
-    }
-}
 
 const rom_app_task_cfg_t rom_app_task_cfg =
 {

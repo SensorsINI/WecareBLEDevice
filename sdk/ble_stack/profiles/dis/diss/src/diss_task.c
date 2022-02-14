@@ -35,7 +35,6 @@
 #include "diss_task.h"
 #include "prf_utils.h"
 #include "attm.h"
-#include "uart_utils.h"
 
 /*
  * FUNCTION DEFINITIONS
@@ -142,8 +141,6 @@ static int gattc_read_req_ind_handler(ke_msg_id_t const msgid,
                                       ke_task_id_t const dest_id,
                                       ke_task_id_t const src_id)
 {
-    printf_string(UART1, "\r\nFunction gattc_read_req_ind_handler from diss_task is called.\r\n");
-
     int msg_status = KE_MSG_CONSUMED;
     ke_state_t state = ke_state_get(dest_id);
 
@@ -152,10 +149,6 @@ static int gattc_read_req_ind_handler(ke_msg_id_t const msgid,
         struct diss_env_tag* diss_env = PRF_ENV_GET(DISS, diss);
         // retrieve value attribute
         uint8_t value = diss_handle_to_value(diss_env, param->handle);
-
-        printf_string(UART1, "The diss request characteristic code is:");
-        print_word(UART1, value);
-        printf_string(UART1, ".\r\n");
 
         // Check Characteristic Code
         if (value < DIS_CHAR_MAX)
@@ -173,13 +166,8 @@ static int gattc_read_req_ind_handler(ke_msg_id_t const msgid,
                 val = (struct diss_val_elmt *)val->hdr.next;
             }
 
-
             if(val != NULL)
             {
-                printf_string(UART1, "The diss request characteristic value is:");
-                printf_byte(UART1, val->data[0]);
-                printf_string(UART1, ".\r\n");
-
                 // Send value to peer device.
                 struct gattc_read_cfm* cfm = KE_MSG_ALLOC_DYN(GATTC_READ_CFM, src_id, dest_id, gattc_read_cfm, val->length);
                 cfm->handle = param->handle;

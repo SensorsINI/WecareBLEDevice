@@ -46,7 +46,6 @@
 #include "app_callback.h"
 
 #include "user_config.h"
-#include "uart_utils.h"
 
 #if BLE_CUSTOM_SERVER
 #include "user_custs_config.h"
@@ -248,6 +247,7 @@ bool app_db_init_next(void)
     return true;
 }
 
+#if !defined (__DA14531__) || defined (__EXCLUDE_ROM_APP_TASK__)
 bool app_db_init_start(void)
 {
     // Indicate if more services need to be added in the database
@@ -270,6 +270,7 @@ bool app_db_init(void)
 
     return end_db_create;
 }
+#endif
 
 /**
  ****************************************************************************************
