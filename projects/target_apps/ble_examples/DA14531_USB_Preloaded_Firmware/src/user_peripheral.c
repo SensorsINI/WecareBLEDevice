@@ -66,8 +66,9 @@
 
 #include "DAC70508M.h"
 #include "MCR35614R.h"
+#include "utils.h"
+#include "da14531_printf.h"
 
-#include <math.h>
 /*
  * TYPE DEFINITIONS
  ****************************************************************************************
@@ -615,72 +616,6 @@ static void spi2_io_ctrl()
 
 /**
  ****************************************************************************************
- * @brief Following functions are the implementation of converting float to string.
- * @return void
- ****************************************************************************************
-*/
-// Reverses a string 'str' of length 'len'
-void reverse(char* str, int len)
-{
-	int i = 0, j = len - 1, temp;
-	while (i < j) {
-		temp = str[i];
-		str[i] = str[j];
-		str[j] = temp;
-		i++;
-		j--;
-	}
-}
-
-// Converts a given integer x to string str[].
-// d is the number of digits required in the output.
-// If d is more than the number of digits in x,
-// then 0s are added at the beginning.
-int intToStr(int x, char str[], int d)
-{
-	int i = 0;
-	while (x) {
-		str[i++] = (x % 10) + '0';
-		x = x / 10;
-	}
-
-	// If number of digits required is more, then
-	// add 0s at the beginning
-	while (i < d)
-		str[i++] = '0';
-
-	reverse(str, i);
-	str[i] = '\0';
-	return i;
-}
-// Converts a floating-point/double number to a string.
-void ftoa(float n, char* res, int afterpoint)
-{
-	// Extract integer part
-	int ipart = (int)n;
-	
-	// Extract floating part
-	float fpart = n - (float)ipart;
-		
-	// convert integer part to string
-	int i = intToStr(ipart, res, 1);
-
-	// check for display option after point
-	if (afterpoint != 0) {
-		res[i] = '.'; // add dot
-
-		// Get the value of fraction part upto given no.
-		// of points after dot. The third parameter
-		// is needed to handle cases like 233.007
-		fpart = fpart * pow(10, afterpoint);
-
-		intToStr((int)fpart, res + i + 1, afterpoint);
-	}
-}
-
-
-/**
- ****************************************************************************************
  * @brief SPI2 DAC (DAC70508M) control function.
  * @return void
  ****************************************************************************************
@@ -693,23 +628,17 @@ static void spi2_dac_ctrl()
 
     if(!spi2_dac_read_register(DEVICE_ID, &regData)) 
 		{
-				printf_string(UART1, "DEVICE ID is: 0x");
-				print_hword(UART1, regData);
-				printf_string(UART1, ".\r\n");
+			  da14531_printf("DEVICE ID is: 0x%x.\r\n", regData);			
 		}
 
     if(!spi2_dac_read_register(GAIN, &regData)) 
 		{
-				printf_string(UART1, "GAIN register is: 0x");
-				print_hword(UART1, regData);
-				printf_string(UART1, ".\r\n");
+			  da14531_printf("GAIN channel 4 register is: 0x%x.\r\n", regData);			
 		}
 
     if(!spi2_dac_read_register(STATUS, &regData))  
 		{
-				printf_string(UART1, "STATUS register is: 0x");
-				print_hword(UART1, regData);
-				printf_string(UART1, ".\r\n");
+			  da14531_printf("STATUS channel 4 register is: 0x%x.\r\n", regData);			
 		}
 				
 //		// Reset the device
@@ -718,17 +647,13 @@ static void spi2_dac_ctrl()
 		spi2_dac_write_register(GAIN, 0x1ff);
     if(!spi2_dac_read_register(STATUS, &regData))  
 		{
-				printf_string(UART1, "STATUS register is: 0x");
-				print_hword(UART1, regData);
-				printf_string(UART1, ".\r\n");
+			  da14531_printf("STATUS channel 4 register is: 0x%x.\r\n", regData);			
 		}
     
 		// spi2_dac_write_register(BRDCAST, 0xafff);
     if(!spi2_dac_read_register(DAC4, &regData))  
 		{
-				printf_string(UART1, "DAC channel 4 register is: 0x");
-				print_hword(UART1, regData);
-				printf_string(UART1, ".\r\n");
+			  da14531_printf("DAC channel 4 register is: 0x%x.\r\n", regData);
 		}
 	  spi2_dac_write_register(DAC0, 0x1fff);
 	  spi2_dac_write_register(DAC1, 0x2fff);
@@ -795,9 +720,7 @@ static void spi2_adc1_init(void)
 		// Read CONFIG0 register.
 		spi2_adc_static_read_register(CONFIG0, receiveBuf, CONFIG0_BYTES);	
 		regVal = swapBufToRealVal(receiveBuf, CONFIG0_BYTES);
-		printf_string(UART1, "CONFIG0 register data is: 0x");
-		print_word(UART1, regVal);
-		printf_string(UART1, ".\r\n");
+		da14531_printf("CONFIG0 register data is: 0x%x.\r\n", regVal);
 }
 
 /**
@@ -848,12 +771,8 @@ static void spi2_adc1_ctrl()
 		spi2_adc_static_read_register(ADCDATA, receiveBuf, ADCDATA_BYTES);	
 		regVal = swapBufToRealVal(receiveBuf, ADCDATA_BYTES);
 		float voltage = regVal/(0x7fffff * gainFactor) * 2.4;    // The internal reference voltage is 2.4V
-		char voltageStr[20];
-		ftoa(voltage, voltageStr, 4);
-    printf_string(UART1, "The voltage is: ");		
-    printf_string(UART1, voltageStr);
-    printf_string(UART1, ".\r\n");			
-
+		da14531_printf("The voltage is: %fV.\r\n",  voltage);
+		
     app_spi2_adc1_timer_used = app_easy_timer(50, spi2_adc1_ctrl);
 }
 

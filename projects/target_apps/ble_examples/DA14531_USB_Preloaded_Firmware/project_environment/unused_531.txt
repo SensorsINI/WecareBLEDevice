@@ -1,4 +1,4 @@
-;#<FEEDBACK># ARM Linker, 5060750: Last Updated: Mon Feb 14 16:35:17 2022
+;#<FEEDBACK># ARM Linker, 5060750: Last Updated: Mon Feb 14 19:16:09 2022
 ;VERSION 0.2
 ;FILE adc_531.o
 adc_correct_sample <= USED 0
@@ -70,6 +70,7 @@ check_sys_startup_period <= USED 0
 battery_get_lvl <= USED 0
 battery_get_voltage <= USED 0
 ;FILE ble_arp.o
+;FILE da14531_printf.o
 ;FILE dac70508m.o
 ;FILE gpio.o
 GPIO_ConfigurePinPower <= USED 0
@@ -248,6 +249,7 @@ uart_register_err_cb <= USED 0
 uart_register_rx_cb <= USED 0
 ;FILE uart_utils.o
 itoa <= USED 0
+print_hword <= USED 0
 printf_byte_dec <= USED 0
 ;FILE user_custs1_impl.o
 user_svc1_adc_val_1_ntf_cfm_handler <= USED 0
@@ -257,6 +259,7 @@ user_svc1_indicateable_ind_cfm_handler <= USED 0
 user_svc1_long_val_ntf_cfm_handler <= USED 0
 ;FILE user_periph_setup.o
 ;FILE user_peripheral.o
+;FILE utils.o
 ;FILE wkupct_quadec.o
 quad_decoder_clear_irq <= USED 0
 quad_decoder_disable_irq <= USED 0

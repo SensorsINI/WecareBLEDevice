@@ -913,6 +913,26 @@
               <FileType>1</FileType>
               <FilePath>..\src\platform\DAC70508M.c</FilePath>
             </File>
+            <File>
+              <FileName>utils.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\platform\utils.c</FilePath>
+            </File>
+            <File>
+              <FileName>utils.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\src\platform\utils.h</FilePath>
+            </File>
+            <File>
+              <FileName>da14531_printf.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\platform\da14531_printf.c</FilePath>
+            </File>
+            <File>
+              <FileName>da14531_printf.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\src\platform\da14531_printf.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
