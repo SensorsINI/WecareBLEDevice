@@ -686,28 +686,19 @@ static void spi2_adc1_init(void)
 	  uint8_t receiveBuf[TOTAL_BYTES] = {0}; 
  
 		// Full reset
-		// spi2_adc_fast_command(FAST_CMD_FULL_RESET);
-		
-		// Configure CONFIG0 register: Internal V_ref and internal master clock, no bias and ADC conversion mode.
-		sendBuf[0] = 0xF3;  // The first byte is the MSbs for registers have more than 8bits
-		// sendBuf[1] = 0x02;
-		// sendBuf[2] = 0x03;
-		spi2_adc_write_register(CONFIG0, sendBuf, CONFIG0_BYTES);
-		// Read CONFIG0 register.
-		spi2_adc_static_read_register(CONFIG0, receiveBuf, CONFIG0_BYTES);	
-		regVal = swapBufToRealVal(receiveBuf, CONFIG0_BYTES);
-		printf_string(UART1, "CONFIG0 register data is: 0x");
-		print_word(UART1, regVal);
-		printf_string(UART1, ".\r\n");
+		spi2_adc_fast_command(FAST_CMD_FULL_RESET);
+
+		// Read all the register values.
+		spi2_adc_increment_read_register(ADCDATA, receiveBuf, TOTAL_BYTES);
 
 		// Configure CONFIG2 register: GAIN('000'): set gain to 1/3.
 		sendBuf[0] = 0x83; 
 		spi2_adc_write_register(CONFIG2, sendBuf, CONFIG2_BYTES);	
-	
+		
 		// Configure CONFIG3 register: CONV_MODE('11'): Continous conversion in scan mode. DATA_FORMAT('11'): 32bit with channel ID.
 		sendBuf[0] = 0xF0; 
 		spi2_adc_write_register(CONFIG3, sendBuf, CONFIG3_BYTES);	
-	
+		
 		// Configure IRQ regiseter: IRQ_Mode('01'): IRQ output and inactive state is logic high
 		// This configuration is important, because if we use the default configuration, then
 		// IRQ is in high-Z state and because we don't have external pull-up resistor on board.
@@ -725,7 +716,21 @@ static void spi2_adc1_init(void)
 //		sendBuf[1] = 0xFF;
 //		sendBuf[2] = 0xFF;
 //		spi2_adc_write_register(SCAN, sendBuf, SCAN_BYTES);
-//		spi2_adc_static_read_register(IRQ, receiveBuf, IRQ_BYTES);		
+//		spi2_adc_static_read_register(IRQ, receiveBuf, IRQ_BYTES);
+
+		// Configure CONFIG0 register: Internal V_ref and internal master clock, no bias and ADC conversion mode.
+		// This register configuration should be put in the last of init function as this register is used to start
+		// the conversion.
+		sendBuf[0] = 0xF3;  // The first byte is the MSbs for registers have more than 8bits
+		// sendBuf[1] = 0x02;
+		// sendBuf[2] = 0x03;
+		spi2_adc_write_register(CONFIG0, sendBuf, CONFIG0_BYTES);
+		// Read CONFIG0 register.
+		spi2_adc_static_read_register(CONFIG0, receiveBuf, CONFIG0_BYTES);	
+		regVal = swapBufToRealVal(receiveBuf, CONFIG0_BYTES);
+		printf_string(UART1, "CONFIG0 register data is: 0x");
+		print_word(UART1, regVal);
+		printf_string(UART1, ".\r\n");
 }
 
 /**
@@ -745,9 +750,9 @@ static void spi2_adc1_ctrl()
 		if(initFlag)
 		{			
 				spi2_adc1_init();
-				// Configure MUX register: Single-ended channel CH0
-				sendBuf[0] = 0x08;
-				spi2_adc_write_register(MUX, sendBuf, MUX_BYTES);			
+//				// Configure MUX register: Single-ended channel CH0
+//				sendBuf[0] = 0x08;
+//				spi2_adc_write_register(MUX, sendBuf, MUX_BYTES);			
 				initFlag = false;
 		}
 		
