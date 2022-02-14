@@ -1,4 +1,4 @@
-;#<FEEDBACK># ARM Linker, 5060750: Last Updated: Mon Feb 14 19:16:09 2022
+;#<FEEDBACK># ARM Linker, 5060750: Last Updated: Mon Feb 14 21:09:32 2022
 ;VERSION 0.2
 ;FILE adc_531.o
 adc_correct_sample <= USED 0
@@ -135,8 +135,6 @@ otp_cs_get_low_power_clock <= USED 0
 ;FILE rf_531.o
 dcoff_calibration <= USED 0
 dis_kdco_cal <= USED 0
-en_hclk <= USED 0
-en_kdtc_cal_mod1 <= USED 0
 kdco_cal_end <= USED 0
 kdco_cal_init <= USED 0
 kdco_calibration <= USED 0

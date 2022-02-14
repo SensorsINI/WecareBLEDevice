@@ -152,11 +152,30 @@ static void outnum( const s32 n, const s32 base, struct params_s *par)
 /* from a float number to the output buffer as       */
 /* directed by the padding and positioning flags.    */
 /*                                                   */
-void outfloat(double n, int afterpoint, struct params_s *par)
+void outfloat(double n, struct params_s *par)
 {
 	  char tmpStr[20];
-		ftoa((float)n, tmpStr, 4);
-	  outs(tmpStr, par);		
+		// par->num2 is the 'afterpoint' decimal places	
+		ftoa((float)n, tmpStr, par->num2);  
+	
+    charptr LocalPtr;
+    LocalPtr = tmpStr;
+    /* pad on left if needed                         */
+    if(LocalPtr != NULL) {
+        par->len = (s32)strlen( LocalPtr);
+    }
+    padding( !(par->left_flag), par);
+
+    /* Move string to the buffer                     */
+    while (((*LocalPtr) != (char8)0)) {
+        outbyte(UART1, *LocalPtr);
+        LocalPtr += 1;
+    }
+
+    /* Pad on right if needed                        */
+    /* CR 439175 - elided next stmt. Seemed bogus.   */
+    /* par->len = strlen( lp)                      */
+    padding( par->left_flag, par);	
 }
 
 
@@ -267,7 +286,7 @@ try_next:
                 Check = 1;
                 break;
 						case 'f':
-						    outfloat(va_arg(argp, double), 4, &par);
+						    outfloat(va_arg(argp, double), &par);
 						    Check = 1;
 								break;
             case 'p':

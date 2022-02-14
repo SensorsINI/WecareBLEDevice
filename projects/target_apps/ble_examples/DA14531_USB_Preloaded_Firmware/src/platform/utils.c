@@ -41,8 +41,22 @@ int intToStr(int x, char str[], int d)
 	return i;
 }
 // Converts a floating-point/double number to a string.
-void ftoa(float n, char* res, int afterpoint)
+void ftoa(float n_val, char* res, int afterpoint)
 {
+	// Convert float to double so we can have more precise calculation on power and divide.
+	volatile double n = n_val;   
+	// If n is a negative value, put a '-' symbol at first.
+	if ( n < 0)
+	{
+		res[0] = '-';
+		res = res + 1; 
+		n = -n;
+	}
+	// Round n to its nearest float number with 'afterpoint' decimal places
+	// Such if afterpoint = 2, it will round 15.638 to 15.64	
+	n = round(n * pow(10, afterpoint));
+  n = n / pow(10, afterpoint);
+
 	// Extract integer part
 	int ipart = (int)n;
 	

@@ -628,17 +628,17 @@ static void spi2_dac_ctrl()
 
     if(!spi2_dac_read_register(DEVICE_ID, &regData)) 
 		{
-			  da14531_printf("DEVICE ID is: 0x%x.\r\n", regData);			
+			  // da14531_printf("DEVICE ID is: 0x%x.\r\n", regData);			
 		}
 
     if(!spi2_dac_read_register(GAIN, &regData)) 
 		{
-			  da14531_printf("GAIN channel 4 register is: 0x%x.\r\n", regData);			
+			  // da14531_printf("GAIN channel 4 register is: 0x%x.\r\n", regData);			
 		}
 
     if(!spi2_dac_read_register(STATUS, &regData))  
 		{
-			  da14531_printf("STATUS channel 4 register is: 0x%x.\r\n", regData);			
+			  // da14531_printf("STATUS channel 4 register is: 0x%x.\r\n", regData);			
 		}
 				
 //		// Reset the device
@@ -647,13 +647,13 @@ static void spi2_dac_ctrl()
 		spi2_dac_write_register(GAIN, 0x1ff);
     if(!spi2_dac_read_register(STATUS, &regData))  
 		{
-			  da14531_printf("STATUS channel 4 register is: 0x%x.\r\n", regData);			
+			  // da14531_printf("STATUS channel 4 register is: 0x%x.\r\n", regData);			
 		}
     
 		// spi2_dac_write_register(BRDCAST, 0xafff);
     if(!spi2_dac_read_register(DAC4, &regData))  
 		{
-			  da14531_printf("DAC channel 4 register is: 0x%x.\r\n", regData);
+			  // da14531_printf("DAC channel 4 register is: 0x%x.\r\n", regData);
 		}
 	  spi2_dac_write_register(DAC0, 0x1fff);
 	  spi2_dac_write_register(DAC1, 0x2fff);
@@ -687,8 +687,8 @@ static void spi2_adc1_init(void)
 //		sendBuf[0] = 0x83; 
 //		spi2_adc_write_register(CONFIG2, sendBuf, CONFIG2_BYTES);	
 		
-		// Configure CONFIG3 register: CONV_MODE('11'): Continous conversion in scan mode. DATA_FORMAT('11'): 32bit with channel ID.
-		sendBuf[0] = 0xF0; 
+		// Configure CONFIG3 register: CONV_MODE('11'): Continous conversion in scan mode. DATA_FORMAT('10'): 32bit without channel ID.
+		sendBuf[0] = 0xE0; 
 		spi2_adc_write_register(CONFIG3, sendBuf, CONFIG3_BYTES);	
 		
 		// Configure IRQ regiseter: IRQ_Mode('01'): IRQ output and inactive state is logic high
@@ -703,12 +703,11 @@ static void spi2_adc1_init(void)
 		sendBuf[0] = 0x98;
 		spi2_adc_write_register(MUX, sendBuf, MUX_BYTES);
 		
-//		// Configure SCAN register: Single-ended input for CH0
-//		sendBuf[0] = 0x00;
-//		sendBuf[1] = 0xFF;
-//		sendBuf[2] = 0xFF;
-//		spi2_adc_write_register(SCAN, sendBuf, SCAN_BYTES);
-//		spi2_adc_static_read_register(IRQ, receiveBuf, IRQ_BYTES);
+		// Configure SCAN register: Single-ended input for CH0
+		sendBuf[0] = 0x00;
+		sendBuf[1] = 0xFF;
+		sendBuf[2] = 0xFF;
+		spi2_adc_write_register(SCAN, sendBuf, SCAN_BYTES);
 
 		// Configure CONFIG0 register: Internal V_ref and internal master clock, no bias and ADC conversion mode.
 		// This register configuration should be put in the last of init function as this register is used to start
@@ -717,10 +716,11 @@ static void spi2_adc1_init(void)
 		// sendBuf[1] = 0x02;
 		// sendBuf[2] = 0x03;
 		spi2_adc_write_register(CONFIG0, sendBuf, CONFIG0_BYTES);
+		
 		// Read CONFIG0 register.
 		spi2_adc_static_read_register(CONFIG0, receiveBuf, CONFIG0_BYTES);	
 		regVal = swapBufToRealVal(receiveBuf, CONFIG0_BYTES);
-		da14531_printf("CONFIG0 register data is: 0x%x.\r\n", regVal);
+		// da14531_printf("CONFIG0 register data is: 0x%x.\r\n", regVal);
 }
 
 /**
@@ -741,7 +741,7 @@ static void spi2_adc1_ctrl()
 		{			
 				spi2_adc1_init();
 				// Configure MUX register: Single-ended channel CH0
-				sendBuf[0] = 0x08;
+				sendBuf[0] = 0x01;
 				spi2_adc_write_register(MUX, sendBuf, MUX_BYTES);			
 				initFlag = false;
 		}
@@ -749,12 +749,12 @@ static void spi2_adc1_ctrl()
 		// Read all the register values.
 		spi2_adc_increment_read_register(ADCDATA, receiveBuf, TOTAL_BYTES);
 
-//		uint8_t irqVal = swapBufToRealVal(receiveBuf, IRQ_BYTES);
-//		while((irqVal & 0x40) != 0)
-//		{
-//				spi2_adc_static_read_register(IRQ, receiveBuf, IRQ_BYTES);
-//				irqVal = swapBufToRealVal(receiveBuf, IRQ_BYTES);
-//		}			
+		uint8_t irqVal = swapBufToRealVal(receiveBuf, IRQ_BYTES);
+		while((irqVal & 0x40) != 0)
+		{
+				spi2_adc_static_read_register(IRQ, receiveBuf, IRQ_BYTES);
+				irqVal = swapBufToRealVal(receiveBuf, IRQ_BYTES);
+		}			
 
 		spi2_adc_static_read_register(CONFIG2, receiveBuf, CONFIG2_BYTES);	
 		regVal = swapBufToRealVal(receiveBuf, CONFIG2_BYTES);
@@ -770,8 +770,9 @@ static void spi2_adc1_ctrl()
 		// STATIC Read ADCDATA
 		spi2_adc_static_read_register(ADCDATA, receiveBuf, ADCDATA_BYTES);	
 		regVal = swapBufToRealVal(receiveBuf, ADCDATA_BYTES);
-		float voltage = regVal/(0x7fffff * gainFactor) * 2.4;    // The internal reference voltage is 2.4V
-		da14531_printf("The voltage is: %fV.\r\n",  voltage);
+		int32_t voltageVal = (int32_t)(regVal);
+		float voltage = voltageVal/(0x800000 * gainFactor) * 2.4;    // The internal reference voltage is 2.4V
+		da14531_printf("The voltage is: %.4fV.\r\n",  voltage);
 		
     app_spi2_adc1_timer_used = app_easy_timer(50, spi2_adc1_ctrl);
 }
