@@ -69,6 +69,10 @@
 #include "utils.h"
 #include "da14531_printf.h"
 
+// Outside value
+extern uint32_t globalDACVal;
+extern uint32_t globalADCVal;
+
 /*
  * TYPE DEFINITIONS
  ****************************************************************************************
@@ -655,7 +659,7 @@ static void spi2_dac_ctrl()
 		{
 			  // da14531_printf("DAC channel 4 register is: 0x%x.\r\n", regData);
 		}
-	  spi2_dac_write_register(DAC0, 0x1fff);
+	  spi2_dac_write_register(DAC0, globalDACVal);
 	  spi2_dac_write_register(DAC1, 0x2fff);
 	  spi2_dac_write_register(DAC2, 0xffff);		
 	  spi2_dac_write_register(DAC3, 0xffff);
@@ -703,11 +707,11 @@ static void spi2_adc1_init(void)
 		sendBuf[0] = 0x98;
 		spi2_adc_write_register(MUX, sendBuf, MUX_BYTES);
 		
-		// Configure SCAN register: Single-ended input for CH0
-		sendBuf[0] = 0x00;
-		sendBuf[1] = 0xFF;
-		sendBuf[2] = 0xFF;
-		spi2_adc_write_register(SCAN, sendBuf, SCAN_BYTES);
+//		// Configure SCAN register: Single-ended input for CH0
+//		sendBuf[0] = 0x00;
+//		sendBuf[1] = 0xFF;
+//		sendBuf[2] = 0xFF;
+//		spi2_adc_write_register(SCAN, sendBuf, SCAN_BYTES);
 
 		// Configure CONFIG0 register: Internal V_ref and internal master clock, no bias and ADC conversion mode.
 		// This register configuration should be put in the last of init function as this register is used to start
@@ -741,7 +745,7 @@ static void spi2_adc1_ctrl()
 		{			
 				spi2_adc1_init();
 				// Configure MUX register: Single-ended channel CH0
-				sendBuf[0] = 0x01;
+				sendBuf[0] = 0x08;
 				spi2_adc_write_register(MUX, sendBuf, MUX_BYTES);			
 				initFlag = false;
 		}
@@ -773,6 +777,9 @@ static void spi2_adc1_ctrl()
 		int32_t voltageVal = (int32_t)(regVal);
 		float voltage = voltageVal/(0x800000 * gainFactor) * 2.4;    // The internal reference voltage is 2.4V
 		da14531_printf("The voltage is: %.4fV.\r\n",  voltage);
+		
+		// Value shared with BLE for sending to the host
+		globalADCVal = regVal;
 		
     app_spi2_adc1_timer_used = app_easy_timer(50, spi2_adc1_ctrl);
 }

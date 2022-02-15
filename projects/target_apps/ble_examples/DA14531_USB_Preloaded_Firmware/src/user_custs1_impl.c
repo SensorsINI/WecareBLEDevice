@@ -47,6 +47,9 @@
 #include "user_periph_setup.h"
 #include "uart_utils.h"
 
+#include "da14531_printf.h"
+#include "MCR35614R.h"
+
 /*
  * GLOBAL VARIABLE DEFINITIONS
  ****************************************************************************************
@@ -106,9 +109,8 @@ void user_svc1_long_val_cfg_ind_handler(ke_msg_id_t const msgid,
                                            ke_task_id_t const dest_id,
                                            ke_task_id_t const src_id)
 {
-	printf_string(UART1, "user_svc1_long_val_cfg_ind_handler is called. And the parameter value 0 is:");
-    print_word(UART1, param->value[0]);
-    printf_string(UART1, ".\r\n");
+
+	  da14531_printf("user_svc1_long_val_cfg_ind_handler is called. And the parameter value 0 is: %x", param->value[0]);
 	
     // Generate indication when the central subscribes to it
     if (param->value[0])
@@ -133,11 +135,18 @@ void user_svc1_long_val_cfg_ind_handler(ke_msg_id_t const msgid,
     }
 }
 
+// This value is sent from the host, and will be used to set DAC.
+uint32_t globalDACVal = 0;
+
 void user_svc1_long_val_wr_ind_handler(ke_msg_id_t const msgid,
                                           struct custs1_val_write_ind const *param,
                                           ke_task_id_t const dest_id,
                                           ke_task_id_t const src_id)
 {
+	uint32_t val[10] = {0};
+	memcpy(&val, &param->value[0], param->length);
+	globalDACVal = val[0];
+	da14531_printf("The value set DAC from the host is: 0x%x\r\n", globalDACVal);
 }
 
 void user_svc1_long_val_ntf_cfm_handler(ke_msg_id_t const msgid,
@@ -231,6 +240,7 @@ void user_svc1_rest_att_info_req_handler(ke_msg_id_t const msgid,
     ke_msg_send(rsp);
 }
 
+uint32_t globalADCVal = 0;
 void app_adcval1_timer_cb_handler()
 {
     struct custs1_val_ntf_ind_req *req = KE_MSG_ALLOC_DYN(CUSTS1_VAL_NTF_REQ,
@@ -245,6 +255,8 @@ void app_adcval1_timer_cb_handler()
                                                               custs1_val_set_req,
                                                               DEF_SVC1_ADC_VAL_1_CHAR_LEN);
 
+		uint32_t valToSend = globalADCVal;
+		da14531_printf("The raw voltage data sent from ADC is: 0x%x.\r\n",  valToSend);
 
     // ADC value to be sampled
     static uint16_t sample      __SECTION_ZERO("retention_mem_area0");
@@ -254,13 +266,13 @@ void app_adcval1_timer_cb_handler()
     req->handle = SVC1_IDX_ADC_VAL_1_VAL;
     req->length = DEF_SVC1_ADC_VAL_1_CHAR_LEN;
     req->notification = true;
-    memcpy(req->value, &sample, DEF_SVC1_ADC_VAL_1_CHAR_LEN);
+    memcpy(req->value, &valToSend, DEF_SVC1_ADC_VAL_1_CHAR_LEN);
 
     ke_msg_send(req);
 
     req_set->handle = SVC1_IDX_ADC_VAL_1_VAL;
     req_set->length = DEF_SVC1_ADC_VAL_1_CHAR_LEN;
-    memcpy(req_set->value, &sample, DEF_SVC1_ADC_VAL_1_CHAR_LEN);
+    memcpy(req_set->value, &valToSend, DEF_SVC1_ADC_VAL_1_CHAR_LEN);
     ke_msg_send(req_set);
 
 
