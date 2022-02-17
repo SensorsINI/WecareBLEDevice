@@ -76,18 +76,18 @@
                                         DIS_PNP_ID_CHAR_SUP)
 
 /// Manufacturer Name
-#define APP_DIS_MANUFACTURER_NAME       ("Dialog Semi")
-#define APP_DIS_MANUFACTURER_NAME_LEN   (11)
+#define APP_DIS_MANUFACTURER_NAME       ("INI, UZH-ETH Zurich")
+#define APP_DIS_MANUFACTURER_NAME_LEN   (19)
 
 /// Model Number String
 #if defined (__DA14586__)
     #define APP_DIS_MODEL_NB_STR            ("DA14586")
 #elif defined (__DA14531__)
-    #define APP_DIS_MODEL_NB_STR            ("DA14531")
+    #define APP_DIS_MODEL_NB_STR            ("WECARE-INI")
 #else
      #define APP_DIS_MODEL_NB_STR           ("DA14585")
 #endif
-#define APP_DIS_MODEL_NB_STR_LEN        (7)
+#define APP_DIS_MODEL_NB_STR_LEN        (10)
 
 /// System ID - LSB -> MSB
 #define APP_DIS_SYSTEM_ID               ("\x12\x34\x56\xFF\xFE\x9A\xBC\xDE")
