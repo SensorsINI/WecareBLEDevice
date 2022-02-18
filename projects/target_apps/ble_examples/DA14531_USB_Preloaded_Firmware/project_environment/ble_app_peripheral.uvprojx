@@ -10,7 +10,7 @@
       <TargetName>DA14531</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060960::V5.06 update 7 (build 960)::.\ARMCC</pCCUsed>
+      <pCCUsed>5060750::V5.06 update 6 (build 750)::ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -185,7 +185,6 @@
             <uocXRam>0</uocXRam>
             <RvdsVP>0</RvdsVP>
             <RvdsMve>0</RvdsMve>
-            <RvdsCdeCp>0</RvdsCdeCp>
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
@@ -313,7 +312,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>2</Optim>
+            <Optim>4</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>0</OneElfS>
@@ -337,7 +336,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls>--thumb -c --preinclude da1458x_config_basic.h --preinclude da1458x_config_advanced.h --preinclude user_config.h --bss_threshold=0 --feedback=".\unused_531.txt"</MiscControls>
-              <Define>__DA14531__</Define>
+              <Define>__DA14531__, __EXCLUDE_ROM_APP_TASK__, __EXCLUDE_ROM_DISS__</Define>
               <Undefine></Undefine>
               <IncludePath>.\..\..\..\..\..\sdk\app_modules\api;.\..\..\..\..\..\sdk\ble_stack\controller\em;.\..\..\..\..\..\sdk\ble_stack\controller\llc;.\..\..\..\..\..\sdk\ble_stack\controller\lld;.\..\..\..\..\..\sdk\ble_stack\controller\llm;.\..\..\..\..\..\sdk\ble_stack\ea\api;.\..\..\..\..\..\sdk\ble_stack\em\api;.\..\..\..\..\..\sdk\ble_stack\hci\api;.\..\..\..\..\..\sdk\ble_stack\hci\src;.\..\..\..\..\..\sdk\ble_stack\host\att;.\..\..\..\..\..\sdk\ble_stack\host\att\attc;.\..\..\..\..\..\sdk\ble_stack\host\att\attm;.\..\..\..\..\..\sdk\ble_stack\host\att\atts;.\..\..\..\..\..\sdk\ble_stack\host\gap;.\..\..\..\..\..\sdk\ble_stack\host\gap\gapc;.\..\..\..\..\..\sdk\ble_stack\host\gap\gapm;.\..\..\..\..\..\sdk\ble_stack\host\gatt;.\..\..\..\..\..\sdk\ble_stack\host\gatt\gattc;.\..\..\..\..\..\sdk\ble_stack\host\gatt\gattm;.\..\..\..\..\..\sdk\ble_stack\host\l2c\l2cc;.\..\..\..\..\..\sdk\ble_stack\host\l2c\l2cm;.\..\..\..\..\..\sdk\ble_stack\host\smp;.\..\..\..\..\..\sdk\ble_stack\host\smp\smpc;.\..\..\..\..\..\sdk\ble_stack\host\smp\smpm;.\..\..\..\..\..\sdk\ble_stack\profiles;.\..\..\..\..\..\sdk\ble_stack\profiles\anc;.\..\..\..\..\..\sdk\ble_stack\profiles\anc\ancc\api;.\..\..\..\..\..\sdk\ble_stack\profiles\anp;.\..\..\..\..\..\sdk\ble_stack\profiles\anp\anpc\api;.\..\..\..\..\..\sdk\ble_stack\profiles\anp\anps\api;.\..\..\..\..\..\sdk\ble_stack\profiles\bas\basc\api;.\..\..\..\..\..\sdk\ble_stack\profiles\bas\bass\api;.\..\..\..\..\..\sdk\ble_stack\profiles\bcs;.\..\..\..\..\..\sdk\ble_stack\profiles\bcs\bcsc\api;.\..\..\..\..\..\sdk\ble_stack\profiles\bcs\bcss\api;.\..\..\..\..\..\sdk\ble_stack\profiles\blp;.\..\..\..\..\..\sdk\ble_stack\profiles\blp\blpc\api;.\..\..\..\..\..\sdk\ble_stack\profiles\blp\blps\api;.\..\..\..\..\..\sdk\ble_stack\profiles\bms;.\..\..\..\..\..\sdk\ble_stack\profiles\bms\bmsc\api;.\..\..\..\..\..\sdk\ble_stack\profiles\bms\bmss\api;.\..\..\..\..\..\sdk\ble_stack\profiles\cpp;.\..\..\..\..\..\sdk\ble_stack\profiles\cpp\cppc\api;.\..\..\..\..\..\sdk\ble_stack\profiles\cpp\cpps\api;.\..\..\..\..\..\sdk\ble_stack\profiles\cscp;.\..\..\..\..\..\sdk\ble_stack\profiles\cscp\cscpc\api;.\..\..\..\..\..\sdk\ble_stack\profiles\cscp\cscps\api;.\..\..\..\..\..\sdk\ble_stack\profiles\cts;.\..\..\..\..\..\sdk\ble_stack\profiles\cts\ctsc\api;.\..\..\..\..\..\sdk\ble_stack\profiles\cts\ctss\api;.\..\..\..\..\..\sdk\ble_stack\profiles\custom;.\..\..\..\..\..\sdk\ble_stack\profiles\custom\custs\api;.\..\..\..\..\..\sdk\ble_stack\profiles\dis\disc\api;.\..\..\..\..\..\sdk\ble_stack\profiles\dis\diss\api;.\..\..\..\..\..\sdk\ble_stack\profiles\find;.\..\..\..\..\..\sdk\ble_stack\profiles\find\findl\api;.\..\..\..\..\..\sdk\ble_stack\profiles\find\findt\api;.\..\..\..\..\..\sdk\ble_stack\profiles\gatt\gatt_client\api;.\..\..\..\..\..\sdk\ble_stack\profiles\glp;.\..\..\..\..\..\sdk\ble_stack\profiles\glp\glpc\api;.\..\..\..\..\..\sdk\ble_stack\profiles\glp\glps\api;.\..\..\..\..\..\sdk\ble_stack\profiles\hogp;.\..\..\..\..\..\sdk\ble_stack\profiles\hogp\hogpbh\api;.\..\..\..\..\..\sdk\ble_stack\profiles\hogp\hogpd\api;.\..\..\..\..\..\sdk\ble_stack\profiles\hogp\hogprh\api;.\..\..\..\..\..\sdk\ble_stack\profiles\hrp;.\..\..\..\..\..\sdk\ble_stack\profiles\hrp\hrpc\api;.\..\..\..\..\..\sdk\ble_stack\profiles\hrp\hrps\api;.\..\..\..\..\..\sdk\ble_stack\profiles\htp;.\..\..\..\..\..\sdk\ble_stack\profiles\htp\htpc\api;.\..\..\..\..\..\sdk\ble_stack\profiles\htp\htpt\api;.\..\..\..\..\..\sdk\ble_stack\profiles\lan;.\..\..\..\..\..\sdk\ble_stack\profiles\lan\lanc\api;.\..\..\..\..\..\sdk\ble_stack\profiles\lan\lans\api;.\..\..\..\..\..\sdk\ble_stack\profiles\pasp;.\..\..\..\..\..\sdk\ble_stack\profiles\pasp\paspc\api;.\..\..\..\..\..\sdk\ble_stack\profiles\pasp\pasps\api;.\..\..\..\..\..\sdk\ble_stack\profiles\prox\proxm\api;.\..\..\..\..\..\sdk\ble_stack\profiles\prox\proxr\api;.\..\..\..\..\..\sdk\ble_stack\profiles\rscp;.\..\..\..\..\..\sdk\ble_stack\profiles\rscp\rscpc\api;.\..\..\..\..\..\sdk\ble_stack\profiles\rscp\rscps\api;.\..\..\..\..\..\sdk\ble_stack\profiles\scpp;.\..\..\..\..\..\sdk\ble_stack\profiles\scpp\scppc\api;.\..\..\..\..\..\sdk\ble_stack\profiles\scpp\scpps\api;.\..\..\..\..\..\sdk\ble_stack\profiles\suota\suotar\api;.\..\..\..\..\..\sdk\ble_stack\profiles\tip;.\..\..\..\..\..\sdk\ble_stack\profiles\tip\tipc\api;.\..\..\..\..\..\sdk\ble_stack\profiles\tip\tips\api;.\..\..\..\..\..\sdk\ble_stack\profiles\uds;.\..\..\..\..\..\sdk\ble_stack\profiles\uds\udsc\api;.\..\..\..\..\..\sdk\ble_stack\profiles\uds\udss\api;.\..\..\..\..\..\sdk\ble_stack\profiles\wss;.\..\..\..\..\..\sdk\ble_stack\profiles\wss\wssc\api;.\..\..\..\..\..\sdk\ble_stack\profiles\wss\wsss\api;.\..\..\..\..\..\sdk\ble_stack\rwble;.\..\..\..\..\..\sdk\ble_stack\rwble_hl;.\..\..\..\..\..\sdk\common_project_files;.\..\..\..\..\..\sdk\platform\arch;.\..\..\..\..\..\sdk\platform\arch\boot;.\..\..\..\..\..\sdk\platform\arch\boot\ARM;.\..\..\..\..\..\sdk\platform\arch\boot\GCC;.\..\..\..\..\..\sdk\platform\arch\compiler;.\..\..\..\..\..\sdk\platform\arch\compiler\ARM;.\..\..\..\..\..\sdk\platform\arch\compiler\GCC;.\..\..\..\..\..\sdk\platform\arch\ll;.\..\..\..\..\..\sdk\platform\arch\main;.\..\..\..\..\..\sdk\platform\core_modules\arch_console;.\..\..\..\..\..\sdk\platform\core_modules\common\api;.\..\..\..\..\..\sdk\platform\core_modules\crypto;.\..\..\..\..\..\sdk\platform\core_modules\dbg\api;.\..\..\..\..\..\sdk\platform\core_modules\gtl\api;.\..\..\..\..\..\sdk\platform\core_modules\gtl\src;.\..\..\..\..\..\sdk\platform\core_modules\h4tl\api;.\..\..\..\..\..\sdk\platform\core_modules\ke\api;.\..\..\..\..\..\sdk\platform\core_modules\ke\src;.\..\..\..\..\..\sdk\platform\core_modules\nvds\api;.\..\..\..\..\..\sdk\platform\core_modules\rf\api;.\..\..\..\..\..\sdk\platform\core_modules\rwip\api;.\..\..\..\..\..\sdk\platform\driver\adc;.\..\..\..\..\..\sdk\platform\driver\battery;.\..\..\..\..\..\sdk\platform\driver\ble;.\..\..\..\..\..\sdk\platform\driver\dma;.\..\..\..\..\..\sdk\platform\driver\gpio;.\..\..\..\..\..\sdk\platform\driver\hw_otpc;.\..\..\..\..\..\sdk\platform\driver\i2c;.\..\..\..\..\..\sdk\platform\driver\i2c_eeprom;.\..\..\..\..\..\sdk\platform\driver\pdm;.\..\..\..\..\..\sdk\platform\driver\reg;.\..\..\..\..\..\sdk\platform\driver\rtc;.\..\..\..\..\..\sdk\platform\driver\spi;.\..\..\..\..\..\sdk\platform\driver\spi_flash;.\..\..\..\..\..\sdk\platform\driver\spi_hci;.\..\..\..\..\..\sdk\platform\driver\syscntl;.\..\..\..\..\..\sdk\platform\driver\systick;.\..\..\..\..\..\sdk\platform\driver\timer;.\..\..\..\..\..\sdk\platform\driver\trng;.\..\..\..\..\..\sdk\platform\driver\uart;.\..\..\..\..\..\sdk\platform\driver\wkupct_quadec;.\..\..\..\..\..\sdk\platform\include;.\..\..\..\..\..\sdk\platform\system_library\include;.\..\..\..\..\..\third_party\hash;.\..\..\..\..\..\third_party\irng;.\..\..\..\..\..\third_party\rand;.\..\src;.\..\src\config;.\..\..\..\..\..\sdk\platform\utilities\otp_cs;.\..\..\..\..\..\sdk\platform\utilities\otp_hdr;..\..\..\..\..\sdk\platform\include\CMSIS\5.6.0\Include;.\..\src\custom_profile;.\..\src\platform</IncludePath>
             </VariousControls>
@@ -352,7 +351,7 @@
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
             <useXO>0</useXO>
-            <ClangAsOpt>4</ClangAsOpt>
+            <uClangAs>0</uClangAs>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define></Define>
@@ -373,7 +372,7 @@
             <ScatterFile>..\..\..\..\..\sdk\common_project_files\scatterfiles\DA14531.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
-            <Misc>--feedback=".\unused_531.txt" .\..\..\..\..\..\sdk\common_project_files\misc\da14531_symbols.txt --symdefs=ble_app_barebone_531_symdef.txt --any_placement=best_fit --datacompressor off</Misc>
+            <Misc>--feedback=".\unused_531.txt" .\..\misc\da14531_symbols.txt --symdefs=ble_app_barebone_531_symdef.txt --any_placement=best_fit --datacompressor off</Misc>
             <LinkerInputFile></LinkerInputFile>
             <DisabledWarnings></DisabledWarnings>
           </LDads>
@@ -665,16 +664,6 @@
               <FilePath>.\..\..\..\..\..\sdk\ble_stack\profiles\custom\custom_common.c</FilePath>
             </File>
             <File>
-              <FileName>diss.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\..\..\..\..\..\sdk\ble_stack\profiles\dis\diss\src\diss.c</FilePath>
-            </File>
-            <File>
-              <FileName>diss_task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\..\..\..\..\..\sdk\ble_stack\profiles\dis\diss\src\diss_task.c</FilePath>
-            </File>
-            <File>
               <FileName>custs1.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\..\..\..\..\..\sdk\ble_stack\profiles\custom\custs\src\custs1.c</FilePath>
@@ -699,6 +688,16 @@
               <FileType>1</FileType>
               <FilePath>..\..\..\..\..\sdk\ble_stack\profiles\bas\bass\src\bass_task.c</FilePath>
             </File>
+            <File>
+              <FileName>diss.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\custom_profile\diss.c</FilePath>
+            </File>
+            <File>
+              <FileName>diss_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\custom_profile\diss_task.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -713,11 +712,6 @@
               <FileName>app.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\src\app_common\app.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\..\..\..\..\..\sdk\app_modules\src\app_common\app_task.c</FilePath>
             </File>
             <File>
               <FileName>app_security.c</FileName>
@@ -760,16 +754,6 @@
               <FilePath>.\..\..\..\..\..\sdk\app_modules\src\app_proxr\app_proxr_task.c</FilePath>
             </File>
             <File>
-              <FileName>app_diss.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\..\..\..\..\..\sdk\app_modules\src\app_diss\app_diss.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_diss_task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\..\..\..\..\..\sdk\app_modules\src\app_diss\app_diss_task.c</FilePath>
-            </File>
-            <File>
               <FileName>app_suotar.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\..\..\..\..\..\sdk\app_modules\src\app_suotar\app_suotar.c</FilePath>
@@ -778,11 +762,6 @@
               <FileName>app_suotar_task.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\..\..\..\..\..\sdk\app_modules\src\app_suotar\app_suotar_task.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_entry_point.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\..\..\..\..\..\sdk\app_modules\src\app_entry\app_entry_point.c</FilePath>
             </File>
             <File>
               <FileName>app_msg_utils.c</FileName>
@@ -828,6 +807,26 @@
               <FileName>app_utils.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\..\..\..\..\..\sdk\app_modules\src\app_common\app_utils.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_diss.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\custom_profile\app_diss.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_diss_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\custom_profile\app_diss_task.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_entry_point.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\app_modules\app_entry_point.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\app_common\app_task.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -883,6 +882,16 @@
               <FileName>user_custs1_def.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\src\custom_profile\user_custs1_def.c</FilePath>
+            </File>
+            <File>
+              <FileName>user_app_own_prf.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\custom_profile\user_app_own_prf.c</FilePath>
+            </File>
+            <File>
+              <FileName>user_app_own_prf.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\src\custom_profile\user_app_own_prf.h</FilePath>
             </File>
           </Files>
         </Group>
