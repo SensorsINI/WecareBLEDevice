@@ -387,6 +387,7 @@ void user_catch_rest_hndl(ke_msg_id_t const msgid,
 	  // printf_string(UART1, "The message id is:");
     // print_word(UART1, msgid);
     // printf_string(UART1, ".\r\n");
+	  da14531_printf("Receive unhandled message from app. The message type is: 0x%x.\r\n", msgid);
     switch(msgid)
     {
         case CUSTS1_VAL_WRITE_IND:
@@ -526,6 +527,7 @@ void user_catch_rest_hndl(ke_msg_id_t const msgid,
         } break;
 
         default:
+					  da14531_printf("Caught message not handled by any function. The message type is: 0x%x\r\n", msgid);
             break;
     }
 }

@@ -44,7 +44,7 @@
  ****************************************************************************************
  */
 
-// #define DEBUG_INFO     // Control debug information print. Define it to get detail info
+#define DEBUG_INFO     // Control debug information print. Define it to get detail info
 
 /*
  * DEFINES
