@@ -334,8 +334,11 @@ void user_app_db_init_complete(void)
     // Need to include: "custs1.h" "prf_utils.h" "attm_db.h"
     struct custs1_env_tag *custs1_env = PRF_ENV_GET(CUSTS1, custs1);
     attmdb_att_set_value(custs1_env->shdl + SVC1_IDX_ADC_VAL_2_VAL, DEF_SVC1_ADC_VAL_2_CHAR_LEN, 0, (uint8_t *)&sample);
-    attmdb_att_set_value(custs1_env->shdl + SVC1_IDX_ADC_VAL_1_VAL, DEF_SVC1_ADC_VAL_1_CHAR_LEN, 0, (uint8_t *)&sample);
-
+	  static uint16_t dacInitVal = 0x1FFF;
+    attmdb_att_set_value(custs1_env->shdl + SVC1_IDX_LONG_VALUE_VAL, DEF_SVC1_LONG_VALUE_CHAR_LEN, 0, (uint8_t *)&dacInitVal);
+	  static char * dacDescName = "DAC";
+    attmdb_att_set_value(custs1_env->shdl + SVC1_IDX_LONG_VALUE_USER_DESC, sizeof(dacDescName) - 1, 0, (uint8_t *)dacDescName);
+    
     //Set svc uuid value      
 	  volatile uint8_t conidx = KE_IDX_GET(TASK_APP);
 	  uint8_t att_idx = 0;

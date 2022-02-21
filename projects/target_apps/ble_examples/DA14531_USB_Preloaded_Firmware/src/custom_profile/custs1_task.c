@@ -123,7 +123,6 @@ static int custs1_att_get_value(uint8_t att_idx, uint16_t *length, const uint8_t
         *length = 0;
         *data = NULL;
     }
-		da14531_printf("The pointer of att value is : 0x%x.\r\n", val->data);
  
     return val ? 0 : ATT_ERR_ATTRIBUTE_NOT_FOUND;
 }
@@ -483,9 +482,9 @@ static int gattc_read_req_ind_handler(ke_msg_id_t const msgid,
         uint16_t length = 0;
         uint16_t ccc_val = 0;
         // da14531_printf("The handle index in the att database is %d.\r\n", att_idx);
-			  uint8_t value[2]={0x55,0xaa};
-			  custs1_set_ccc_value(conidx, att_idx, *(uint16_t *)value);	
-			  da14531_printf("Value at 0x7FC85EBA is 0x%x.\r\n", custs1_get_ccc_value(conidx, att_idx));
+			  // uint8_t value[2]={0x55,0xaa};
+			  // custs1_set_ccc_value(conidx, att_idx, *(uint16_t *)value);	
+			  // da14531_printf("Value at 0x7FC85EBA is 0x%x.\r\n", custs1_get_ccc_value(conidx, att_idx));
 			
         // If the attribute has been found, status is GAP_ERR_NO_ERROR
         if (status == GAP_ERR_NO_ERROR)
@@ -533,7 +532,7 @@ static int gattc_read_req_ind_handler(ke_msg_id_t const msgid,
 
         if (status == GAP_ERR_NO_ERROR)
         {
-					  da14531_printf("Data requeted is 0x%x.\r\n", ccc_val);
+					  // da14531_printf("Data requeted is 0x%x.\r\n", ccc_val);
             memcpy(cfm->value, &ccc_val, length);
         }
 
@@ -564,7 +563,7 @@ static int gattc_write_req_ind_handler(ke_msg_id_t const msgid,
                                        ke_task_id_t const dest_id,
                                        ke_task_id_t const src_id)
 {
-	  // da14531_printf("gattc_write_req_ind_handler is called. The message type is 0x%x and parameter handle 0 is: 0x%x.\r\n", msgid, param->handle);
+	  da14531_printf("gattc_write_req_ind_handler is called. The message type is 0x%x and parameter handle 0 is: 0x%x.\r\n", msgid, param->handle);
 
     struct custs1_env_tag *custs1_env = PRF_ENV_GET(CUSTS1, custs1);
     struct gattc_write_cfm * cfm;

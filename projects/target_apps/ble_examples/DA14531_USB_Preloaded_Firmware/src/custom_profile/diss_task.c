@@ -36,6 +36,8 @@
 #include "prf_utils.h"
 #include "attm.h"
 
+#include "da14531_printf.h"
+
 /*
  * FUNCTION DEFINITIONS
  ****************************************************************************************
@@ -143,7 +145,7 @@ static int gattc_read_req_ind_handler(ke_msg_id_t const msgid,
 {
     int msg_status = KE_MSG_CONSUMED;
     ke_state_t state = ke_state_get(dest_id);
-
+	
     if(state == DISS_IDLE)
     {
         struct diss_env_tag* diss_env = PRF_ENV_GET(DISS, diss);
