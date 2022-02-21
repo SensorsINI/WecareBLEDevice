@@ -334,7 +334,23 @@ void user_app_db_init_complete(void)
     // Need to include: "custs1.h" "prf_utils.h" "attm_db.h"
     struct custs1_env_tag *custs1_env = PRF_ENV_GET(CUSTS1, custs1);
     attmdb_att_set_value(custs1_env->shdl + SVC1_IDX_ADC_VAL_2_VAL, DEF_SVC1_ADC_VAL_2_CHAR_LEN, 0, (uint8_t *)&sample);
-    
+    attmdb_att_set_value(custs1_env->shdl + SVC1_IDX_ADC_VAL_1_VAL, DEF_SVC1_ADC_VAL_1_CHAR_LEN, 0, (uint8_t *)&sample);
+
+    //Set svc uuid value      
+	  volatile uint8_t conidx = KE_IDX_GET(TASK_APP);
+	  uint8_t att_idx = 0;
+	  // retrieve handle information
+    uint8_t status = custs1_get_att_idx(SVC1_IDX_ADC_VAL_1_NTF_CFG, &att_idx);
+	  uint8_t value[2]={0x55,0xaa};
+    custs1_set_ccc_value(conidx, 9, *(uint16_t *)value);	
+	
+//		struct gattm_att_set_value_req * setreq = KE_MSG_ALLOC(GATTM_ATT_SET_VALUE_REQ,TASK_ID_GATTM,TASK_APP,gattm_att_set_value_req);
+//		setreq ->handle =SVC1_IDX_ADC_VAL_1_NTF_CFG;
+//		setreq ->length = ATT_UUID_16_LEN;
+//		uint8_t svc_uuid[2]={1,2};
+//		memcpy(setreq ->value, svc_uuid, sizeof(svc_uuid));
+//		ke_msg_send(setreq);
+				
     // ---------------- Method 2: ke_msg_send() ----------------
 
     // // Dummy sample value
@@ -360,7 +376,7 @@ void user_app_db_init_complete(void)
     app_spi2_timer_used = app_easy_timer(50, spi2_io_ctrl);
 		app_spi2_dac_timer_used = app_easy_timer(50, spi2_dac_ctrl);
 		app_spi2_adc1_timer_used = app_easy_timer(50, spi2_adc1_ctrl);		
-
+		
     user_app_adv_start();
 }
 
@@ -388,7 +404,7 @@ void user_catch_rest_hndl(ke_msg_id_t const msgid,
 	  // printf_string(UART1, "The message id is:");
     // print_word(UART1, msgid);
     // printf_string(UART1, ".\r\n");
-	  da14531_printf("Receive unhandled message from ssk app layer. The message type is: 0x%x.\r\n", msgid);
+	  da14531_printf("Receive unhandled message from sdk app layer. The message type is: 0x%x.\r\n", msgid);
     switch(msgid)
     {
         case CUSTS1_VAL_WRITE_IND:
@@ -529,9 +545,12 @@ void user_catch_rest_hndl(ke_msg_id_t const msgid,
 				
 				case DISS_VALUE_REQ_IND: 
 				{
-					   diss_value_req_ind_handler(msgid, param, dest_id, src_id);
+					   my_own_diss_value_req_ind_handler(msgid, param, dest_id, src_id);
 				}  break;
-			   
+			  case GAPM_CMP_EVT: 
+				{
+					 struct gapm_cmp_evt const *msg_param = (struct gapm_cmp_evt const *)(param);
+        }  break;
 								
 
         default:
@@ -788,7 +807,7 @@ static void spi2_adc1_ctrl()
 		regVal = (regVal & 0xFFFFFFF) + (((regVal >> 24) & 0xF) << 28);
 		int32_t voltageVal = (int32_t)(regVal);
 		float voltage = voltageVal/(0x800000 * gainFactor) * 2.4;    // The internal reference voltage is 2.4V
-		da14531_printf("The voltage of channel ID %d is: %.4fV.\r\n",  channelID, voltage);
+		// da14531_printf("The voltage of channel ID %d is: %.4fV.\r\n",  channelID, voltage);
 		
 		// Value shared with BLE for sending to the host
 		globalADCVal = regVal;

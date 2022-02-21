@@ -110,7 +110,7 @@ void user_svc1_long_val_cfg_ind_handler(ke_msg_id_t const msgid,
                                            ke_task_id_t const src_id)
 {
 
-	  da14531_printf("user_svc1_long_val_cfg_ind_handler is called. And the parameter value 0 is: %x", param->value[0]);
+	  da14531_printf("user_svc1_long_val_cfg_ind_handler is called. And the parameter value 0 is: %x.\r\n", param->value[0]);
 	
     // Generate indication when the central subscribes to it
     if (param->value[0])
@@ -123,12 +123,14 @@ void user_svc1_long_val_cfg_ind_handler(ke_msg_id_t const msgid,
                                                           custs1_val_ind_req,
                                                           sizeof(indication_counter));
 
+	 
         req->conidx = app_env[conidx].conidx;
         req->handle = SVC1_IDX_INDICATEABLE_VAL;
         req->length = sizeof(indication_counter);
         req->value[0] = (indication_counter >> 8) & 0xFF;
         req->value[1] = indication_counter & 0xFF;
 
+				
         indication_counter++;
 
         ke_msg_send(req);

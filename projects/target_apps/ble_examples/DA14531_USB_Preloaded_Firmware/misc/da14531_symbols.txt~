@@ -1097,8 +1097,8 @@
 0x07f22621 T custs1_prf_itf_get
 
 ; custs1_task.c (controlled by __EXCLUDE_ROM_CUSTS1__)
-# 0x07f226d3 T custs1_init_ccc_values
-# 0x07f2270b T custs1_set_ccc_value
+0x07f226d3 T custs1_init_ccc_values
+0x07f2270b T custs1_set_ccc_value
 0x07f22823 T gattc_cmp_evt_handler
 0x07f22837 T custs1_val_set_req_handler
 0x07f22857 T custs1_val_ntf_req_handler

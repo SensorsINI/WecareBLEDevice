@@ -62,9 +62,9 @@ const struct attm_desc diss_att_db[DIS_IDX_NB] =
     [DIS_IDX_SVC]                           =   {ATT_DECL_PRIMARY_SERVICE, PERM(RD, ENABLE), 0},
 
     // Manufacturer Name Characteristic Declaration
-    [DIS_IDX_MANUFACTURER_NAME_CHAR]        =   {ATT_DECL_CHARACTERISTIC, PERM(RD, ENABLE), DIS_IDX_MANUFACTURER_NAME_VAL},
+    [DIS_IDX_MANUFACTURER_NAME_CHAR]        =   {ATT_DECL_CHARACTERISTIC, PERM(RI, ENABLE), DIS_IDX_MANUFACTURER_NAME_VAL},
     // Manufacturer Name Characteristic Value
-    [DIS_IDX_MANUFACTURER_NAME_VAL]         =   {ATT_CHAR_MANUF_NAME, PERM(RD, ENABLE), PERM(RI, ENABLE) |DIS_VAL_MAX_LEN},
+    [DIS_IDX_MANUFACTURER_NAME_VAL]         =   {ATT_CHAR_MANUF_NAME, PERM(RI, ENABLE), PERM(RI, ENABLE) |DIS_VAL_MAX_LEN},
 
     // Model Number String Characteristic Declaration
     [DIS_IDX_MODEL_NB_STR_CHAR]             =   {ATT_DECL_CHARACTERISTIC, PERM(RD, ENABLE), DIS_IDX_MODEL_NB_STR_VAL},

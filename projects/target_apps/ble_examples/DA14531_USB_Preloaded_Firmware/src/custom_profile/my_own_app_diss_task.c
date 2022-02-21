@@ -9,7 +9,7 @@
 #include "sdk_version.h"
 #include "user_profiles_config.h"
 
-int diss_value_req_ind_handler(ke_msg_id_t const msgid,
+int my_own_diss_value_req_ind_handler(ke_msg_id_t const msgid,
                                       struct diss_value_req_ind const *param,
                                       ke_task_id_t const dest_id,
                                       ke_task_id_t const src_id)

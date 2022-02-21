@@ -10,7 +10,7 @@
       <TargetName>DA14531</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060960::V5.06 update 7 (build 960)::.\ARMCC</pCCUsed>
+      <pCCUsed>5060750::V5.06 update 6 (build 750)::ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -185,7 +185,6 @@
             <uocXRam>0</uocXRam>
             <RvdsVP>0</RvdsVP>
             <RvdsMve>0</RvdsMve>
-            <RvdsCdeCp>0</RvdsCdeCp>
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
@@ -352,7 +351,7 @@
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
             <useXO>0</useXO>
-            <ClangAsOpt>4</ClangAsOpt>
+            <uClangAs>0</uClangAs>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define></Define>
@@ -665,16 +664,6 @@
               <FilePath>.\..\..\..\..\..\sdk\ble_stack\profiles\custom\custom_common.c</FilePath>
             </File>
             <File>
-              <FileName>custs1.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\..\..\..\..\..\sdk\ble_stack\profiles\custom\custs\src\custs1.c</FilePath>
-            </File>
-            <File>
-              <FileName>custs1_task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\..\..\..\..\..\sdk\ble_stack\profiles\custom\custs\src\custs1_task.c</FilePath>
-            </File>
-            <File>
               <FileName>prf.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\..\..\..\..\..\sdk\ble_stack\profiles\prf.c</FilePath>
@@ -698,6 +687,16 @@
               <FileName>diss_task.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\src\custom_profile\diss_task.c</FilePath>
+            </File>
+            <File>
+              <FileName>custs1.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\custom_profile\custs1.c</FilePath>
+            </File>
+            <File>
+              <FileName>custs1_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\custom_profile\custs1_task.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -785,21 +784,6 @@
               <FilePath>.\..\..\..\..\..\sdk\app_modules\src\app_easy\app_easy_timer.c</FilePath>
             </File>
             <File>
-              <FileName>app_customs.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\..\..\..\..\..\sdk\app_modules\src\app_custs\app_customs.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_customs_task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\..\..\..\..\..\sdk\app_modules\src\app_custs\app_customs_task.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_customs_common.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\..\..\..\..\..\sdk\app_modules\src\app_custs\app_customs_common.c</FilePath>
-            </File>
-            <File>
               <FileName>app_bond_db.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\..\..\..\..\..\sdk\app_modules\src\app_bond_db\app_bond_db.c</FilePath>
@@ -823,6 +807,26 @@
               <FileName>app_task.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\src\app_common\app_task.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_diss_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\custom_profile\app_diss_task.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_customs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\custom_profile\app_customs.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_customs_common.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\custom_profile\app_customs_common.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_customs_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\custom_profile\app_customs_task.c</FilePath>
             </File>
           </Files>
         </Group>
