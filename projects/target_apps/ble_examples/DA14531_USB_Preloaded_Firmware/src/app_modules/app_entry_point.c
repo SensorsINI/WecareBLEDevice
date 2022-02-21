@@ -222,9 +222,9 @@ int app_entry_point_handler(ke_msg_id_t const msgid,
     //user cannot do anything else than consume the message
     if (app_process_catch_rest_cb != NULL)
     {
-			  #if defined(DEBUG_INFO)
+			  // #if defined(DEBUG_INFO)
 			  da14531_printf("No handler found. User should take care of it.\r\n");
-			  #endif
+			  // #endif
 			
         app_process_catch_rest_cb(msgid,param, dest_id, src_id);
     }

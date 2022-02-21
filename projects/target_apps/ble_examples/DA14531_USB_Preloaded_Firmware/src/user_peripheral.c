@@ -69,6 +69,7 @@
 #include "utils.h"
 #include "da14531_printf.h"
 
+#include "my_own_app_diss_task.h" 
 // Outside value
 extern uint32_t globalDACVal;
 extern uint32_t globalADCVal;
@@ -387,7 +388,7 @@ void user_catch_rest_hndl(ke_msg_id_t const msgid,
 	  // printf_string(UART1, "The message id is:");
     // print_word(UART1, msgid);
     // printf_string(UART1, ".\r\n");
-	  da14531_printf("Receive unhandled message from app. The message type is: 0x%x.\r\n", msgid);
+	  da14531_printf("Receive unhandled message from ssk app layer. The message type is: 0x%x.\r\n", msgid);
     switch(msgid)
     {
         case CUSTS1_VAL_WRITE_IND:
@@ -525,6 +526,13 @@ void user_catch_rest_hndl(ke_msg_id_t const msgid,
                 } break;
              }
         } break;
+				
+				case DISS_VALUE_REQ_IND: 
+				{
+					   diss_value_req_ind_handler(msgid, param, dest_id, src_id);
+				}  break;
+			   
+								
 
         default:
 					  da14531_printf("Caught message not handled by any function. The message type is: 0x%x\r\n", msgid);
