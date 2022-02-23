@@ -1071,11 +1071,11 @@
 0x07f2135f T prf_unpack_date_time
   
 ; diss.c (controlled by __EXCLUDE_ROM_DISS__)
-# 0x07f21381 T diss_compute_cfg_flag                    
-# 0x07f21453 T diss_handle_to_value                     
-# 0x07f21483 T diss_value_to_handle                     
-# 0x07f214b7 T diss_check_val_len                       
-# 0x07f214ed T diss_prf_itf_get 
+0x07f21381 T diss_compute_cfg_flag                    
+0x07f21453 T diss_handle_to_value                     
+0x07f21483 T diss_value_to_handle                     
+0x07f214b7 T diss_check_val_len                       
+0x07f214ed T diss_prf_itf_get 
 
 ; bass.c (controlled by __EXCLUDE_ROM_BASS__)
 0x07f2184b T bass_get_att_handle
