@@ -467,7 +467,7 @@ static int gattc_read_req_ind_handler(ke_msg_id_t const msgid,
                                       ke_task_id_t const dest_id,
                                       ke_task_id_t const src_id)
 {
-	  da14531_printf("gattc_read_req_ind_handler is called. The message type is 0x%x and parameter handle 0 is: 0x%x.\r\n", msgid, param->handle);
+	  // da14531_printf("gattc_read_req_ind_handler is called. The message type is 0x%x and parameter handle 0 is: 0x%x.\r\n", msgid, param->handle);
 
     ke_state_t state = ke_state_get(dest_id);
 

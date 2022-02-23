@@ -120,6 +120,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGUARM</Key>
+          <Name>0I¤€§Œw0I¤€§Œw0I¤</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -147,24 +148,7 @@
           <Name></Name>
         </SetRegEntry>
       </TargetDriverDllRegistry>
-      <Breakpoint>
-        <Bp>
-          <Number>0</Number>
-          <Type>0</Type>
-          <LineNumber>59</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>133970558</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\src\custom_profile\app_diss.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\ble_app_peripheral_531\../src/custom_profile/app_diss.c\59</Expression>
-        </Bp>
-      </Breakpoint>
+      <Breakpoint/>
       <WatchWindow1>
         <Ww>
           <count>0</count>
@@ -201,7 +185,7 @@
         <Mm>
           <WinNumber>1</WinNumber>
           <SubType>0</SubType>
-          <ItemText>0x7FC8EBA</ItemText>
+          <ItemText>0x7FC9A74</ItemText>
           <AccSizeX>0</AccSizeX>
         </Mm>
       </MemoryWindow1>
@@ -1332,30 +1316,6 @@
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
-    <File>
-      <GroupNumber>8</GroupNumber>
-      <FileNumber>86</FileNumber>
-      <FileType>1</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>..\src\custom_profile\my_own_app_diss_task.c</PathWithFileName>
-      <FilenameWithoutPath>my_own_app_diss_task.c</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>8</GroupNumber>
-      <FileNumber>87</FileNumber>
-      <FileType>5</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>..\src\custom_profile\my_own_app_diss_task.h</PathWithFileName>
-      <FilenameWithoutPath>my_own_app_diss_task.h</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
   </Group>
 
   <Group>
@@ -1366,7 +1326,7 @@
     <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>9</GroupNumber>
-      <FileNumber>88</FileNumber>
+      <FileNumber>86</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1378,7 +1338,7 @@
     </File>
     <File>
       <GroupNumber>9</GroupNumber>
-      <FileNumber>89</FileNumber>
+      <FileNumber>87</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1390,7 +1350,7 @@
     </File>
     <File>
       <GroupNumber>9</GroupNumber>
-      <FileNumber>90</FileNumber>
+      <FileNumber>88</FileNumber>
       <FileType>5</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1402,7 +1362,7 @@
     </File>
     <File>
       <GroupNumber>9</GroupNumber>
-      <FileNumber>91</FileNumber>
+      <FileNumber>89</FileNumber>
       <FileType>5</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1414,7 +1374,7 @@
     </File>
     <File>
       <GroupNumber>9</GroupNumber>
-      <FileNumber>92</FileNumber>
+      <FileNumber>90</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1426,7 +1386,7 @@
     </File>
     <File>
       <GroupNumber>9</GroupNumber>
-      <FileNumber>93</FileNumber>
+      <FileNumber>91</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1438,7 +1398,7 @@
     </File>
     <File>
       <GroupNumber>9</GroupNumber>
-      <FileNumber>94</FileNumber>
+      <FileNumber>92</FileNumber>
       <FileType>5</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1450,7 +1410,7 @@
     </File>
     <File>
       <GroupNumber>9</GroupNumber>
-      <FileNumber>95</FileNumber>
+      <FileNumber>93</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1462,7 +1422,7 @@
     </File>
     <File>
       <GroupNumber>9</GroupNumber>
-      <FileNumber>96</FileNumber>
+      <FileNumber>94</FileNumber>
       <FileType>5</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1482,7 +1442,7 @@
     <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>10</GroupNumber>
-      <FileNumber>97</FileNumber>
+      <FileNumber>95</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1494,7 +1454,7 @@
     </File>
     <File>
       <GroupNumber>10</GroupNumber>
-      <FileNumber>98</FileNumber>
+      <FileNumber>96</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>

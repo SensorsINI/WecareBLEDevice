@@ -1,4 +1,4 @@
-;#<FEEDBACK># ARM Linker, 5060960: Last Updated: Tue Feb 22 00:20:59 2022
+;#<FEEDBACK># ARM Linker, 5060960: Last Updated: Wed Feb 23 22:02:11 2022
 ;VERSION 0.2
 ;FILE adc_531.o
 adc_correct_sample <= USED 0
@@ -46,7 +46,6 @@ default_app_on_db_init_complete <= USED 0
 default_app_on_disconnect <= USED 0
 ;FILE app_diss.o
 ;FILE app_diss_task.o
-app_diss_process_handler <= USED 0
 ;FILE app_easy_msg_utils.o
 app_easy_msg_free_callback <= USED 0
 app_easy_msg_modify <= USED 0
@@ -137,7 +136,6 @@ i2c_wait_until_eeprom_ready <= USED 0
 ;FILE jump_table.o
 dummyf <= USED 0
 ;FILE mcr35614r.o
-;FILE my_own_app_diss_task.o
 ;FILE nmi_handler.o
 ;FILE otp_cs.o
 otp_cs_get_adc_offsh_ge <= USED 0

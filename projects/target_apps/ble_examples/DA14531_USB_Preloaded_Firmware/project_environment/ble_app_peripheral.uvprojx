@@ -894,16 +894,6 @@
               <FileType>5</FileType>
               <FilePath>..\src\custom_profile\user_app_own_prf.h</FilePath>
             </File>
-            <File>
-              <FileName>my_own_app_diss_task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\src\custom_profile\my_own_app_diss_task.c</FilePath>
-            </File>
-            <File>
-              <FileName>my_own_app_diss_task.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\src\custom_profile\my_own_app_diss_task.h</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
