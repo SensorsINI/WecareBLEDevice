@@ -1,4 +1,4 @@
-;#<FEEDBACK># ARM Linker, 5060960: Last Updated: Wed Feb 23 22:07:14 2022
+;#<FEEDBACK># ARM Linker, 5060750: Last Updated: Thu Feb 24 17:28:50 2022
 ;VERSION 0.2
 ;FILE adc_531.o
 adc_correct_sample <= USED 0
@@ -79,8 +79,8 @@ check_sys_startup_period <= USED 0
 battery_get_lvl <= USED 0
 battery_get_voltage <= USED 0
 ;FILE ble_arp.o
+;FILE custs1.o
 ;FILE custs1_task.o
-custs1_init_ccc_values <= USED 0
 ;FILE da14531_printf.o
 ;FILE dac70508m.o
 ;FILE gpio.o
