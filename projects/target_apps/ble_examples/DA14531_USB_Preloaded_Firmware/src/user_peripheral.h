@@ -79,6 +79,10 @@
 
 #define APP_PERIPHERAL_CTRL_TIMER_DELAY 100
 
+// LEDs on the wecare board which is controlled by a SPI chip (MAX3717).
+#define RED_LED_PORT 2
+#define GREEN_LED_PORT 3
+
 /*
  * TYPE DEFINITIONS
  ****************************************************************************************
@@ -157,6 +161,16 @@ void user_catch_rest_hndl(ke_msg_id_t const msgid,
                           ke_task_id_t const dest_id,
                           ke_task_id_t const src_id);
 
+/**
+ ****************************************************************************************
+ * @brief Wecare board LED control
+ * @param[in] redLed on/off for the red LED
+ * @param[in] blueLed on/off for the blue LED													
+ * @return void
+ ****************************************************************************************
+*/													
+void spi2_led_ctrl(bool redLed, bool greenLed);
+	
 /// @} APP
 
 #endif // _USER_PERIPHERAL_H_

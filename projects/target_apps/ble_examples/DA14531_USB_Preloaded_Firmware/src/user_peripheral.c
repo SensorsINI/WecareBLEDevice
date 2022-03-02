@@ -382,7 +382,7 @@ void user_app_db_init_complete(void)
     ////////////////////////////////////////////////////////////////
 
     // Test: SPI2 timer start. Delay time: 50*10ms = 500ms
-    app_spi2_timer_used = app_easy_timer(50, spi2_io_ctrl);
+    // app_spi2_timer_used = app_easy_timer(50, spi2_io_ctrl);
 		app_spi2_dac_timer_used = app_easy_timer(50, spi2_dac_ctrl);
 		app_spi2_adc1_timer_used = app_easy_timer(50, spi2_adc1_ctrl);		
 		
@@ -413,7 +413,7 @@ void user_catch_rest_hndl(ke_msg_id_t const msgid,
 	  // printf_string(UART1, "The message id is:");
     // print_word(UART1, msgid);
     // printf_string(UART1, ".\r\n");
-	  da14531_printf("Receive unhandled message from sdk app layer. The message type is: 0x%x.\r\n", msgid);
+//	  da14531_printf("Receive unhandled message from sdk app layer. The message type is: 0x%x.\r\n", msgid);
     switch(msgid)
     {
         case CUSTS1_VAL_WRITE_IND:
@@ -813,11 +813,35 @@ static void spi2_adc1_ctrl()
 		int32_t voltageVal = (int32_t)(regVal);
 		float voltage = voltageVal/(0x800000 * gainFactor) * 2.4;    // The internal reference voltage is 2.4V
 		// da14531_printf("The voltage of channel ID %d is: %.4fV.\r\n",  channelID, voltage);
-		
-		// Value shared with BLE for sending to the host
-		globalADCVal = regVal;
+	
+		// Copy voltage hex buffer to value shared with BLE for sending to the host
+		memcpy(&globalADCVal, &voltage, sizeof(float));
 		 
     app_spi2_adc1_timer_used = app_easy_timer(50, spi2_adc1_ctrl);
+}
+
+
+/**
+ ****************************************************************************************
+ * @brief API functions export
+ ****************************************************************************************
+*/
+void spi2_led_ctrl(bool redLed, bool greenLed)
+{
+		spi_initialize(&spi2_cfg);
+
+    uint16_t reg_val_ledRed = (RED_LED_PORT << 8) + redLed;
+    uint16_t reg_val_ledGreen = (GREEN_LED_PORT << 8) + greenLed;
+
+	  // For the red LED
+    spi_cs_low();
+	  spi_send(&reg_val_ledRed, 1, SPI_OP_BLOCKING);
+    spi_cs_high();
+		  
+    // For the green LED
+    spi_cs_low();
+    spi_send(&reg_val_ledGreen, 1, SPI_OP_BLOCKING);
+    spi_cs_high();
 }
 
 /// @} APP

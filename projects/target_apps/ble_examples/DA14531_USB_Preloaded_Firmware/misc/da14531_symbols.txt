@@ -1112,8 +1112,8 @@
 0x07f22c19 T attm_svc_create_db_128
 
 ; app_entry_point.c (__EXCLUDE_ROM_APP_TASK__)
-# 0x07f232a9 T app_entry_point_handler                  
-# 0x07f232f1 T app_std_process_event     
+0x07f232a9 T app_entry_point_handler                  
+0x07f232f1 T app_std_process_event     
 
 ; app_utils.c - (controlled by __EXCLUDE_ROM_APP_UTILS__)
 0x07f23335 T app_get_address_type_ROM
@@ -1126,24 +1126,24 @@
 0x07f23461 T __aeabi_uldivmod
 
 ; app.c (controlled by __EXCLUDE_ROM_APP_TASK__)
-# 0x07f234c1 T app_db_init_start
-# 0x07f234dd T app_db_init
-# 0x07f234e9 T app_easy_gap_confirm
-# 0x07f23515 T append_device_name                              
-# 0x07f23539 T app_easy_gap_update_adv_data 
-# 0x07f23581 T app_easy_gap_disconnect
-# 0x07f235bd T app_easy_gap_advertise_stop
-# 0x07f235d9 T active_conidx_to_conhdl
-# 0x07f23605 T active_conhdl_to_conidx
-# 0x07f23641 T app_timer_set
-# 0x07f2365d T app_easy_gap_set_data_packet_length
-# 0x07f23699 T get_user_prf_srv_perm
-# 0x07f236c1 T app_set_prf_srv_perm
-# 0x07f236f1 T prf_init_srv_perm
-# 0x07f23715 T app_gattc_svc_changed_cmd_send                
+0x07f234c1 T app_db_init_start
+0x07f234dd T app_db_init
+0x07f234e9 T app_easy_gap_confirm
+0x07f23515 T append_device_name                              
+0x07f23539 T app_easy_gap_update_adv_data 
+0x07f23581 T app_easy_gap_disconnect
+0x07f235bd T app_easy_gap_advertise_stop
+0x07f235d9 T active_conidx_to_conhdl
+0x07f23605 T active_conhdl_to_conidx
+0x07f23641 T app_timer_set
+0x07f2365d T app_easy_gap_set_data_packet_length
+0x07f23699 T get_user_prf_srv_perm
+0x07f236c1 T app_set_prf_srv_perm
+0x07f236f1 T prf_init_srv_perm
+0x07f23715 T app_gattc_svc_changed_cmd_send                
 
 ; (controlled by __EXCLUDE_ROM_APP_TASK__)
-# 0x07f23f58 D app_default_handler
+0x07f23f58 D app_default_handler
 
 ; (controlled by __EXCLUDE_ROM_GAP_CFG_DATA__)               
 0x07f23f60 D gap_cfg_user_var_struct

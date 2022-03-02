@@ -94,14 +94,24 @@ void user_svc1_led_wr_ind_handler(ke_msg_id_t const msgid,
     uint8_t val = 0;
     memcpy(&val, &param->value[0], param->length);
 
-    if (val == CUSTS1_LED_ON)
-    {
-        // GPIO_SetActive(GPIO_LED_PORT, GPIO_LED_PIN);
-    }
-    else if (val == CUSTS1_LED_OFF)
-    {
-        // GPIO_SetInactive(GPIO_LED_PORT, GPIO_LED_PIN);
-    }
+	  // On the board, '0' turns on the LED, '1' turns off.
+	  switch(val)
+		{
+				case 0:
+						spi2_led_ctrl(false, false); // 0: both red and green on
+						break;
+				case 1:
+					  spi2_led_ctrl(false, true); // 1: red on and green off
+						break;
+				case 2:
+						spi2_led_ctrl(true, false); // 2: red off and green on
+						break;
+				case 3:
+					  spi2_led_ctrl(true, true); // 3: red off and green off
+						break;
+				default:
+						break;
+		}
 }
 
 void user_svc1_long_val_cfg_ind_handler(ke_msg_id_t const msgid,
@@ -110,7 +120,7 @@ void user_svc1_long_val_cfg_ind_handler(ke_msg_id_t const msgid,
                                            ke_task_id_t const src_id)
 {
 
-	  da14531_printf("user_svc1_long_val_cfg_ind_handler is called. And the parameter value 0 is: %x.\r\n", param->value[0]);
+	  // da14531_printf("user_svc1_long_val_cfg_ind_handler is called. And the parameter value 0 is: %x.\r\n", param->value[0]);
 	
     // Generate indication when the central subscribes to it
     if (param->value[0])

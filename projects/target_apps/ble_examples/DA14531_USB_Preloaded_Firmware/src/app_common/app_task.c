@@ -98,7 +98,7 @@ static int gapm_cmp_evt_handler(ke_msg_id_t const msgid,
                                 ke_task_id_t const dest_id,
                                 ke_task_id_t const src_id)
 {
-    da14531_printf("The param->operation of gapm_cmp_evt_handler is: %d. \r\n", param->operation);
+//    da14531_printf("The param->operation of gapm_cmp_evt_handler is: %d. \r\n", param->operation);
 
     switch(param->operation)
     {
