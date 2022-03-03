@@ -70,6 +70,25 @@
 
 #define TOTAL_BYTES 31
 
+static const uint8_t ADC_CHANNEL_ID[16] =
+{
+		0x08,  // Single CH0
+		0x18,  // Single CH1
+		0x28,  // Single CH2
+		0x38,  // Single CH3
+		0x48,  // Single CH4
+		0x58,  // Single CH5
+		0x68,  // Single CH6
+		0x78,  // Single CH7
+		0x01,  // Diff A (CH0-CH1)
+		0x23,  // Diff B (CH2-CH3)
+		0x45,  // Diff C (CH4-CH5)
+		0x67,  // Diff D (CH6-CH7)
+		0xDE,  // TEMP
+		0x98,  // AVDD
+		0xF8,  // Vcm
+		0x88  // OFFSET
+};
 
 /**
  ****************************************************************************************
