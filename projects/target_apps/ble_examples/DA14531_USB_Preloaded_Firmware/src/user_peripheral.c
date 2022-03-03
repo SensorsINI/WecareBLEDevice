@@ -726,7 +726,7 @@ static void spi2_adc1_init(void)
 //		spi2_adc_write_register(CONFIG2, sendBuf, CONFIG2_BYTES);	
 		
 		// Configure CONFIG3 register: CONV_MODE('11'): Continous conversion in scan mode. DATA_FORMAT('11'): 32bit with channel ID.
-		sendBuf[0] = 0xF0; 
+		sendBuf[0] = 0xB0; 
 		spi2_adc_write_register(CONFIG3, sendBuf, CONFIG3_BYTES);	
 		
 		// Configure IRQ regiseter: IRQ_Mode('01'): IRQ output and inactive state is logic high
@@ -741,10 +741,10 @@ static void spi2_adc1_init(void)
 		sendBuf[0] = 0x98;
 		spi2_adc_write_register(MUX, sendBuf, MUX_BYTES);
 		
-		// Configure SCAN register: Single-ended input for CH0
+		// Configure SCAN register: Disable SCAN mode
 		sendBuf[0] = 0x00;
-		sendBuf[1] = 0xFF;
-		sendBuf[2] = 0xFF;
+		sendBuf[1] = 0x00;
+		sendBuf[2] = 0x00;
 		spi2_adc_write_register(SCAN, sendBuf, SCAN_BYTES);
 
 		// Configure CONFIG0 register: Internal V_ref and internal master clock, no bias and ADC conversion mode.
@@ -783,17 +783,7 @@ static void spi2_adc1_ctrl()
 				spi2_adc_write_register(MUX, sendBuf, MUX_BYTES);			
 				initFlag = false;
 		}
-		
-		// Read all the register values.
-		spi2_adc_increment_read_register(ADCDATA, receiveBuf, TOTAL_BYTES);
-
-		uint8_t irqVal = swapBufToRealVal(receiveBuf, IRQ_BYTES);
-		while((irqVal & 0x40) != 0)
-		{
-				spi2_adc_static_read_register(IRQ, receiveBuf, IRQ_BYTES);
-				irqVal = swapBufToRealVal(receiveBuf, IRQ_BYTES);
-		}			
-
+	
 		spi2_adc_static_read_register(CONFIG2, receiveBuf, CONFIG2_BYTES);	
 		regVal = swapBufToRealVal(receiveBuf, CONFIG2_BYTES);
     // Obtain the GAIN bits value
@@ -802,21 +792,38 @@ static void spi2_adc1_ctrl()
 		float gainFactor = 0.333;  // if gainReg == 0, then gainFactor is 1/3
 		if(gainReg != 0)
 		{
-			gainFactor = 1 << (gainReg - 1);
+				gainFactor = 1 << (gainReg - 1);
 		}		
 		
-		// STATIC Read ADCDATA
-		spi2_adc_static_read_register(ADCDATA, receiveBuf, ADCDATA_BYTES);	
-		regVal = swapBufToRealVal(receiveBuf, ADCDATA_BYTES);
-		volatile uint32_t channelID = (regVal >> 28) & 0xF;
-		regVal = (regVal & 0xFFFFFFF) + (((regVal >> 24) & 0xF) << 28);
-		int32_t voltageVal = (int32_t)(regVal);
-		float voltage = voltageVal/(0x800000 * gainFactor) * 2.4;    // The internal reference voltage is 2.4V
-		// da14531_printf("The voltage of channel ID %d is: %.4fV.\r\n",  channelID, voltage);
-	
-		// Copy voltage hex buffer to value shared with BLE for sending to the host
-		memcpy(&globalADCVal, &voltage, sizeof(float));
-		 
+		for(int i = 0; i < 8; i++)
+		{			
+				// Read IRQ register, check DR_STATUS bit.
+				spi2_adc_static_read_register(IRQ, receiveBuf, IRQ_BYTES);
+				uint8_t irqVal = swapBufToRealVal(receiveBuf, IRQ_BYTES);
+				da14531_printf("Current IRQ register value is 0x%x.\r\n", irqVal);					
+			  // Wait until DR_STAUS become low.
+				while((irqVal & 0x40) != 0)
+				{
+						spi2_adc_static_read_register(IRQ, receiveBuf, IRQ_BYTES);
+						irqVal = swapBufToRealVal(receiveBuf, IRQ_BYTES);
+				}
+
+				// STATIC Read ADCDATA
+				spi2_adc_static_read_register(ADCDATA, receiveBuf, ADCDATA_BYTES);	
+				regVal = swapBufToRealVal(receiveBuf, ADCDATA_BYTES);
+				volatile uint32_t channelID = (regVal >> 28) & 0xF;
+				regVal = (regVal & 0xFFFFFFF) + (((regVal >> 24) & 0xF) << 28);
+				int32_t voltageVal = (int32_t)(regVal);
+				float voltage = voltageVal/(0x800000 * gainFactor) * 2.4;    // The internal reference voltage is 2.4V
+				da14531_printf("The voltage of channel ID %d is: %.4fV.\r\n",  channelID, voltage);
+				// Copy voltage hex buffer to value shared with BLE for sending to the host
+				memcpy(&globalADCVal, &voltage, sizeof(float));
+				
+//				spi2_adc_static_read_register(IRQ, receiveBuf, IRQ_BYTES);
+//				irqVal = swapBufToRealVal(receiveBuf, IRQ_BYTES);
+//				da14531_printf("Current IRQ register value is 0x%x.\r\n", irqVal);				
+		}
+
     app_spi2_adc1_timer_used = app_easy_timer(50, spi2_adc1_ctrl);
 }
 
