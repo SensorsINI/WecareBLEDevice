@@ -58,6 +58,7 @@
 ke_msg_id_t timer_used      __SECTION_ZERO("retention_mem_area0"); //@RETENTION MEMORY
 uint16_t indication_counter __SECTION_ZERO("retention_mem_area0"); //@RETENTION MEMORY
 uint16_t non_db_val_counter __SECTION_ZERO("retention_mem_area0"); //@RETENTION MEMORY
+extern timer_hnd app_spi2_led_timer_used;
 
 /*
  * FUNCTION DEFINITIONS
@@ -108,6 +109,16 @@ void user_svc1_led_wr_ind_handler(ke_msg_id_t const msgid,
 						break;
 				case 3:
 					  spi2_led_ctrl(true, true); // 3: red off and green off
+						break;
+				case 4:
+					  app_spi2_led_timer_used = app_easy_timer(50, spi2_led_toggle);
+						break;
+				case 5:
+						if (app_spi2_led_timer_used != EASY_TIMER_INVALID_TIMER)
+						{
+								app_easy_timer_cancel(app_spi2_led_timer_used);
+								app_spi2_led_timer_used = EASY_TIMER_INVALID_TIMER;
+						}
 						break;
 				default:
 						break;
@@ -252,7 +263,8 @@ void user_svc1_rest_att_info_req_handler(ke_msg_id_t const msgid,
     ke_msg_send(rsp);
 }
 
-uint32_t globalADCVal = 0;
+uint32_t globalADCValBuf[16];
+
 void app_adcval1_timer_cb_handler()
 {
     struct custs1_val_ntf_ind_req *req = KE_MSG_ALLOC_DYN(CUSTS1_VAL_NTF_REQ,
@@ -267,7 +279,7 @@ void app_adcval1_timer_cb_handler()
                                                               custs1_val_set_req,
                                                               DEF_SVC1_ADC_VAL_1_CHAR_LEN);
 
-		uint32_t valToSend = globalADCVal;
+		uint32_t valToSend = globalADCValBuf[0];
 		da14531_printf("The raw voltage data sent from ADC is: 0x%x.\r\n",  valToSend);
 
     // ADC value to be sampled
@@ -286,7 +298,6 @@ void app_adcval1_timer_cb_handler()
     req_set->length = DEF_SVC1_ADC_VAL_1_CHAR_LEN;
     memcpy(req_set->value, &valToSend, DEF_SVC1_ADC_VAL_1_CHAR_LEN);
     ke_msg_send(req_set);
-
 
     if (ke_state_get(TASK_APP) == APP_CONNECTED)
     {

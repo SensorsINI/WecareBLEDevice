@@ -72,7 +72,7 @@
 #include "app_diss_task.h" 
 // Outside value
 extern uint32_t globalDACVal;
-extern uint32_t globalADCVal;
+extern uint32_t globalADCValBuf[16];
 
 /*
  * TYPE DEFINITIONS
@@ -107,8 +107,7 @@ uint8_t stored_adv_data[ADV_DATA_LEN]           __SECTION_ZERO("retention_mem_ar
 uint8_t stored_scan_rsp_data[SCAN_RSP_DATA_LEN] __SECTION_ZERO("retention_mem_area0"); //@RETENTION MEMORY
 
 // Test: SPI2 timer
-timer_hnd app_spi2_timer_used                   __SECTION_ZERO("retention_mem_area0");
-static void spi2_io_ctrl(void);
+timer_hnd app_spi2_led_timer_used                   __SECTION_ZERO("retention_mem_area0");
 
 // Test: SPI2 DAC
 timer_hnd app_spi2_dac_timer_used                   __SECTION_ZERO("retention_mem_area0");
@@ -382,9 +381,12 @@ void user_app_db_init_complete(void)
     ////////////////////////////////////////////////////////////////
 
     // Test: SPI2 timer start. Delay time: 50*10ms = 500ms
-    // app_spi2_timer_used = app_easy_timer(50, spi2_io_ctrl);
+    // app_spi2_led_timer_used = app_easy_timer(50, spi2_led_toggle);
 		app_spi2_dac_timer_used = app_easy_timer(50, spi2_dac_ctrl);
 		app_spi2_adc1_timer_used = app_easy_timer(50, spi2_adc1_ctrl);		
+		
+		// Turn on a LED to show that the board is running
+		spi2_led_ctrl(true, false);
 		
     user_app_adv_start();
 }
@@ -619,7 +621,7 @@ uint16_t globalCnt = 0;
  * @return void
  ****************************************************************************************
 */
-static void spi2_io_ctrl()
+void spi2_led_toggle()
 {
     spi_initialize(&spi2_cfg);
 
@@ -648,8 +650,7 @@ static void spi2_io_ctrl()
     spi_cs_high();
     // }
 
-    // Restart timer for the next SPI2 transaction. Delay time: 50*10ms = 500ms
-    app_spi2_timer_used = app_easy_timer(50, spi2_io_ctrl);
+		app_spi2_led_timer_used = app_easy_timer(50, spi2_led_toggle);
 }
 
 /**
@@ -800,6 +801,7 @@ static void spi2_adc1_ctrl()
 				gainFactor = 1 << (gainReg - 1);
 		}		
 		
+		float voltage[16];
 		for(int i = 0; i < 16; i++)
 		{		
 				sendBuf[0] = ADC_CHANNEL_ID[i];
@@ -821,12 +823,13 @@ static void spi2_adc1_ctrl()
 				volatile uint32_t channelID = (regVal >> 28) & 0xF;
 				regVal = (regVal & 0xFFFFFFF) + (((regVal >> 24) & 0xF) << 28);
 				int32_t voltageVal = (int32_t)(regVal);
-				float voltage = voltageVal/(0x800000 * gainFactor) * 2.4;    // The internal reference voltage is 2.4V
-				da14531_printf("The voltage of channel ID %d is: %.4fV.\r\n",  channelID, voltage);
-				// Copy voltage hex buffer to value shared with BLE for sending to the host
-				memcpy(&globalADCVal, &voltage, sizeof(float));			
+				voltage[channelID] = voltageVal/(0x800000 * gainFactor) * 2.4;    // The internal reference voltage is 2.4V
+				da14531_printf("The voltage of channel ID %d is: %.4fV.\r\n",  channelID, voltage[channelID]);
 		}
-    
+		
+		// Copy voltage hex buffer to value shared with BLE for sending to the host
+		memcpy(globalADCValBuf, voltage, sizeof(float) * 16);			    
+		
 		// Shutdown ADC to save power after conversion
 		spi2_adc_fast_command(FAST_CMD_ADC_SHUTDOWN);
 		
@@ -841,6 +844,13 @@ static void spi2_adc1_ctrl()
 */
 void spi2_led_ctrl(bool redLed, bool greenLed)
 {
+		// Disable LED controll from the timer first
+		if (app_spi2_led_timer_used != EASY_TIMER_INVALID_TIMER)
+		{
+				app_easy_timer_cancel(app_spi2_led_timer_used);
+				app_spi2_led_timer_used = EASY_TIMER_INVALID_TIMER;
+		}
+						
 		spi_initialize(&spi2_cfg);
 
     uint16_t reg_val_ledRed = (RED_LED_PORT << 8) + redLed;
