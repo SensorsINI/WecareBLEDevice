@@ -71,7 +71,7 @@
 
 #include "app_diss_task.h" 
 // Outside value
-extern uint32_t globalDACVal;
+extern uint16_t globalDACValBuf[8];
 extern uint32_t globalADCValBuf[16];
 
 /*
@@ -334,9 +334,9 @@ void user_app_db_init_complete(void)
 		struct custs1_env_tag *custs1_env = PRF_ENV_GET(CUSTS1, custs1);
 		attmdb_att_set_value(custs1_env->shdl + SVC1_IDX_ADC_VAL_2_VAL, DEF_SVC1_ADC_VAL_2_CHAR_LEN, 0, (uint8_t *)&sample);
 		static uint16_t dacInitVal = 0x1FFF;
-		attmdb_att_set_value(custs1_env->shdl + SVC1_IDX_LONG_VALUE_VAL, DEF_SVC1_LONG_VALUE_CHAR_LEN, 0, (uint8_t *)&dacInitVal);
+		attmdb_att_set_value(custs1_env->shdl + SVC1_IDX_DAC_VALUE_VAL, DEF_SVC1_DAC_VALUE_CHAR_LEN, 0, (uint8_t *)&dacInitVal);
 		static char * dacDescName = "DAC";
-		attmdb_att_set_value(custs1_env->shdl + SVC1_IDX_LONG_VALUE_USER_DESC, sizeof(dacDescName) - 1, 0, (uint8_t *)dacDescName);
+		attmdb_att_set_value(custs1_env->shdl + SVC1_IDX_DAC_VALUE_USER_DESC, sizeof(dacDescName) - 1, 0, (uint8_t *)dacDescName);
 
 		//Set svc uuid value      
 		volatile uint8_t conidx = KE_IDX_GET(TASK_APP);
@@ -441,15 +441,15 @@ void user_catch_rest_hndl(ke_msg_id_t const msgid,
                     break;
 
                 case SVC1_IDX_INDICATEABLE_IND_CFG:
-                    user_svc1_long_val_cfg_ind_handler(msgid, msg_param, dest_id, src_id);
+                    user_svc1_dac_val_cfg_ind_handler(msgid, msg_param, dest_id, src_id);
                     break;
 
-                case SVC1_IDX_LONG_VALUE_NTF_CFG:
-                    user_svc1_long_val_cfg_ind_handler(msgid, msg_param, dest_id, src_id);
+                case SVC1_IDX_DAC_VALUE_NTF_CFG:
+                    user_svc1_dac_val_cfg_ind_handler(msgid, msg_param, dest_id, src_id);
                     break;
 
-                case SVC1_IDX_LONG_VALUE_VAL:
-                    user_svc1_long_val_wr_ind_handler(msgid, msg_param, dest_id, src_id);
+                case SVC1_IDX_DAC_VALUE_VAL:
+                    user_svc1_dac_val_wr_ind_handler(msgid, msg_param, dest_id, src_id);
                     break;
 
                 default:
@@ -469,7 +469,7 @@ void user_catch_rest_hndl(ke_msg_id_t const msgid,
                 case SVC1_IDX_BUTTON_STATE_VAL:
                     break;
 
-                case SVC1_IDX_LONG_VALUE_VAL:
+                case SVC1_IDX_DAC_VALUE_VAL:
                     break;
 
                 default:
@@ -497,8 +497,8 @@ void user_catch_rest_hndl(ke_msg_id_t const msgid,
 
             switch (msg_param->att_idx)
             {
-                case SVC1_IDX_LONG_VALUE_VAL:
-                    user_svc1_long_val_att_info_req_handler(msgid, msg_param, dest_id, src_id);
+                case SVC1_IDX_DAC_VALUE_VAL:
+                    user_svc1_dac_val_att_info_req_handler(msgid, msg_param, dest_id, src_id);
                     break;
 
                 default:
@@ -694,10 +694,12 @@ static void spi2_dac_ctrl()
 		{
 			  // da14531_printf("DAC channel 4 register is: 0x%x.\r\n", regData);
 		}
-	  spi2_dac_write_register(DAC0, globalDACVal);
-	  spi2_dac_write_register(DAC1, 0x2fff);
-	  spi2_dac_write_register(DAC2, 0xffff);		
-	  spi2_dac_write_register(DAC3, 0xffff);
+		
+		const uint8_t DAC_CHS[8] = {DAC0, DAC1, DAC2, DAC3, DAC4, DAC5, DAC6, DAC7};
+		for (int i = 0; i < 8; i++)
+		{
+				spi2_dac_write_register(DAC_CHS[i], globalDACValBuf[i]);
+		}
 		
 		// spi2_dac_write_register(CONFIG, 0x0ff);
     app_spi2_dac_timer_used = app_easy_timer(50, spi2_dac_ctrl);

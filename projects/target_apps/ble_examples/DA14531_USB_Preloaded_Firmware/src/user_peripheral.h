@@ -177,7 +177,7 @@ void spi2_led_ctrl(bool redLed, bool greenLed);
  * @return void
  ****************************************************************************************
 */														
-void spi2_led_toggle();													
+void spi2_led_toggle(void);													
 	
 /// @} APP
 

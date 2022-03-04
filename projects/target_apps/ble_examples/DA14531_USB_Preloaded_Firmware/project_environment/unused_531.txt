@@ -1,4 +1,4 @@
-;#<FEEDBACK># ARM Linker, 5060750: Last Updated: Fri Mar 04 17:19:02 2022
+;#<FEEDBACK># ARM Linker, 5060750: Last Updated: Fri Mar 04 19:01:27 2022
 ;VERSION 0.2
 ;FILE adc_531.o
 adc_correct_sample <= USED 0
@@ -259,9 +259,9 @@ app_own_prf_creat_db <= USED 0
 ;FILE user_custs1_impl.o
 user_svc1_adc_val_1_ntf_cfm_handler <= USED 0
 user_svc1_button_ntf_cfm_handler <= USED 0
+user_svc1_dac_val_ntf_cfm_handler <= USED 0
 user_svc1_indicateable_cfg_ind_handler <= USED 0
 user_svc1_indicateable_ind_cfm_handler <= USED 0
-user_svc1_long_val_ntf_cfm_handler <= USED 0
 ;FILE user_periph_setup.o
 ;FILE user_peripheral.o
 ;FILE utils.o

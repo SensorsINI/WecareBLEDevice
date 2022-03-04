@@ -107,7 +107,7 @@ void user_svc1_led_wr_ind_handler(ke_msg_id_t const msgid,
 
 /**
  ****************************************************************************************
- * @brief Long value configuration indication handler.
+ * @brief DAC value configuration indication handler.
  * @param[in] msgid   Id of the message received.
  * @param[in] param   Pointer to the parameters of the message.
  * @param[in] dest_id ID of the receiving task instance.
@@ -115,14 +115,14 @@ void user_svc1_led_wr_ind_handler(ke_msg_id_t const msgid,
  * @return void
  ****************************************************************************************
 */
-void user_svc1_long_val_cfg_ind_handler(ke_msg_id_t const msgid,
+void user_svc1_dac_val_cfg_ind_handler(ke_msg_id_t const msgid,
                                         struct custs1_val_write_ind const *param,
                                         ke_task_id_t const dest_id,
                                         ke_task_id_t const src_id);
 
 /**
  ****************************************************************************************
- * @brief Long value write indication handler.
+ * @brief DAC value write indication handler.
  * @param[in] msgid   Id of the message received.
  * @param[in] param   Pointer to the parameters of the message.
  * @param[in] dest_id ID of the receiving task instance.
@@ -130,7 +130,7 @@ void user_svc1_long_val_cfg_ind_handler(ke_msg_id_t const msgid,
  * @return void
  ****************************************************************************************
 */
-void user_svc1_long_val_wr_ind_handler(ke_msg_id_t const msgid,
+void user_svc1_dac_val_wr_ind_handler(ke_msg_id_t const msgid,
                                        struct custs1_val_write_ind const *param,
                                        ke_task_id_t const dest_id,
                                        ke_task_id_t const src_id);
@@ -167,7 +167,7 @@ void user_svc1_button_cfg_ind_handler(ke_msg_id_t const msgid,
 
 /**
  ****************************************************************************************
- * @brief Long value attribute info request handler.
+ * @brief DAC value attribute info request handler.
  * @param[in] msgid   Id of the message received.
  * @param[in] param   Pointer to the parameters of the message.
  * @param[in] dest_id ID of the receiving task instance.
@@ -175,7 +175,7 @@ void user_svc1_button_cfg_ind_handler(ke_msg_id_t const msgid,
  * @return void
  ****************************************************************************************
 */
-void user_svc1_long_val_att_info_req_handler(ke_msg_id_t const msgid,
+void user_svc1_dac_val_att_info_req_handler(ke_msg_id_t const msgid,
                                              struct custs1_att_info_req const *param,
                                              ke_task_id_t const dest_id,
                                              ke_task_id_t const src_id);

@@ -125,13 +125,13 @@ void user_svc1_led_wr_ind_handler(ke_msg_id_t const msgid,
 		}
 }
 
-void user_svc1_long_val_cfg_ind_handler(ke_msg_id_t const msgid,
+void user_svc1_dac_val_cfg_ind_handler(ke_msg_id_t const msgid,
                                            struct custs1_val_write_ind const *param,
                                            ke_task_id_t const dest_id,
                                            ke_task_id_t const src_id)
 {
 
-	  // da14531_printf("user_svc1_long_val_cfg_ind_handler is called. And the parameter value 0 is: %x.\r\n", param->value[0]);
+	  // da14531_printf("user_svc1_dac_val_cfg_ind_handler is called. And the parameter value 0 is: %x.\r\n", param->value[0]);
 	
     // Generate indication when the central subscribes to it
     if (param->value[0])
@@ -159,20 +159,18 @@ void user_svc1_long_val_cfg_ind_handler(ke_msg_id_t const msgid,
 }
 
 // This value is sent from the host, and will be used to set DAC.
-uint32_t globalDACVal = 0;
+uint16_t globalDACValBuf[8] = {0};
 
-void user_svc1_long_val_wr_ind_handler(ke_msg_id_t const msgid,
+void user_svc1_dac_val_wr_ind_handler(ke_msg_id_t const msgid,
                                           struct custs1_val_write_ind const *param,
                                           ke_task_id_t const dest_id,
                                           ke_task_id_t const src_id)
 {
-	uint32_t val[10] = {0};
-	memcpy(&val, &param->value[0], param->length);
-	globalDACVal = val[0];
-	da14531_printf("The value set DAC from the host is: 0x%x\r\n", globalDACVal);
+	memcpy(globalDACValBuf, &param->value[0], param->length);
+	da14531_printf("The value set DAC from the host is: 0x%x\r\n", globalDACValBuf[0]);
 }
 
-void user_svc1_long_val_ntf_cfm_handler(ke_msg_id_t const msgid,
+void user_svc1_dac_val_ntf_cfm_handler(ke_msg_id_t const msgid,
                                            struct custs1_val_write_ind const *param,
                                            ke_task_id_t const dest_id,
                                            ke_task_id_t const src_id)
@@ -221,7 +219,7 @@ void user_svc1_indicateable_ind_cfm_handler(ke_msg_id_t const msgid,
 {
 }
 
-void user_svc1_long_val_att_info_req_handler(ke_msg_id_t const msgid,
+void user_svc1_dac_val_att_info_req_handler(ke_msg_id_t const msgid,
                                                 struct custs1_att_info_req const *param,
                                                 ke_task_id_t const dest_id,
                                                 ke_task_id_t const src_id)
@@ -290,13 +288,13 @@ void app_adcval1_timer_cb_handler()
     req->handle = SVC1_IDX_ADC_VAL_1_VAL;
     req->length = DEF_SVC1_ADC_VAL_1_CHAR_LEN;
     req->notification = true;
-    memcpy(req->value, &valToSend, DEF_SVC1_ADC_VAL_1_CHAR_LEN);
+    memcpy(req->value, globalADCValBuf, DEF_SVC1_ADC_VAL_1_CHAR_LEN);
 
     ke_msg_send(req);
 
     req_set->handle = SVC1_IDX_ADC_VAL_1_VAL;
     req_set->length = DEF_SVC1_ADC_VAL_1_CHAR_LEN;
-    memcpy(req_set->value, &valToSend, DEF_SVC1_ADC_VAL_1_CHAR_LEN);
+    memcpy(req_set->value, globalADCValBuf, DEF_SVC1_ADC_VAL_1_CHAR_LEN);
     ke_msg_send(req_set);
 
     if (ke_state_get(TASK_APP) == APP_CONNECTED)
