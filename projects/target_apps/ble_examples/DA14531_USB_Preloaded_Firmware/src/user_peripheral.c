@@ -787,8 +787,7 @@ static void spi2_adc1_ctrl()
 		}
 		
 		// Start ADC conversion
-		sendBuf[0] = 0xF3;
-		spi2_adc_write_register(CONFIG0, sendBuf, CONFIG0_BYTES);
+		spi2_adc_fast_command(FAST_CMD_START_CONVERSION);
 	
 		spi2_adc_static_read_register(CONFIG2, receiveBuf, CONFIG2_BYTES);	
 		regVal = swapBufToRealVal(receiveBuf, CONFIG2_BYTES);
@@ -827,7 +826,10 @@ static void spi2_adc1_ctrl()
 				// Copy voltage hex buffer to value shared with BLE for sending to the host
 				memcpy(&globalADCVal, &voltage, sizeof(float));			
 		}
-
+    
+		// Shutdown ADC to save power after conversion
+		spi2_adc_fast_command(FAST_CMD_ADC_SHUTDOWN);
+		
     app_spi2_adc1_timer_used = app_easy_timer(50, spi2_adc1_ctrl);
 }
 
