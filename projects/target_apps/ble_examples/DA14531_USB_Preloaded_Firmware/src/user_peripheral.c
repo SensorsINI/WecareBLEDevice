@@ -720,13 +720,18 @@ static void spi2_adc1_init(void)
 
 		// Read all the register values.
 		spi2_adc_increment_read_register(ADCDATA, receiveBuf, TOTAL_BYTES);
-
+		
+		// Set PRE[1:0] to 1 (default) and OSR to some big enough value because ADC conversion rate is faster than SPI speed.
+		// Here we set OSR to 20480. That is the minimum setting we tested by experiments.
+		sendBuf[0] = 0x24;
+		spi2_adc_write_register(CONFIG1, sendBuf, CONFIG1_BYTES);	
+		
 //		// Configure CONFIG2 register: GAIN('000'): set gain to 1/3.
 //		sendBuf[0] = 0x83; 
 //		spi2_adc_write_register(CONFIG2, sendBuf, CONFIG2_BYTES);	
 		
-		// Configure CONFIG3 register: CONV_MODE('11'): Continous conversion in scan mode. DATA_FORMAT('11'): 32bit with channel ID.
-		sendBuf[0] = 0xF0; 
+		// Configure CONFIG3 register: CONV_MODE('10'): One-shot conversion in scan mode. DATA_FORMAT('11'): 32bit with channel ID.
+		sendBuf[0] = 0xB0; 
 		spi2_adc_write_register(CONFIG3, sendBuf, CONFIG3_BYTES);	
 		
 		// Configure IRQ regiseter: IRQ_Mode('01'): IRQ output and inactive state is logic high
@@ -741,10 +746,10 @@ static void spi2_adc1_init(void)
 		sendBuf[0] = 0x98;
 		spi2_adc_write_register(MUX, sendBuf, MUX_BYTES);
 		
-		// Configure SCAN register: Disable SCAN mode
+		// Configure SCAN register
 		sendBuf[0] = 0x00;
-		sendBuf[1] = 0x00;
-		sendBuf[2] = 0x00;
+		sendBuf[1] = 0xFF;
+		sendBuf[2] = 0xFF;
 		spi2_adc_write_register(SCAN, sendBuf, SCAN_BYTES);
 
 		// Configure CONFIG0 register: Internal V_ref and internal master clock, no bias and ADC conversion mode.
@@ -777,12 +782,13 @@ static void spi2_adc1_ctrl()
  
 		if(initFlag)
 		{			
-				spi2_adc1_init();
-				// Configure MUX register: Single-ended channel CH0
-				sendBuf[0] = 0x08;
-				spi2_adc_write_register(MUX, sendBuf, MUX_BYTES);			
+				spi2_adc1_init();		
 				initFlag = false;
 		}
+		
+		// Start ADC conversion
+		sendBuf[0] = 0xF3;
+		spi2_adc_write_register(CONFIG0, sendBuf, CONFIG0_BYTES);
 	
 		spi2_adc_static_read_register(CONFIG2, receiveBuf, CONFIG2_BYTES);	
 		regVal = swapBufToRealVal(receiveBuf, CONFIG2_BYTES);
@@ -798,7 +804,18 @@ static void spi2_adc1_ctrl()
 		for(int i = 0; i < 16; i++)
 		{		
 				sendBuf[0] = ADC_CHANNEL_ID[i];
-				spi2_adc_write_register(MUX, sendBuf, MUX_BYTES);				
+				spi2_adc_write_register(MUX, sendBuf, MUX_BYTES);		
+			
+				// Read IRQ register
+				spi2_adc_static_read_register(IRQ, receiveBuf, IRQ_BYTES);
+				uint8_t irqVal = swapBufToRealVal(receiveBuf, IRQ_BYTES);
+			  // Wait the conversion finish
+				while((irqVal & 0x40) != 0)
+				{
+						spi2_adc_static_read_register(IRQ, receiveBuf, IRQ_BYTES);
+						irqVal = swapBufToRealVal(receiveBuf, IRQ_BYTES);
+				}			
+				
 				// STATIC Read ADCDATA
 				spi2_adc_static_read_register(ADCDATA, receiveBuf, ADCDATA_BYTES);	
 				regVal = swapBufToRealVal(receiveBuf, ADCDATA_BYTES);
@@ -806,7 +823,7 @@ static void spi2_adc1_ctrl()
 				regVal = (regVal & 0xFFFFFFF) + (((regVal >> 24) & 0xF) << 28);
 				int32_t voltageVal = (int32_t)(regVal);
 				float voltage = voltageVal/(0x800000 * gainFactor) * 2.4;    // The internal reference voltage is 2.4V
-				da14531_printf("The voltage of channel ID %d is: %.4fV.\r\n",  i, voltage);
+				da14531_printf("The voltage of channel ID %d is: %.4fV.\r\n",  channelID, voltage);
 				// Copy voltage hex buffer to value shared with BLE for sending to the host
 				memcpy(&globalADCVal, &voltage, sizeof(float));			
 		}
