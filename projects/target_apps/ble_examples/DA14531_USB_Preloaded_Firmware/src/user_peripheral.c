@@ -751,7 +751,7 @@ static void spi2_adc1_init(void)
 		
 		// Configure SCAN register
 		sendBuf[0] = 0x00;
-		sendBuf[1] = 0xFF;
+		sendBuf[1] = 0x00;
 		sendBuf[2] = 0xFF;
 		spi2_adc_write_register(SCAN, sendBuf, SCAN_BYTES);
 
@@ -803,8 +803,11 @@ static void spi2_adc1_ctrl()
 				gainFactor = 1 << (gainReg - 1);
 		}		
 		
+		// da14531_printf("Reset the watchdog.\r\n");
+		// wdg_reload(WATCHDOG_DEFAULT_PERIOD);		
+		
 		float voltage[16];
-		for(int i = 0; i < 16; i++)
+		for(int i = 0; i < 8; i++)
 		{		
 				sendBuf[0] = ADC_CHANNEL_ID[i];
 				spi2_adc_write_register(MUX, sendBuf, MUX_BYTES);		
