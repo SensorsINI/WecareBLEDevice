@@ -120,10 +120,6 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGUARM</Key>
-          <Name>˜xí
-€§˜w˜xí
-€§˜w˜xí
-</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -318,7 +314,7 @@
 
   <Group>
     <GroupName>sdk_arch</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>

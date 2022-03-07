@@ -119,6 +119,8 @@ static void spi2_adc1_ctrl(void);
 // timer_hnd app_spi2_adc1_timer_init                   __SECTION_ZERO("retention_mem_area0");
 static void spi2_adc1_init(void);
 
+static uint32_t adcConversionCount = 0;
+
 /*
  * FUNCTION DEFINITIONS
  ****************************************************************************************
@@ -726,7 +728,7 @@ static void spi2_adc1_init(void)
 		
 		// Set PRE[1:0] to 1 (default) and OSR to some big enough value because ADC conversion rate is faster than SPI speed.
 		// Here we set OSR to 20480. That is the minimum setting we tested by experiments.
-		sendBuf[0] = 0x24;
+		sendBuf[0] = 0x28;
 		spi2_adc_write_register(CONFIG1, sendBuf, CONFIG1_BYTES);	
 		
 //		// Configure CONFIG2 register: GAIN('000'): set gain to 1/3.
@@ -751,7 +753,7 @@ static void spi2_adc1_init(void)
 		
 		// Configure SCAN register
 		sendBuf[0] = 0x00;
-		sendBuf[1] = 0x00;
+		sendBuf[1] = 0xFF;
 		sendBuf[2] = 0xFF;
 		spi2_adc_write_register(SCAN, sendBuf, SCAN_BYTES);
 
@@ -788,6 +790,15 @@ static void spi2_adc1_ctrl()
 				spi2_adc1_init();		
 				initFlag = false;
 		}
+
+//		da14531_printf("Reset the watchdog.\r\n");
+//		wdg_reload(WATCHDOG_DEFAULT_PERIOD);		
+
+//		//Disable the interrupts
+//		GLOBAL_INT_STOP();	
+		
+		adcConversionCount++;
+		da14531_printf("Start the %dth ADC conversion. \r\n", adcConversionCount);
 		
 		// Start ADC conversion
 		spi2_adc_fast_command(FAST_CMD_START_CONVERSION);
@@ -803,11 +814,8 @@ static void spi2_adc1_ctrl()
 				gainFactor = 1 << (gainReg - 1);
 		}		
 		
-		// da14531_printf("Reset the watchdog.\r\n");
-		// wdg_reload(WATCHDOG_DEFAULT_PERIOD);		
-		
 		float voltage[16];
-		for(int i = 0; i < 8; i++)
+		for(int i = 0; i < 16; i++)
 		{		
 				sendBuf[0] = ADC_CHANNEL_ID[i];
 				spi2_adc_write_register(MUX, sendBuf, MUX_BYTES);		
@@ -837,6 +845,9 @@ static void spi2_adc1_ctrl()
 		
 		// Shutdown ADC to save power after conversion
 		spi2_adc_fast_command(FAST_CMD_ADC_SHUTDOWN);
+		
+//		// restore interrupts
+//		GLOBAL_INT_START();		
 		
     app_spi2_adc1_timer_used = app_easy_timer(50, spi2_adc1_ctrl);
 }
