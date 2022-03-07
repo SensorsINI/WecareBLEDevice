@@ -735,8 +735,8 @@ static void spi2_adc1_init(void)
 //		sendBuf[0] = 0x83; 
 //		spi2_adc_write_register(CONFIG2, sendBuf, CONFIG2_BYTES);	
 		
-		// Configure CONFIG3 register: CONV_MODE('10'): One-shot conversion in scan mode. DATA_FORMAT('11'): 32bit with channel ID.
-		sendBuf[0] = 0xB0; 
+		// Configure CONFIG3 register: CONV_MODE('11'): Continous conversion in scan mode. DATA_FORMAT('11'): 32bit with channel ID.
+		sendBuf[0] = 0xF0; 
 		spi2_adc_write_register(CONFIG3, sendBuf, CONFIG3_BYTES);	
 		
 		// Configure IRQ regiseter: IRQ_Mode('01'): IRQ output and inactive state is logic high
@@ -771,6 +771,7 @@ static void spi2_adc1_init(void)
 		// da14531_printf("CONFIG0 register data is: 0x%x.\r\n", regVal);
 }
 					
+static uint32_t errorCnt = 0;
 /**
  ****************************************************************************************
  * @brief SPI2 ADC1 module (MCP3564R) test timer callback function.
@@ -838,6 +839,12 @@ static void spi2_adc1_ctrl()
 				int32_t voltageVal = (int32_t)(regVal);
 				voltage[channelID] = voltageVal/(0x800000 * gainFactor) * 2.4;    // The internal reference voltage is 2.4V
 				da14531_printf("The voltage of channel ID %d is: %.4fV.\r\n",  channelID, voltage[channelID]);
+				
+				if ((channelID + i) != 15)
+				{
+					  errorCnt++;
+						da14531_printf("ADC conversion error.\r\n");
+				}
 		}
 		
 		// Copy voltage hex buffer to value shared with BLE for sending to the host
@@ -845,6 +852,8 @@ static void spi2_adc1_ctrl()
 		
 		// Shutdown ADC to save power after conversion
 		spi2_adc_fast_command(FAST_CMD_ADC_SHUTDOWN);
+		
+		da14531_printf("ADC conversion error count is %d.\r\n", errorCnt);
 		
 //		// restore interrupts
 //		GLOBAL_INT_START();		
