@@ -126,7 +126,7 @@ const struct attm_desc_128 custs1_att_db[CUSTS1_IDX_NB] =
                                             0, 0, NULL},
 
     // LED State Characteristic Value
-    [SVC1_IDX_LED_STATE_VAL]           = {SVC1_LED_STATE_UUID_128, ATT_UUID_128_LEN, PERM(WR, ENABLE) | PERM(WRITE_COMMAND, ENABLE),
+    [SVC1_IDX_LED_STATE_VAL]           = {SVC1_LED_STATE_UUID_128, ATT_UUID_128_LEN, PERM(WR, ENABLE) | PERM(WRITE_REQ, ENABLE),
                                             DEF_SVC1_LED_STATE_CHAR_LEN, 0, NULL},
 
     // LED State Characteristic User Description

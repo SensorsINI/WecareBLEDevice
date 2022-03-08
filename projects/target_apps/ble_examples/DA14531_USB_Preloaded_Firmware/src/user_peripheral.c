@@ -692,10 +692,6 @@ static void spi2_dac_ctrl()
 		}
     
 		// spi2_dac_write_register(BRDCAST, 0xafff);
-    if(!spi2_dac_read_register(DAC4, &regData))  
-		{
-			  // da14531_printf("DAC channel 4 register is: 0x%x.\r\n", regData);
-		}
 		
 		const uint8_t DAC_CHS[8] = {DAC0, DAC1, DAC2, DAC3, DAC4, DAC5, DAC6, DAC7};
 		for (int i = 0; i < 8; i++)
@@ -751,9 +747,9 @@ static void spi2_adc1_init(void)
 		sendBuf[0] = 0x98;
 		spi2_adc_write_register(MUX, sendBuf, MUX_BYTES);
 		
-		// Configure SCAN register
+		// Configure SCAN register: 4 Differential Channels plus 8 Single-Ended Channels.
 		sendBuf[0] = 0x00;
-		sendBuf[1] = 0xFF;
+		sendBuf[1] = 0x0F;
 		sendBuf[2] = 0xFF;
 		spi2_adc_write_register(SCAN, sendBuf, SCAN_BYTES);
 
@@ -815,8 +811,9 @@ static void spi2_adc1_ctrl()
 				gainFactor = 1 << (gainReg - 1);
 		}		
 		
-		float voltage[16];
-		for(int i = 0; i < 16; i++)
+		float voltage[12];
+		bool validFlg = true; // Check if this conversion valid
+		for(int i = 0; i < 12; i++)
 		{		
 				sendBuf[0] = ADC_CHANNEL_ID[i];
 				spi2_adc_write_register(MUX, sendBuf, MUX_BYTES);		
@@ -840,15 +837,23 @@ static void spi2_adc1_ctrl()
 				voltage[channelID] = voltageVal/(0x800000 * gainFactor) * 2.4;    // The internal reference voltage is 2.4V
 				da14531_printf("The voltage of channel ID %d is: %.4fV.\r\n",  channelID, voltage[channelID]);
 				
-				if ((channelID + i) != 15)
+				if ((channelID + i) != 11)
 				{
-					  errorCnt++;
 						da14531_printf("ADC conversion error.\r\n");
+						validFlg = false;
 				}
 		}
 		
+		if(validFlg == false)
+		{
+				errorCnt++;
+		}
+		
 		// Copy voltage hex buffer to value shared with BLE for sending to the host
-		memcpy(globalADCValBuf, voltage, sizeof(float) * 16);			    
+		memcpy(globalADCValBuf, voltage, sizeof(float) * 12);			
+    globalADCValBuf[12] = adcConversionCount; // Store the ADC conversion count
+		globalADCValBuf[13] = errorCnt;
+		globalADCValBuf[14] = validFlg;           // Indicate the current conversion valid or not
 		
 		// Shutdown ADC to save power after conversion
 		spi2_adc_fast_command(FAST_CMD_ADC_SHUTDOWN);

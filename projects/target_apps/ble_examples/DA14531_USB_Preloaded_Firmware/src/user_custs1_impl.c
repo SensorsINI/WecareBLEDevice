@@ -261,7 +261,7 @@ void user_svc1_rest_att_info_req_handler(ke_msg_id_t const msgid,
     ke_msg_send(rsp);
 }
 
-uint32_t globalADCValBuf[16];
+uint32_t globalADCValBuf[16] = {0};
 
 void app_adcval1_timer_cb_handler()
 {
