@@ -228,7 +228,7 @@ const struct attm_desc_128 custs1_att_db[CUSTS1_IDX_NB] =
     [SVC2_WRITE_1_CHAR]                = {(uint8_t*)&att_decl_char, ATT_UUID_16_LEN, PERM(RD, ENABLE), 0, 0, NULL},
 
     // Write 1 Characteristic Value
-    [SVC2_WRITE_1_VAL]                 = {SVC2_WRITE_VAL_1_UUID_128, ATT_UUID_128_LEN, PERM(WR, ENABLE) | PERM(WRITE_REQ, ENABLE),
+    [SVC2_WRITE_1_VAL]                 = {SVC2_WRITE_VAL_1_UUID_128, ATT_UUID_128_LEN, PERM(RD, ENABLE) | PERM(WR, ENABLE) | PERM(WRITE_REQ, ENABLE),
                                             DEF_SVC2_WRITE_VAL_1_CHAR_LEN, 0, NULL},
 
     // Write 1 Characteristic User Description

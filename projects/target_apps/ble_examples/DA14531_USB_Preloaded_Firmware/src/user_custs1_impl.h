@@ -218,6 +218,21 @@ void user_svc3_read_non_db_val_handler(ke_msg_id_t const msgid,
                                            ke_task_id_t const dest_id,
                                            ke_task_id_t const src_id);
 
+ /**
+ ****************************************************************************************
+ * @brief SWD debugger control value write indication handler.
+ * @param[in] msgid   Id of the message received.
+ * @param[in] param   Pointer to the parameters of the message.
+ * @param[in] dest_id ID of the receiving task instance.
+ * @param[in] src_id  ID of the sending task instance.
+ * @return void
+ ****************************************************************************************
+*/
+void user_svc2_write_1_wr_ind_handler(ke_msg_id_t const msgid,
+																				struct custs1_val_write_ind const *param,
+																				ke_task_id_t const dest_id,
+																				ke_task_id_t const src_id);
+																					 
 /// @} APP
 
 #endif // _USER_CUSTS1_IMPL_H_

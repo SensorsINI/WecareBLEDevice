@@ -73,6 +73,7 @@
 // Outside value
 extern uint16_t globalDACValBuf[8];
 extern uint32_t globalADCValBuf[16];
+extern uint32_t globalADC2ValBuf[16];
 
 /*
  * TYPE DEFINITIONS
@@ -120,6 +121,7 @@ static void spi2_adc1_ctrl(void);
 static void spi2_adc1_init(void);
 
 static uint32_t adcConversionCount = 0;
+static uint32_t adc2ConversionCount = 0;
 
 /*
  * FUNCTION DEFINITIONS
@@ -453,6 +455,9 @@ void user_catch_rest_hndl(ke_msg_id_t const msgid,
                 case SVC1_IDX_DAC_VALUE_VAL:
                     user_svc1_dac_val_wr_ind_handler(msgid, msg_param, dest_id, src_id);
                     break;
+								case SVC2_WRITE_1_VAL:
+										user_svc2_write_1_wr_ind_handler(msgid, msg_param, dest_id, src_id);
+										break;
 
                 default:
                     break;
@@ -563,7 +568,7 @@ void user_catch_rest_hndl(ke_msg_id_t const msgid,
 								
 
         default:
-					  da14531_printf("Caught message not handled by any function. The message type is: 0x%x\r\n", msgid);
+					  // da14531_printf("Caught message not handled by any function. The message type is: 0x%x\r\n", msgid);
             break;
     }
 }
@@ -594,7 +599,7 @@ spi_cfg_t spi2_dac_cfg = {
 #endif
 };
 
-// Initialize SPI2 DAC driver
+// Initialize SPI2 ADC1 driver
 spi_cfg_t spi2_adc1_cfg = {  
 	                      .spi_ms = SPI_MS_MODE_MASTER,
                         .spi_cp = SPI_CP_MODE_0,            // SPI Mode 0,0
@@ -603,6 +608,19 @@ spi_cfg_t spi2_adc1_cfg = {
                         .spi_cs = SPI_CS_1,                 
                         .cs_pad.port = SPI2_ADC1_CS_PORT,
                         .cs_pad.pin = SPI2_ADC1_CS_PIN
+#if defined(CFG_SPI_DMA_SUPPORT)
+#endif
+};
+
+// Initialize SPI2 ADC2 driver
+spi_cfg_t spi2_adc2_cfg = {  
+	                      .spi_ms = SPI_MS_MODE_MASTER,
+                        .spi_cp = SPI_CP_MODE_0,            // SPI Mode 0,0
+                        .spi_speed = SPI_SPEED_MODE_2MHz,
+                        .spi_wsz = SPI_MODE_8BIT,
+                        .spi_cs = SPI_CS_0,                 
+                        .cs_pad.port = SPI2_ADC2_CS_PORT,
+                        .cs_pad.pin = SPI2_ADC2_CS_PIN		
 #if defined(CFG_SPI_DMA_SUPPORT)
 #endif
 };
@@ -625,8 +643,11 @@ uint16_t globalCnt = 0;
 */
 void spi2_led_toggle()
 {
+		GPIO_ConfigurePin(SPI2_IO_CS_PORT, SPI2_IO_CS_PIN, OUTPUT, PID_SPI_EN, true);  // Enable IO
+		GPIO_ConfigurePin(SPI2_DAC_CS_PORT, SPI2_DAC_CS_PIN, OUTPUT, PID_GPIO, true); // Disable DAC
+		GPIO_ConfigurePin(SPI2_ADC2_CS_PORT, SPI2_ADC2_CS_PIN, OUTPUT, PID_GPIO, true); //Disable ADC2
     spi_initialize(&spi2_cfg);
-
+	
     // for (uint8_t i=0; i<0xFF; i++) {
     reg_val_led2 ^= 1;
     reg_val_led3 ^= 1;
@@ -867,6 +888,173 @@ static void spi2_adc1_ctrl()
 }
 
 
+
+static bool initFlagADC2 = true;   // Make sure initilization only execute once
+/**
+ ****************************************************************************************
+ * @brief SPI2 ADC1 module (MCP3564R) init function.
+ * @return void
+ ****************************************************************************************
+*/
+static void spi2_adc2_init(void)
+{	
+	  uint32_t regVal;
+	  uint8_t sendBuf[TOTAL_BYTES] = {0};
+	  uint8_t receiveBuf[TOTAL_BYTES] = {0}; 
+ 
+		// Full reset
+		spi2_adc_fast_command(FAST_CMD_FULL_RESET);
+
+		// Read all the register values.
+		spi2_adc_increment_read_register(ADCDATA, receiveBuf, TOTAL_BYTES);
+		
+		// Set PRE[1:0] to 1 (default) and OSR to some big enough value because ADC conversion rate is faster than SPI speed.
+		// Here we set OSR to 20480. That is the minimum setting we tested by experiments.
+		sendBuf[0] = 0x28;
+		spi2_adc_write_register(CONFIG1, sendBuf, CONFIG1_BYTES);	
+		
+//		// Configure CONFIG2 register: GAIN('000'): set gain to 1/3.
+//		sendBuf[0] = 0x83; 
+//		spi2_adc_write_register(CONFIG2, sendBuf, CONFIG2_BYTES);	
+		
+		// Configure CONFIG3 register: CONV_MODE('11'): Continous conversion in scan mode. DATA_FORMAT('11'): 32bit with channel ID.
+		sendBuf[0] = 0xF0; 
+		spi2_adc_write_register(CONFIG3, sendBuf, CONFIG3_BYTES);	
+		
+		// Configure IRQ regiseter: IRQ_Mode('01'): IRQ output and inactive state is logic high
+		// This configuration is important, because if we use the default configuration, then
+		// IRQ is in high-Z state and because we don't have external pull-up resistor on board.
+		// Therefore, IRQ cannot generate falling edge and SDO cannot be updated resulting in 
+		// SPI reading on ADCDATA always 0.
+		sendBuf[0] = 0x07;
+		spi2_adc_write_register(IRQ, sendBuf, IRQ_BYTES);
+		
+		// Configure MUX register: AVDD reading
+		sendBuf[0] = 0x98;
+		spi2_adc_write_register(MUX, sendBuf, MUX_BYTES);
+		
+		// Configure SCAN register: 4 Differential Channels plus 8 Single-Ended Channels.
+		sendBuf[0] = 0x00;
+		sendBuf[1] = 0x0F;
+		sendBuf[2] = 0xFF;
+		spi2_adc_write_register(SCAN, sendBuf, SCAN_BYTES);
+
+		// Configure CONFIG0 register: Internal V_ref and internal master clock, no bias and ADC conversion mode.
+		// This register configuration should be put in the last of init function as this register is used to start
+		// the conversion.
+		sendBuf[0] = 0xF3;  // The first byte is the MSbs for registers have more than 8bits
+		// sendBuf[1] = 0x02;
+		// sendBuf[2] = 0x03;
+		spi2_adc_write_register(CONFIG0, sendBuf, CONFIG0_BYTES);
+		
+		// Read CONFIG0 register.
+		spi2_adc_static_read_register(CONFIG0, receiveBuf, CONFIG0_BYTES);	
+		regVal = swapBufToRealVal(receiveBuf, CONFIG0_BYTES);
+		// da14531_printf("CONFIG0 register data is: 0x%x.\r\n", regVal);
+}
+					
+static uint32_t errorCntADC2 = 0;
+/**
+ ****************************************************************************************
+ * @brief SPI2 ADC1 module (MCP3564R) test timer callback function.
+ * @return void
+ ****************************************************************************************
+*/
+static void spi2_adc2_ctrl()
+{ 
+    spi_initialize(&spi2_adc2_cfg);
+	
+    uint32_t regVal = 0;	
+		uint8_t sendBuf[TOTAL_BYTES] = {0};	
+    uint8_t receiveBuf[TOTAL_BYTES] = {0}; 
+ 
+		if(initFlagADC2)
+		{			
+				GPIO_ConfigurePin(SPI2_ADC2_CS_PORT, SPI2_ADC2_CS_PIN, OUTPUT, PID_SPI_EN, true);		// Enable ADC2	
+				GPIO_ConfigurePin(SPI2_DAC_CS_PORT, SPI2_DAC_CS_PIN, OUTPUT, PID_GPIO, true); // Disable DAC
+				GPIO_ConfigurePin(SPI2_IO_CS_PORT, SPI2_IO_CS_PIN, OUTPUT, PID_SPI_EN, true); //Disable IO	
+				spi2_adc2_init();					
+				initFlagADC2 = false;
+		}
+
+//		da14531_printf("Reset the watchdog.\r\n");
+//		wdg_reload(WATCHDOG_DEFAULT_PERIOD);		
+
+//		//Disable the interrupts
+//		GLOBAL_INT_STOP();	
+		
+		adc2ConversionCount++;
+		// da14531_printf("Start the %dth ADC2 conversion. \r\n", adc2ConversionCount);
+		
+		// Start ADC conversion
+		spi2_adc_fast_command(FAST_CMD_START_CONVERSION);
+	
+		spi2_adc_static_read_register(CONFIG2, receiveBuf, CONFIG2_BYTES);	
+		regVal = swapBufToRealVal(receiveBuf, CONFIG2_BYTES);
+    // Obtain the GAIN bits value
+		uint8_t gainReg = (regVal & 0x38) >> 3;
+	  // Convert it to the real gain
+		float gainFactor = 0.333;  // if gainReg == 0, then gainFactor is 1/3
+		if(gainReg != 0)
+		{
+				gainFactor = 1 << (gainReg - 1);
+		}		
+		
+		float voltage[12];
+		bool validFlg = true; // Check if this conversion valid
+		for(int i = 0; i < 12; i++)
+		{		
+				sendBuf[0] = ADC_CHANNEL_ID[i];
+				spi2_adc_write_register(MUX, sendBuf, MUX_BYTES);		
+			
+				// Read IRQ register
+				spi2_adc_static_read_register(IRQ, receiveBuf, IRQ_BYTES);
+				uint8_t irqVal = swapBufToRealVal(receiveBuf, IRQ_BYTES);
+			  // Wait the conversion finish
+				while((irqVal & 0x40) != 0)
+				{
+						spi2_adc_static_read_register(IRQ, receiveBuf, IRQ_BYTES);
+						irqVal = swapBufToRealVal(receiveBuf, IRQ_BYTES);
+				}			
+				
+				// STATIC Read ADCDATA
+				spi2_adc_static_read_register(ADCDATA, receiveBuf, ADCDATA_BYTES);	
+				regVal = swapBufToRealVal(receiveBuf, ADCDATA_BYTES);
+				volatile uint32_t channelID = (regVal >> 28) & 0xF;
+				regVal = (regVal & 0xFFFFFFF) + (((regVal >> 24) & 0xF) << 28);
+				int32_t voltageVal = (int32_t)(regVal);
+				voltage[channelID] = voltageVal/(0x800000 * gainFactor) * 2.4;    // The internal reference voltage is 2.4V
+				// da14531_printf("The voltage of channel ID %d is: %.4fV.\r\n",  channelID, voltage[channelID]);
+				
+				if ((channelID + i) != 11)
+				{
+						// da14531_printf("ADC2 conversion error.\r\n");
+						validFlg = false;
+				}
+		}
+		
+		if(validFlg == false)
+		{
+				errorCntADC2++;
+		}
+		
+		// Copy voltage hex buffer to value shared with BLE for sending to the host
+		memcpy(globalADCValBuf, voltage, sizeof(float) * 12);			
+    globalADC2ValBuf[12] = adc2ConversionCount; // Store the ADC conversion count
+		globalADC2ValBuf[13] = errorCntADC2;
+		globalADC2ValBuf[14] = validFlg;           // Indicate the current conversion valid or not
+		
+		// Shutdown ADC to save power after conversion
+		spi2_adc_fast_command(FAST_CMD_ADC_SHUTDOWN);
+		
+		da14531_printf("ADC conversion error count is %d.\r\n", errorCnt);
+		
+//		// restore interrupts
+//		GLOBAL_INT_START();		
+		
+    app_spi2_adc1_timer_used = app_easy_timer(50, spi2_adc1_ctrl);
+}
+
 /**
  ****************************************************************************************
  * @brief API functions export
@@ -881,7 +1069,10 @@ void spi2_led_ctrl(bool redLed, bool greenLed)
 				app_spi2_led_timer_used = EASY_TIMER_INVALID_TIMER;
 		}
 						
-		spi_initialize(&spi2_cfg);
+		GPIO_ConfigurePin(SPI2_IO_CS_PORT, SPI2_IO_CS_PIN, OUTPUT, PID_SPI_EN, true);  // Enable IO
+		GPIO_ConfigurePin(SPI2_DAC_CS_PORT, SPI2_DAC_CS_PIN, OUTPUT, PID_GPIO, true); // Disable DAC
+		GPIO_ConfigurePin(SPI2_ADC2_CS_PORT, SPI2_ADC2_CS_PIN, OUTPUT, PID_GPIO, true); //Disable ADC2
+    spi_initialize(&spi2_cfg);
 
     uint16_t reg_val_ledRed = (RED_LED_PORT << 8) + redLed;
     uint16_t reg_val_ledGreen = (GREEN_LED_PORT << 8) + greenLed;

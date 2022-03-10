@@ -154,9 +154,12 @@
 // Define extra SPI chip select signals: 1 DAC and 2 ADCs
     #define SPI2_ADC1_CS_PORT            GPIO_PORT_0
     #define SPI2_ADC1_CS_PIN             GPIO_PIN_8  
+
+    #define SPI2_ADC2_CS_PORT            GPIO_PORT_0
+    #define SPI2_ADC2_CS_PIN             GPIO_PIN_7  
 		
     #define SPI2_DAC_CS_PORT            GPIO_PORT_0
-    #define SPI2_DAC_CS_PIN             GPIO_PIN_7  
+    #define SPI2_DAC_CS_PIN             GPIO_PIN_10  
 #endif
 
 		

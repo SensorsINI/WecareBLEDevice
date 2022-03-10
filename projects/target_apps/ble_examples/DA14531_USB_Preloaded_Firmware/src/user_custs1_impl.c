@@ -262,6 +262,7 @@ void user_svc1_rest_att_info_req_handler(ke_msg_id_t const msgid,
 }
 
 uint32_t globalADCValBuf[16] = {0};
+uint32_t globalADC2ValBuf[16] = {0};
 
 void app_adcval1_timer_cb_handler()
 {
@@ -278,7 +279,7 @@ void app_adcval1_timer_cb_handler()
                                                               DEF_SVC1_ADC_VAL_1_CHAR_LEN);
 
 		uint32_t valToSend = globalADCValBuf[0];
-		da14531_printf("The raw voltage data sent from ADC is: 0x%x.\r\n",  valToSend);
+		// da14531_printf("The raw voltage data sent from ADC is: 0x%x.\r\n",  valToSend);
 
     // ADC value to be sampled
     static uint16_t sample      __SECTION_ZERO("retention_mem_area0");
@@ -303,6 +304,35 @@ void app_adcval1_timer_cb_handler()
         timer_used = app_easy_timer(APP_PERIPHERAL_CTRL_TIMER_DELAY, app_adcval1_timer_cb_handler);
     }
 }
+void user_svc2_write_1_wr_ind_handler(ke_msg_id_t const msgid,
+																				struct custs1_val_write_ind const *param,
+																				ke_task_id_t const dest_id,
+																				ke_task_id_t const src_id)
+{
+    uint8_t val = 0;
+    memcpy(&val, &param->value[0], param->length);
+	
+		struct custs1_env_tag *custs1_env = PRF_ENV_GET(CUSTS1, custs1);
+		attmdb_att_set_value(custs1_env->shdl + SVC2_WRITE_1_VAL, DEF_SVC2_WRITE_VAL_1_CHAR_LEN, 0, (uint8_t *)&val);
+
+	  // On the board, '0' disable the debugger, '1' enables the debuggger.
+	  switch(val)
+		{
+				case 0:
+						SetBits16(SYS_CTRL_REG, DEBUGGER_ENABLE, NO_SWD);   // Disable debugger
+						GPIO_ConfigurePin(SPI2_DAC_CS_PORT, SPI2_DAC_CS_PIN, OUTPUT, PID_SPI_EN, true); //Enable DAC
+						GPIO_ConfigurePin(SPI2_IO_CS_PORT, SPI2_IO_CS_PIN, OUTPUT, PID_GPIO, true);  // Disable IO
+						GPIO_ConfigurePin(SPI2_ADC2_CS_PORT, SPI2_ADC2_CS_PIN, OUTPUT, PID_GPIO, true); //Disable ADC2				
+						// GPIO_EnablePorPin();
+						break;
+				case 1:
+						SetBits16(SYS_CTRL_REG, DEBUGGER_ENABLE, SWD_DATA_AT_P0_10);   // Enable debugger
+						break;
+				default:
+						break;
+		}
+}		
+
 
 void user_svc3_read_non_db_val_handler(ke_msg_id_t const msgid,
                                            struct custs1_value_req_ind const *param,

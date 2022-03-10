@@ -91,7 +91,7 @@
 #define DEF_SVC2_WRITE_VAL_1_CHAR_LEN    1
 #define DEF_SVC2_WRITE_VAL_2_CHAR_LEN    1
 
-#define DEF_SVC2_WRITE_VAL_1_USER_DESC   "Write me"
+#define DEF_SVC2_WRITE_VAL_1_USER_DESC   "Debugger enable/disable"
 #define DEF_SVC2_WRITE_VAL_2_USER_DESC   "Write me (no rsp)"
 
 // Service 3 of the custom server 1
