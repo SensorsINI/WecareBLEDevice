@@ -684,6 +684,9 @@ void spi2_led_toggle()
 */
 static void spi2_dac_ctrl()
 {
+		GPIO_ConfigurePin(SPI2_DAC_CS_PORT, SPI2_DAC_CS_PIN, OUTPUT, PID_SPI_EN, true); //Enable DAC
+		GPIO_ConfigurePin(SPI2_IO_CS_PORT, SPI2_IO_CS_PIN, OUTPUT, PID_GPIO, true);  // Disable IO
+		GPIO_ConfigurePin(SPI2_ADC2_CS_PORT, SPI2_ADC2_CS_PIN, OUTPUT, PID_GPIO, true); //Disable ADC2			
     spi_initialize(&spi2_dac_cfg);
 
     uint16_t regData; 

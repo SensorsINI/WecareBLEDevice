@@ -224,8 +224,9 @@ void periph_init(void)
     // Enable the pads
     GPIO_set_pad_latch_en(true);
 		
+		SetBits16(SYS_CTRL_REG, DEBUGGER_ENABLE, NO_SWD);   // Disable debugger
+		
 		timer0_setup(25);
-
 }
 
 // Configuration struct for UART

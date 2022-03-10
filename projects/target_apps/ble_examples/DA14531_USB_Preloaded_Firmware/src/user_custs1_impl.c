@@ -327,6 +327,9 @@ void user_svc2_write_1_wr_ind_handler(ke_msg_id_t const msgid,
 						break;
 				case 1:
 						SetBits16(SYS_CTRL_REG, DEBUGGER_ENABLE, SWD_DATA_AT_P0_10);   // Enable debugger
+						GPIO_ConfigurePin(SPI2_DAC_CS_PORT, SPI2_DAC_CS_PIN, OUTPUT, PID_GPIO, true); //Disable DAC
+						GPIO_ConfigurePin(SPI2_IO_CS_PORT, SPI2_IO_CS_PIN, OUTPUT, PID_GPIO, true);  // Disable IO
+						GPIO_ConfigurePin(SPI2_ADC2_CS_PORT, SPI2_ADC2_CS_PIN, OUTPUT, PID_GPIO, true); //Disable ADC2								
 						break;
 				default:
 						break;
