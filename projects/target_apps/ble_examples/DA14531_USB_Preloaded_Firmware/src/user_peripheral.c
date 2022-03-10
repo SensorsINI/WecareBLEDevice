@@ -568,7 +568,7 @@ void user_catch_rest_hndl(ke_msg_id_t const msgid,
 								
 
         default:
-					  // da14531_printf("Caught message not handled by any function. The message type is: 0x%x\r\n", msgid);
+					  da14531_printf("Caught message not handled by any function. The message type is: 0x%x\r\n", msgid);
             break;
     }
 }
@@ -972,7 +972,7 @@ static void spi2_adc2_ctrl()
 		{			
 				GPIO_ConfigurePin(SPI2_ADC2_CS_PORT, SPI2_ADC2_CS_PIN, OUTPUT, PID_SPI_EN, true);		// Enable ADC2	
 				GPIO_ConfigurePin(SPI2_DAC_CS_PORT, SPI2_DAC_CS_PIN, OUTPUT, PID_GPIO, true); // Disable DAC
-				GPIO_ConfigurePin(SPI2_IO_CS_PORT, SPI2_IO_CS_PIN, OUTPUT, PID_SPI_EN, true); //Disable IO	
+				GPIO_ConfigurePin(SPI2_IO_CS_PORT, SPI2_IO_CS_PIN, OUTPUT, PID_GPIO, true); //Disable IO	
 				spi2_adc2_init();					
 				initFlagADC2 = false;
 		}
@@ -984,7 +984,7 @@ static void spi2_adc2_ctrl()
 //		GLOBAL_INT_STOP();	
 		
 		adc2ConversionCount++;
-		// da14531_printf("Start the %dth ADC2 conversion. \r\n", adc2ConversionCount);
+		da14531_printf("Start the %dth ADC2 conversion. \r\n", adc2ConversionCount);
 		
 		// Start ADC conversion
 		spi2_adc_fast_command(FAST_CMD_START_CONVERSION);
@@ -1024,11 +1024,11 @@ static void spi2_adc2_ctrl()
 				regVal = (regVal & 0xFFFFFFF) + (((regVal >> 24) & 0xF) << 28);
 				int32_t voltageVal = (int32_t)(regVal);
 				voltage[channelID] = voltageVal/(0x800000 * gainFactor) * 2.4;    // The internal reference voltage is 2.4V
-				// da14531_printf("The voltage of channel ID %d is: %.4fV.\r\n",  channelID, voltage[channelID]);
+				da14531_printf("The voltage of channel ID %d is: %.4fV.\r\n",  channelID, voltage[channelID]);
 				
 				if ((channelID + i) != 11)
 				{
-						// da14531_printf("ADC2 conversion error.\r\n");
+						da14531_printf("ADC2 conversion error.\r\n");
 						validFlg = false;
 				}
 		}

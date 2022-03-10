@@ -1094,7 +1094,7 @@
 0x07f22449 T custs1_get_att_idx                       
 
 ; custs1.c (controlled by __EXCLUDE_ROM_CUSTS1__)
-# 0x07f22621 T custs1_prf_itf_get
+0x07f22621 T custs1_prf_itf_get
 
 ; custs1_task.c (controlled by __EXCLUDE_ROM_CUSTS1__)
 # 0x07f226d3 T custs1_init_ccc_values

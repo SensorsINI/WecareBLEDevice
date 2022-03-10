@@ -1,4 +1,4 @@
-;#<FEEDBACK># ARM Linker, 5060960: Last Updated: Thu Mar 10 14:41:10 2022
+;#<FEEDBACK># ARM Linker, 5060750: Last Updated: Thu Mar 10 15:17:21 2022
 ;VERSION 0.2
 ;FILE adc_531.o
 adc_correct_sample <= USED 0
@@ -70,10 +70,12 @@ check_sys_startup_period <= USED 0
 battery_get_lvl <= USED 0
 battery_get_voltage <= USED 0
 ;FILE ble_arp.o
-;FILE custs1.o
 ;FILE custs1_task.o
+custs1_init_ccc_values <= USED 0
 ;FILE da14531_printf.o
 ;FILE dac70508m.o
+spi2_dac_read_register <= USED 0
+spi2_dac_write_register <= USED 0
 ;FILE gpio.o
 GPIO_ConfigurePinPower <= USED 0
 GPIO_DisablePorPin <= USED 0
@@ -126,6 +128,11 @@ i2c_wait_until_eeprom_ready <= USED 0
 ;FILE jump_table.o
 dummyf <= USED 0
 ;FILE mcr35614r.o
+spi2_adc_fast_command <= USED 0
+spi2_adc_increment_read_register <= USED 0
+spi2_adc_static_read_register <= USED 0
+spi2_adc_write_register <= USED 0
+swapBufToRealVal <= USED 0
 ;FILE nmi_handler.o
 ;FILE otp_cs.o
 otp_cs_get_adc_offsh_ge <= USED 0
@@ -154,6 +161,7 @@ rf_power_down <= USED 0
 spi_access <= USED 0
 spi_disable <= USED 0
 spi_master_transfer <= USED 0
+spi_receive <= USED 0
 spi_register_receive_cb <= USED 0
 spi_register_send_cb <= USED 0
 spi_register_transfer_cb <= USED 0
