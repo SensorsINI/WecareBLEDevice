@@ -77,7 +77,7 @@
 #define APP_AD_MSD_COMPANY_ID_LEN   (2)
 #define APP_AD_MSD_DATA_LEN         (sizeof(uint16_t))
 
-#define APP_PERIPHERAL_CTRL_TIMER_DELAY 100
+#define APP_PERIPHERAL_CTRL_TIMER_DELAY 50
 
 // LEDs on the wecare board which is controlled by a SPI chip (MAX3717).
 #define RED_LED_PORT 2
