@@ -100,6 +100,7 @@ void spi2_adc_increment_read_register(uint8_t regAddr, uint8_t *readBuf, uint8_t
 void spi2_adc_fast_command(uint8_t cmdType);
 void spi2_adc_write_register(uint8_t regAddr, uint8_t *sendBuf, uint8_t writeBytes);
 uint32_t swapBufToRealVal(uint8_t *buf, uint8_t regLenByte);
-
+void spi2_adc1_init(void);
+void spi2_adc1_readout(uint32_t *ADCReadValBuf);
 
 #endif // _MCR35614R_H_

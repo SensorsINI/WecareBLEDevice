@@ -40,5 +40,6 @@
 */
 int spi2_dac_read_register(uint16_t regAddr, uint16_t *readVal);
 int spi2_dac_write_register(uint16_t regAddr, uint16_t setVal);
+void spi2_dac_set_data(uint16_t *DACValBuf);
 
 #endif // _DAC70508M_H_

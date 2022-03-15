@@ -1,4 +1,4 @@
-#include "DAC70508M.h"
+#include "user_periph_setup.h"
 
 /**
  ****************************************************************************************
@@ -62,4 +62,53 @@ int spi2_dac_write_register(uint16_t regAddr, uint16_t setVal)
 			return -1;
 		}
 	  else return 0;	  
+}
+
+
+ /****************************************************************************************
+ * @brief SPI2 DAC (DAC70508M) set input data function.
+* @param DACValBuf: input. DAC input data.
+ * @return void
+ ****************************************************************************************
+*/
+void spi2_dac_set_data(uint16_t *DACValBuf)
+{
+		GPIO_ConfigurePin(SPI2_DAC_CS_PORT, SPI2_DAC_CS_PIN, OUTPUT, PID_SPI_EN, true); //Enable DAC
+		GPIO_ConfigurePin(SPI2_IO_CS_PORT, SPI2_IO_CS_PIN, OUTPUT, PID_GPIO, true);  // Disable IO
+		GPIO_ConfigurePin(SPI2_ADC2_CS_PORT, SPI2_ADC2_CS_PIN, OUTPUT, PID_GPIO, true); //Disable ADC2			
+    spi_initialize(&spi2_dac_cfg);
+
+    uint16_t regData; 
+
+    if(!spi2_dac_read_register(DEVICE_ID, &regData)) 
+		{
+			  // da14531_printf("DEVICE ID is: 0x%x.\r\n", regData);			
+		}
+
+    if(!spi2_dac_read_register(GAIN, &regData)) 
+		{
+			  // da14531_printf("GAIN channel 4 register is: 0x%x.\r\n", regData);			
+		}
+
+    if(!spi2_dac_read_register(STATUS, &regData))  
+		{
+			  // da14531_printf("STATUS channel 4 register is: 0x%x.\r\n", regData);			
+		}
+				
+//		// Reset the device
+//		spi2_dac_write_register(TRIGGER, 0xa);
+    
+		spi2_dac_write_register(GAIN, 0x1ff);
+    if(!spi2_dac_read_register(STATUS, &regData))  
+		{
+			  // da14531_printf("STATUS channel 4 register is: 0x%x.\r\n", regData);			
+		}
+    
+		// spi2_dac_write_register(BRDCAST, 0xafff);
+		
+		const uint8_t DAC_CHS[8] = {DAC0, DAC1, DAC2, DAC3, DAC4, DAC5, DAC6, DAC7};
+		for (int i = 0; i < 8; i++)
+		{
+				spi2_dac_write_register(DAC_CHS[i], DACValBuf[i]);
+		}
 }

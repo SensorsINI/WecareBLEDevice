@@ -44,6 +44,8 @@
 #include "spi_flash.h"
 #include "i2c.h"
 #include "i2c_eeprom.h"
+#include "DAC70508M.h"
+#include "MCR35614R.h"
 
 
 
@@ -162,7 +164,59 @@
     #define SPI2_DAC_CS_PIN             GPIO_PIN_10  
 #endif
 
-		
+
+// Initialize SPI2 IO driver
+static spi_cfg_t spi2_cfg = {  .spi_ms = SPI_MS_MODE_MASTER,
+                        .spi_cp = SPI_CP_MODE_0,            // SPI Mode 0,0
+                        .spi_speed = SPI_SPEED_MODE_2MHz,
+                        .spi_wsz = SPI_MODE_16BIT,
+                        .spi_cs = SPI_CS_0,                 
+                        .cs_pad.port = SPI2_IO_CS_PORT,
+                        .cs_pad.pin = SPI2_IO_CS_PIN
+#if defined(CFG_SPI_DMA_SUPPORT)
+#endif
+};
+
+// Initialize SPI2 DAC driver
+static spi_cfg_t spi2_dac_cfg = {  
+	                      .spi_ms = SPI_MS_MODE_MASTER,
+                        .spi_cp = SPI_CP_MODE_1,            // SPI Mode 0,1
+                        .spi_speed = SPI_SPEED_MODE_2MHz,
+                        .spi_wsz = SPI_MODE_32BIT,
+                        .spi_cs = SPI_CS_0,                
+                        .cs_pad.port = SPI2_DAC_CS_PORT,
+                        .cs_pad.pin = SPI2_DAC_CS_PIN
+#if defined(CFG_SPI_DMA_SUPPORT)
+#endif
+};
+
+// Initialize SPI2 ADC1 driver
+static spi_cfg_t spi2_adc1_cfg = {  
+	                      .spi_ms = SPI_MS_MODE_MASTER,
+                        .spi_cp = SPI_CP_MODE_0,            // SPI Mode 0,0
+                        .spi_speed = SPI_SPEED_MODE_2MHz,
+                        .spi_wsz = SPI_MODE_8BIT,
+                        .spi_cs = SPI_CS_1,                 
+                        .cs_pad.port = SPI2_ADC1_CS_PORT,
+                        .cs_pad.pin = SPI2_ADC1_CS_PIN
+#if defined(CFG_SPI_DMA_SUPPORT)
+#endif
+};
+
+// Initialize SPI2 ADC2 driver
+static spi_cfg_t spi2_adc2_cfg = {  
+	                      .spi_ms = SPI_MS_MODE_MASTER,
+                        .spi_cp = SPI_CP_MODE_0,            // SPI Mode 0,0
+                        .spi_speed = SPI_SPEED_MODE_2MHz,
+                        .spi_wsz = SPI_MODE_8BIT,
+                        .spi_cs = SPI_CS_0,                 
+                        .cs_pad.port = SPI2_ADC2_CS_PORT,
+                        .cs_pad.pin = SPI2_ADC2_CS_PIN		
+#if defined(CFG_SPI_DMA_SUPPORT)
+#endif
+};
+
+
 /***************************************************************************************/
 /* Production debug output configuration                                               */
 /***************************************************************************************/
