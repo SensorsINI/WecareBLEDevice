@@ -173,6 +173,9 @@ async def main(address, char_uuid):
 
         await client.write_gatt_char(CHAR_LED_STATE_UUID, b'\x01', True)
 
+        await client.start_notify(char_uuid, notification_handler)
+        print("ADC value 1 characteristic notification enabled")
+
         DAC_Vs0 = Vs
         DAC_Vg0 = Vg
         DACCode_Vs0 = convertDACVoltageToDACCode(DAC_Vs0)
@@ -208,8 +211,6 @@ async def main(address, char_uuid):
             [row.append('Isd_CH{:d}'.format(ch)) for ch in range(0, NUM_CHANNEL)]
             csv_writer.writerow(row)
 
-        await client.start_notify(char_uuid, notification_handler)
-        print("ADC value 1 characteristic notification enabled")
         await asyncio.sleep(3.0)
         while (f_exit == False):
             # if ADCConversionFinishFlg:

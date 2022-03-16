@@ -203,7 +203,7 @@ async def main(address, char_uuid):
         software_revision = await client.read_gatt_char(SOFTWARE_REV_UUID)
         print("Software Revision: {0}".format("".join(map(chr, software_revision))))
 
-        await client.write_gatt_char(CHAR_CONTROL_POINT_UUID, b'\x01', True)
+        await client.write_gatt_char(CHAR_CONTROL_POINT_UUID, b'\x00', True)
         print("Control point characteristic written")
 
         await client.write_gatt_char(CHAR_LED_STATE_UUID, b'\x01', True)

@@ -59,7 +59,8 @@ CHAR_DAC_DATA_UUID = "772ae377-b3d2-4f8e-4042-5481d1e0098c"
 NUM_DATA = 4
 Rs = 100
 Vd = 0.5
-Vds = -0.4
+# Vds = -0.4  # for real sensor
+Vds = -1.4    # for fake sensor
 Vs = Vd - Vds
 f_exit = False
 # fig, ax = None, None
@@ -121,7 +122,7 @@ def notification_handler(sender, data):
     else:
         counter += 1
 
-    ydata = np.append(ydata[0:], floatADC[9])
+    ydata = np.append(ydata[0:], floatADC[8])
     xdata = np.append(xdata[0:], DACTargetVoltage)
     # line.set_xdata(xdata)
     # line.set_ydata(ydata)
@@ -194,14 +195,18 @@ async def main(address, char_uuid):
         software_revision = await client.read_gatt_char(SOFTWARE_REV_UUID)
         print("Software Revision: {0}".format("".join(map(chr, software_revision))))
 
-        await client.write_gatt_char(CHAR_CONTROL_POINT_UUID, b'\x01', True)
+        await client.write_gatt_char(CHAR_CONTROL_POINT_UUID, b'\x00', True)
         print("Control point characteristic written")
 
         await client.write_gatt_char(CHAR_LED_STATE_UUID, b'\x01', True)
 
+        await client.start_notify(char_uuid, notification_handler)
+        print("ADC value 1 characteristic notification enabled")
+
         # DACDefaultVoltage = 0.3
         DAC_Vs0 = Vs
-        DAC_Vg0 = np.concatenate([np.arange(0.7, 1.7+0.001, 0.05), np.arange(1.7, 0.7-0.001, -0.05)])
+        DAC_Vg0 = np.concatenate([np.arange(0.5, 2.5+0.001, 0.05), np.arange(2.5, 0.5-0.001, -0.05)])
+        # DAC_Vg0 = np.concatenate([np.arange(0.7, 1.7 + 0.001, 0.05), np.arange(1.7, 0.7 - 0.001, -0.05)])# fake sensor
         DACCode_Vs0 = convertDACVoltageToDACCode(DAC_Vs0)
         DACCode_Vg0 = convertDACVoltageToDACCode(DAC_Vg0[counter])
         # DACCode = convertDACVoltageToDACCode(DACDefaultVoltage)
@@ -235,8 +240,6 @@ async def main(address, char_uuid):
         print("ADC1 Value is: {0}".format(value))
         adc_data_int = int.from_bytes(value, byteorder='little', signed=False)
 
-        await client.start_notify(char_uuid, notification_handler)
-        print("ADC value 1 characteristic notification enabled")
         await asyncio.sleep(3.0)
         while (f_exit == False):
             if ADCConversionFinishFlg:
@@ -247,7 +250,9 @@ async def main(address, char_uuid):
                 await client.write_gatt_char(CHAR_DAC_DATA_UUID, write_value, True)
                 ADCConversionFinishFlg = False
 
-            await asyncio.sleep(0.033)
+            await asyncio.sleep(0.33)
+            if not ADCConversionFinishFlg:
+                ADCConversionFinishFlg = True
             line.figure.canvas.flush_events()
         await client.stop_notify(char_uuid)
 
