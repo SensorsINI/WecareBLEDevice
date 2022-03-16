@@ -69,7 +69,7 @@ f_exit = False
 plt.ion()
 
 counter = 0
-prevCounter = 0
+errCounter = 0
 DACCode = 0xFF1F
 ADCConversionFinishFlg = False
 sineSignal = []
@@ -89,7 +89,7 @@ def onclick_button_exit(event):
 
 def notification_handler(sender, data):
     global fig, ax, line, xdata, ydata, cdata
-    global counter, prevCounter, DACCode_Vg0, ADCConversionFinishFlg, DAC_Vg0
+    global counter, DACCode_Vg0, ADCConversionFinishFlg, DAC_Vg0
     """Simple notification handler which prints the data received."""
     print("{0}: {1}".format(sender, data))
 
@@ -101,8 +101,10 @@ def notification_handler(sender, data):
     print(floatADC)
 
     ADCConversionFinishFlg = True
-    DACTargetVoltage = DAC_Vg0[prevCounter]
-    if prevCounter == 0:
+    DACTargetVoltage = DAC_Vg0[counter]
+
+    if counter == len(DAC_Vg0) - 1:
+        counter = 0
         # ydata = np.reshape(ydata, (4, -1))
         # xdata = np.reshape(xdata, (4, -1))
         # with open('sensor2.csv', mode='a', newline='') as csv_file:
@@ -115,10 +117,6 @@ def notification_handler(sender, data):
         #             break
         ydata = np.empty((0,))
         xdata = np.empty((0,))
-
-    prevCounter = counter
-    if counter == len(DAC_Vg0) - 1:
-        counter = 0
     else:
         counter += 1
 
@@ -158,7 +156,7 @@ def convertDACVoltageToDACCode(voltage: float):
 
 async def main(address, char_uuid):
     global fig, ax, line, xdata, ydata, cdata, f_exit
-    global counter, prevCounter, DACCode_Vg0, ADCConversionFinishFlg, DAC_Vg0
+    global counter, DACCode_Vg0, ADCConversionFinishFlg, DAC_Vg0
     async with BleakClient(address, timeout=10.0) as client:
         print(f"Connected: {client.is_connected}")
         # client._assign_mtu = 67
@@ -210,7 +208,7 @@ async def main(address, char_uuid):
         DACCode_Vs0 = convertDACVoltageToDACCode(DAC_Vs0)
         DACCode_Vg0 = convertDACVoltageToDACCode(DAC_Vg0[counter])
         # DACCode = convertDACVoltageToDACCode(DACDefaultVoltage)
-        counter += 1
+        # counter += 1
         write_value = bytearray(struct.pack('HHHHHHHH', DACCode_Vs0, DACCode_Vs0, DACCode_Vs0, DACCode_Vs0, DACCode_Vg0, DACCode_Vg0, DACCode_Vg0, DACCode_Vg0))
         # value = await client.read_gatt_char(CHAR_DAC_DATA_UUID)
         # print("I/O Data Pre-Write Value: {0}".format(value))
@@ -252,6 +250,8 @@ async def main(address, char_uuid):
 
             await asyncio.sleep(0.33)
             if not ADCConversionFinishFlg:
+                errCounter += 1
+                print("!!!!!! ADC Notification Missed ({:d}) !!!!!".format(errCounter))
                 ADCConversionFinishFlg = True
             line.figure.canvas.flush_events()
         await client.stop_notify(char_uuid)
