@@ -171,14 +171,29 @@ void user_svc1_dac_val_wr_ind_handler(ke_msg_id_t const msgid,
 		static uint32_t errorCnt = 0;
 		static bool initFlag = true;   // Make sure initilization only execute once
 		uint16_t localDACValBuf[8] = {0};
+		uint32_t ADC1ValBuf[16] = {0};
+		uint32_t ADC2ValBuf[16] = {0};		
 		uint32_t sweepModeADCValBuf[16] = {0};
-
+		
 		memcpy(localDACValBuf, &param->value[0], param->length);
 		da14531_printf("The value from the host to set DAC is: 0x%x.\r\n", localDACValBuf[0]);
 		// Set the DAC
 		spi2_dac_set_data(localDACValBuf);
 		// Read the ADC output data
-		spi2_adc1_readout(sweepModeADCValBuf);
+		spi2_adc1_readout(ADC1ValBuf);
+	  // Read the ADC output data
+		spi2_adc2_readout(ADC2ValBuf);
+		
+		for(int i = 0; i < 16; i++)
+		{
+				sweepModeADCValBuf[i] =  ADC2ValBuf[i];
+		}		
+
+		// replace the lower 4 data from ADC1
+		for(int i = 0; i < 4; i++)
+		{
+				sweepModeADCValBuf[8 + i] =  ADC1ValBuf[i];
+		}		
 		
 		// Send notification
     struct custs1_val_ntf_ind_req *req = KE_MSG_ALLOC_DYN(CUSTS1_VAL_NTF_REQ,
