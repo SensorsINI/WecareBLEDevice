@@ -120,7 +120,7 @@ def notification_handler(sender, data):
     else:
         counter += 1
 
-    ydata = np.append(ydata[0:], floatADC[8])
+    ydata = np.append(ydata[0:], floatADC[11])
     xdata = np.append(xdata[0:], DACTargetVoltage)
     # line.set_xdata(xdata)
     # line.set_ydata(ydata)
@@ -156,7 +156,7 @@ def convertDACVoltageToDACCode(voltage: float):
 
 async def main(address, char_uuid):
     global fig, ax, line, xdata, ydata, cdata, f_exit
-    global counter, DACCode_Vg0, ADCConversionFinishFlg, DAC_Vg0
+    global counter, errCounter, DACCode_Vg0, ADCConversionFinishFlg, DAC_Vg0
     async with BleakClient(address, timeout=10.0) as client:
         print(f"Connected: {client.is_connected}")
         # client._assign_mtu = 67

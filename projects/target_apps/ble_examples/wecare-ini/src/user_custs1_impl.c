@@ -169,7 +169,6 @@ void user_svc1_dac_val_wr_ind_handler(ke_msg_id_t const msgid,
                                           ke_task_id_t const src_id)
 {
 		static uint32_t errorCnt = 0;
-		static bool initFlag = true;   // Make sure initilization only execute once
 		uint16_t localDACValBuf[8] = {0};
 		uint32_t ADC1ValBuf[16] = {0};
 		uint32_t ADC2ValBuf[16] = {0};		
@@ -318,11 +317,26 @@ void user_svc1_rest_att_info_req_handler(ke_msg_id_t const msgid,
 
 void app_adcval1_timer_cb_handler()
 {
-		uint32_t timerModeADCValBuf[16] = {0};	
+		uint32_t ADC1ValBuf[16] = {0};
+		uint32_t ADC2ValBuf[16] = {0};		
+		uint32_t timerModeADCValBuf[16] = {0};
 		
 		// Read the ADC output data
-		spi2_adc1_readout(timerModeADCValBuf);
-	
+		spi2_adc1_readout(ADC1ValBuf);
+	  // Read the ADC output data
+		spi2_adc2_readout(ADC2ValBuf);
+
+		for(int i = 0; i < 16; i++)
+		{
+				timerModeADCValBuf[i] =  ADC2ValBuf[i];
+		}		
+
+		// replace the lower 4 data from ADC1
+		for(int i = 0; i < 4; i++)
+		{
+				timerModeADCValBuf[8 + i] =  ADC1ValBuf[i];
+		}		
+		
     struct custs1_val_ntf_ind_req *req = KE_MSG_ALLOC_DYN(CUSTS1_VAL_NTF_REQ,
                                                           prf_get_task_from_id(TASK_ID_CUSTS1),
                                                           TASK_APP,

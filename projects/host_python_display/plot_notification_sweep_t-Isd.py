@@ -64,7 +64,8 @@ LOG_INTERVAL = 64
 # Chnl_read = [8, 9, 10, 11]
 Rs = 100
 Vd = 0.5
-Vds = -0.4
+# Vds = -0.4 # real sensor
+Vds = -1.4   # fake sensor
 Vgs = 0.1
 Vs = Vd - Vds
 Vg = Vgs + Vs
@@ -97,7 +98,7 @@ def notification_handler(sender, data):
     ADCConversionFinishFlg = True
     rx_time = counter
     tdata.append(time_now)
-    
+
     counter += 1
 
     # ydata = np.append(ydata[0:], floatADC[9])
@@ -119,14 +120,14 @@ def notification_handler(sender, data):
                 row.append(tdata[i])
                 [row.append(ydata[ch, i]) for ch in range(NUM_CHANNEL)]
                 csv_writer.writerow(row)
-    
+
     for ch in range(0, NUM_CHANNEL):
         scatter[ch].set_offsets(np.column_stack([xdata[ch, :], ydata[ch, :]/Rs*1000]))
 
     ax.set_xlim(0, rx_time+1)
     # ax.set_ylim(np.min(floatADC[:12])-1, np.max(floatADC[:12])+1)
     ax.figure.canvas.draw_idle()
-    
+
 
 def convertDACVoltageToDACCode(voltage: float):
     return int(voltage * (2 ** 14 - 1) / 2.5) << 2
@@ -204,7 +205,7 @@ async def main(address, char_uuid):
         ax_exit = plt.axes([0.77, 0.77, 0.1, 0.075])
         button_exit = Button(ax_exit, 'Exit')
         button_exit.on_clicked(onclick_button_exit)
-        
+
         with open(filename, mode='a', newline='') as csv_file:
             csv_writer = csv.writer(csv_file)
             row = ['time']
