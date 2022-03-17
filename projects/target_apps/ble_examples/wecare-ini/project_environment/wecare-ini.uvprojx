@@ -698,6 +698,16 @@
               <FileType>1</FileType>
               <FilePath>..\src\custom_profile\custs1_task.c</FilePath>
             </File>
+            <File>
+              <FileName>suotar.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\sdk\ble_stack\profiles\suota\suotar\src\suotar.c</FilePath>
+            </File>
+            <File>
+              <FileName>suotar_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\sdk\ble_stack\profiles\suota\suotar\src\suotar_task.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

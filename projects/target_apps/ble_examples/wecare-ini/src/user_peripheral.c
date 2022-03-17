@@ -696,6 +696,7 @@ void spi2_led_ctrl(bool redLed, bool greenLed)
     spi_cs_high();
 }
 
+
 #if (BLE_SUOTA_RECEIVER)
 void on_suotar_status_change(const uint8_t suotar_event)
 {
@@ -720,16 +721,6 @@ void on_suotar_status_change(const uint8_t suotar_event)
 }
 #endif
 
-#if (BLE_SUOTA_RECEIVER)
-		// Issue a platform reset when it is requested by the suotar procedure
-    if (suota_state.reboot_requested)
-    {
-        // Reboot request will be served
-        suota_state.reboot_requested = 0;
 
-        // Platform reset
-        platform_reset(RESET_AFTER_SUOTA_UPDATE);
-    }
-#endif
 
 /// @} APP
