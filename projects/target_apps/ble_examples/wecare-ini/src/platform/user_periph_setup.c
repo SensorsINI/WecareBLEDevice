@@ -225,7 +225,7 @@ void periph_init(void)
     GPIO_set_pad_latch_en(true);
 		
 		// Disable debugger
-		SetBits16(SYS_CTRL_REG, DEBUGGER_ENABLE, NO_SWD);   
+		// SetBits16(SYS_CTRL_REG, DEBUGGER_ENABLE, NO_SWD);   
 		
 		timer0_setup(25);
 }

@@ -67,9 +67,14 @@
 #include "DAC70508M.h"
 #include "MCR35614R.h"
 #include "utils.h"
-#include "da14531_printf.h"
+// #include "da14531_printf.h"
 
 #include "app_diss_task.h" 
+
+#if (BLE_SUOTA_RECEIVER)
+#include "app_suotar.h"
+#endif
+
 // Outside value
 extern uint16_t globalDACValBuf[8];
 extern uint32_t globalADCValBuf[16];
@@ -563,7 +568,7 @@ void user_catch_rest_hndl(ke_msg_id_t const msgid,
 								
 
         default:
-					  da14531_printf("Caught message not handled by any function. The message type is: 0x%x\r\n", msgid);
+					  // da14531_printf("Caught message not handled by any function. The message type is: 0x%x\r\n", msgid);
             break;
     }
 }
@@ -690,5 +695,41 @@ void spi2_led_ctrl(bool redLed, bool greenLed)
     spi_send(&reg_val_ledGreen, 1, SPI_OP_BLOCKING);
     spi_cs_high();
 }
+
+#if (BLE_SUOTA_RECEIVER)
+void on_suotar_status_change(const uint8_t suotar_event)
+{
+#if (!SUOTAR_SPI_DISABLE)
+    uint8_t dev_id;
+
+    // Release the SPI flash memory from power down
+    spi_flash_release_from_power_down();
+
+    // Disable the SPI flash memory protection (unprotect all sectors)
+    spi_flash_configure_memory_protection(SPI_FLASH_MEM_PROT_NONE);
+
+    // Try to auto-detect the SPI flash memory
+    spi_flash_auto_detect(&dev_id);
+
+    if (suotar_event == SUOTAR_END)
+    {
+        // Power down the SPI flash memory
+        spi_flash_power_down();
+    }
+#endif
+}
+#endif
+
+#if (BLE_SUOTA_RECEIVER)
+		// Issue a platform reset when it is requested by the suotar procedure
+    if (suota_state.reboot_requested)
+    {
+        // Reboot request will be served
+        suota_state.reboot_requested = 0;
+
+        // Platform reset
+        platform_reset(RESET_AFTER_SUOTA_UPDATE);
+    }
+#endif
 
 /// @} APP

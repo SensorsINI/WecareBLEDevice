@@ -59,6 +59,12 @@ static const struct app_bass_cb user_app_bass_cb = {
 };
 #endif // BLE_BATT_SERVER
 
+#if (BLE_SUOTA_RECEIVER)
+static const struct app_suotar_cb user_app_suotar_cb = {
+    .on_suotar_status_change = on_suotar_status_change,
+};
+#endif // BLE_SUOTA_RECEIVER
+
 static const struct app_callbacks user_app_callbacks = {
     .app_on_connection                  = user_app_connection,
     .app_on_disconnect                  = user_app_disconnect,

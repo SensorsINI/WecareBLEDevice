@@ -31,7 +31,7 @@
 #include "prf_utils.h"
 #include "app_prf_types.h"
 
-#include "da14531_printf.h"
+#if !defined (__DA14531__) || defined (__EXCLUDE_ROM_CUSTS1__)
 
 /*
  * FUNCTION DEFINITIONS
@@ -81,7 +81,7 @@ static int custs1_att_set_value(uint8_t att_idx, uint16_t length, const uint8_t 
     }
     val->att_idx = att_idx;
     val->length = length;
-    memcpy(val->data, data, length);		
+    memcpy(val->data, data, length);
 
     return 0;
 }
@@ -123,7 +123,6 @@ static int custs1_att_get_value(uint8_t att_idx, uint16_t *length, const uint8_t
         *length = 0;
         *data = NULL;
     }
- 
     return val ? 0 : ATT_ERR_ATTRIBUTE_NOT_FOUND;
 }
 
@@ -271,7 +270,6 @@ static void custs1_exe_operation(void)
     }
 }
 
-#if !defined (__DA14531__) || defined (__EXCLUDE_ROM_CUSTS1__)
 /**
  ****************************************************************************************
  * @brief Handles reception of the @ref GATTC_CMP_EVT message.
@@ -390,7 +388,7 @@ static int custs1_val_ind_req_handler(ke_msg_id_t const msgid,
     uint16_t handle = custs1_env->shdl + param->handle;
     uint8_t ccc_idx;
     uint8_t status;
-    
+
     uint8_t state = ke_state_get(dest_id);
     if (state == CUSTS1_BUSY)
     {
@@ -450,7 +448,6 @@ static int custs1_att_info_rsp_handler(ke_msg_id_t const msgid,
 
     return (KE_MSG_CONSUMED);
 }
-#endif
 
 /**
  ****************************************************************************************
@@ -467,8 +464,6 @@ static int gattc_read_req_ind_handler(ke_msg_id_t const msgid,
                                       ke_task_id_t const dest_id,
                                       ke_task_id_t const src_id)
 {
-	  da14531_printf("gattc_read_req_ind_handler is called. The message type is 0x%x and parameter handle 0 is: 0x%x.\r\n", msgid, param->handle);
-
     ke_state_t state = ke_state_get(dest_id);
 
     if(state == CUSTS1_IDLE)
@@ -481,21 +476,16 @@ static int gattc_read_req_ind_handler(ke_msg_id_t const msgid,
         uint8_t status = custs1_get_att_idx(param->handle, &att_idx);
         uint16_t length = 0;
         uint16_t ccc_val = 0;
-        // da14531_printf("The handle index in the att database is %d.\r\n", att_idx);
-			  // uint8_t value[2]={0x55,0xaa};
-			  // custs1_set_ccc_value(conidx, att_idx, *(uint16_t *)value);	
-			  // da14531_printf("Value at 0x7FC85EBA is 0x%x.\r\n", custs1_get_ccc_value(conidx, att_idx));
-			
+
         // If the attribute has been found, status is GAP_ERR_NO_ERROR
         if (status == GAP_ERR_NO_ERROR)
         {
             const struct cust_prf_func_callbacks *callbacks = custs_get_func_callbacks(TASK_ID_CUSTS1);
-            
+
             if (callbacks->att_db[att_idx].uuid_size == ATT_UUID_16_LEN &&
                 *(uint16_t *)callbacks->att_db[att_idx].uuid == ATT_DESC_CLIENT_CHAR_CFG)
             {
                 ccc_val = custs1_get_ccc_value(conidx, att_idx);
-	              // da14531_printf("uuid_size is 0x%x and uuid is 0x%x.\r\n", conidx, att_idx);					
                 length = 2;
             }
             else
@@ -532,7 +522,6 @@ static int gattc_read_req_ind_handler(ke_msg_id_t const msgid,
 
         if (status == GAP_ERR_NO_ERROR)
         {
-					  // da14531_printf("Data requeted is 0x%x.\r\n", ccc_val);
             memcpy(cfm->value, &ccc_val, length);
         }
 
@@ -547,6 +536,7 @@ static int gattc_read_req_ind_handler(ke_msg_id_t const msgid,
     }
 }
 
+#endif
 
 /**
  ****************************************************************************************
@@ -563,8 +553,6 @@ static int gattc_write_req_ind_handler(ke_msg_id_t const msgid,
                                        ke_task_id_t const dest_id,
                                        ke_task_id_t const src_id)
 {
-	  da14531_printf("gattc_write_req_ind_handler is called. The message type is 0x%x and parameter handle 0 is: 0x%x.\r\n", msgid, param->handle);
-
     struct custs1_env_tag *custs1_env = PRF_ENV_GET(CUSTS1, custs1);
     struct gattc_write_cfm * cfm;
     uint8_t att_idx = 0;
@@ -743,6 +731,11 @@ static int custs1_value_req_rsp_handler(ke_msg_id_t const msgid,
 #endif
 
 #if defined (__DA14531__) && !defined (__EXCLUDE_ROM_CUSTS1__)
+extern int gattc_read_req_ind_handler(ke_msg_id_t const msgid,
+                                      struct gattc_read_req_ind const *param,
+                                      ke_task_id_t const dest_id,
+                                      ke_task_id_t const src_id);
+
 extern int gattc_att_info_req_ind_handler(ke_msg_id_t const msgid,
                                           struct gattc_att_info_req_ind *param,
                                           ke_task_id_t const dest_id,

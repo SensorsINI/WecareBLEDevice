@@ -174,12 +174,13 @@ static const struct advertise_configuration user_adv_conf = {
  ****************************************************************************************
  */
 /// Advertising data
-#define USER_ADVERTISE_DATA         ("\x03"\
+#define USER_ADVERTISE_DATA         ("\x05"\
                                     ADV_TYPE_COMPLETE_LIST_16BIT_SERVICE_IDS\
+																		ADV_UUID_SUOTAR_SERVICE\
                                     ADV_UUID_DEVICE_INFORMATION_SERVICE\
-																		"\x05" \
+																		"\x02" \
 																		ADV_TYPE_MANUFACTURER_SPECIFIC_DATA \
-																		"\xaa\x55\xaa\x55" \
+																		"\x5a" \
                                     "\x11"\
                                     ADV_TYPE_COMPLETE_LIST_128BIT_SERVICE_IDS\
                                     "\x88\x88\x88\x88\x88\x8\x8\x88\x66\x66\x66\x66\x66\x66\x66\x66")
@@ -206,7 +207,7 @@ static const struct advertise_configuration user_adv_conf = {
  ****************************************************************************************
  */
 /// Device name
-#define USER_DEVICE_NAME        "WECARE-INI"
+#define USER_DEVICE_NAME        "WECARE-INI-V2"
 
 /// Device name length
 #define USER_DEVICE_NAME_LEN    (sizeof(USER_DEVICE_NAME)-1)

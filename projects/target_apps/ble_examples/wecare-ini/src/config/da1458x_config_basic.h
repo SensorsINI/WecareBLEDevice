@@ -100,7 +100,7 @@
 /* SPI FLASH  (#define CFG_SPI_FLASH_ENABLE)                                                                    */
 /* I2C EEPROM (#define CFG_I2C_EEPROM_ENABLE)                                                                   */
 /****************************************************************************************************************/
-#undef CFG_SPI_FLASH_ENABLE
+#define CFG_SPI_FLASH_ENABLE
 #undef CFG_I2C_EEPROM_ENABLE
 
 /****************************************************************************************************************/
@@ -181,7 +181,7 @@
 /* SPI FLASH  (#define CFG_SPI_FLASH_ENABLE)                                                                    */
 /* I2C EEPROM (#define CFG_I2C_EEPROM_ENABLE)                                                                   */
 /****************************************************************************************************************/
-#undef CFG_SPI_FLASH_ENABLE
+#define CFG_SPI_FLASH_ENABLE
 #undef CFG_I2C_EEPROM_ENABLE
 
 /****************************************************************************************************************/
