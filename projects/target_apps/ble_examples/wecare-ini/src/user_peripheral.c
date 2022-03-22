@@ -336,7 +336,6 @@ void user_app_db_init_complete(void)
 
 		// Need to include: "custs1.h" "prf_utils.h" "attm_db.h"
 		struct custs1_env_tag *custs1_env = PRF_ENV_GET(CUSTS1, custs1);
-		attmdb_att_set_value(custs1_env->shdl + SVC1_IDX_ADC_VAL_2_VAL, DEF_SVC1_ADC_VAL_2_CHAR_LEN, 0, (uint8_t *)&sample);
 		static uint16_t dacInitVal = 0x1FFF;
 		attmdb_att_set_value(custs1_env->shdl + SVC1_IDX_DAC_VALUE_VAL, DEF_SVC1_DAC_VALUE_CHAR_LEN, 0, (uint8_t *)&dacInitVal);
 		static char * dacDescName = "DAC";
@@ -458,14 +457,6 @@ void user_catch_rest_hndl(ke_msg_id_t const msgid,
                     user_svc1_adc_val_1_cfg_ind_handler(msgid, msg_param, dest_id, src_id);
                     break;
 
-                case SVC1_IDX_BUTTON_STATE_NTF_CFG:
-                    user_svc1_button_cfg_ind_handler(msgid, msg_param, dest_id, src_id);
-                    break;
-
-                case SVC1_IDX_INDICATEABLE_IND_CFG:
-                    user_svc1_dac_val_cfg_ind_handler(msgid, msg_param, dest_id, src_id);
-                    break;
-
                 case SVC1_IDX_DAC_VALUE_NTF_CFG:
                     user_svc1_dac_val_cfg_ind_handler(msgid, msg_param, dest_id, src_id);
                     break;
@@ -491,12 +482,6 @@ void user_catch_rest_hndl(ke_msg_id_t const msgid,
                 case SVC1_IDX_ADC_VAL_1_VAL:
                     break;
 
-                case SVC1_IDX_BUTTON_STATE_VAL:
-                    break;
-
-                case SVC1_IDX_DAC_VALUE_VAL:
-                    break;
-
                 default:
                     break;
             }
@@ -508,9 +493,6 @@ void user_catch_rest_hndl(ke_msg_id_t const msgid,
 
             switch (msg_param->handle)
             {
-                case SVC1_IDX_INDICATEABLE_VAL:
-                    break;
-
                 default:
                     break;
              }
@@ -552,11 +534,6 @@ void user_catch_rest_hndl(ke_msg_id_t const msgid,
 
             switch (msg_param->att_idx)
             {
-                case SVC3_IDX_READ_4_VAL:
-                {
-                    user_svc3_read_non_db_val_handler(msgid, msg_param, dest_id, src_id);
-                } break;
-
                 default:
                 {
                     // Send Error message

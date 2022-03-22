@@ -146,7 +146,7 @@ void user_svc1_dac_val_cfg_ind_handler(ke_msg_id_t const msgid,
 
 	 
         req->conidx = app_env[conidx].conidx;
-        req->handle = SVC1_IDX_INDICATEABLE_VAL;
+        req->handle = SVC1_IDX_DAC_VALUE_VAL;
         req->length = sizeof(indication_counter);
         req->value[0] = (indication_counter >> 8) & 0xFF;
         req->value[1] = indication_counter & 0xFF;
