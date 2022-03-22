@@ -1,0 +1,20 @@
+
+
+*** Memory Logging Results ***
+
+>>> ENV HEAP <<<
+Used size in this HEAP  :  512 (current) -  672 (maximum)
+Used size in other HEAPs:  404 (current) -  404 (maximum)
+
+>>> DB HEAP <<<
+Used size in this HEAP  : 2400 (current) - 2400 (maximum)
+Used size in other HEAPs:    0 (current) -    0 (maximum)
+
+>>> MSG HEAP <<<
+Used size in this HEAP  :   48 (current) -  472 (maximum)
+Used size in other HEAPs:    0 (current) -    0 (maximum)
+
+>>> Non-Ret HEAP <<<
+Used size in this HEAP  :    0 (current) -  628 (maximum)
+Used size in other HEAPs:    0 (current) -    0 (maximum)
+

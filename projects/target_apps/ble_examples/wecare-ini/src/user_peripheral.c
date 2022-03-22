@@ -407,6 +407,24 @@ void user_app_disconnect(struct gapc_disconnect_ind const *param)
     mnf_data_update();
     // Restart Advertising
     user_app_adv_start();
+		
+    default_app_on_disconnect(NULL);
+
+		#if (BLE_BATT_SERVER)
+				app_batt_poll_stop();
+		#endif
+
+		#if (BLE_SUOTA_RECEIVER)
+				// Issue a platform reset when it is requested by the suotar procedure
+				if (suota_state.reboot_requested)
+				{
+						// Reboot request will be served
+						suota_state.reboot_requested = 0;
+
+						// Platform reset
+						platform_reset(RESET_AFTER_SUOTA_UPDATE);
+				}
+		#endif
 }
 
 void user_catch_rest_hndl(ke_msg_id_t const msgid,

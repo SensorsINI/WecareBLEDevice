@@ -1,4 +1,4 @@
-;#<FEEDBACK># ARM Linker, 5060750: Last Updated: Thu Mar 17 17:42:45 2022
+;#<FEEDBACK># ARM Linker, 5060750: Last Updated: Tue Mar 22 18:26:40 2022
 ;VERSION 0.2
 ;FILE adc_531.o
 adc_correct_sample <= USED 0
@@ -35,7 +35,6 @@ app_custs1_val_wr_validate <= USED 0
 default_advertise_operation <= USED 0
 default_app_generate_static_random_addr <= USED 0
 default_app_on_db_init_complete <= USED 0
-default_app_on_disconnect <= USED 0
 ;FILE app_diss.o
 ;FILE app_diss_task.o
 ;FILE app_easy_msg_utils.o

@@ -331,7 +331,7 @@
 /****************************************************************************************************************/
 /* Custom heap sizes                                                                                            */
 /****************************************************************************************************************/
-// #define DB_HEAP_SZ              1024
+#define DB_HEAP_SZ              3000
 // #define ENV_HEAP_SZ             4928
 // #define MSG_HEAP_SZ             6880
 // #define NON_RET_HEAP_SZ         2048
@@ -370,7 +370,7 @@
 /* "da14531_with_heap_logging.lib" in project structure under sdk_arch. Developer must stop execution           */
 /* and type disp_heaplog in debugger's command window. Heap memory statistics will be displayed on window       */
 /****************************************************************************************************************/
-#undef CFG_LOG_HEAP_USAGE
+#define CFG_LOG_HEAP_USAGE
 
 /****************************************************************************************************************/
 /* Enables the BLE statistics measurement feature.                                                              */
