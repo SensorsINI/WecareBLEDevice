@@ -764,16 +764,6 @@
               <FilePath>.\..\..\..\..\..\sdk\app_modules\src\app_proxr\app_proxr_task.c</FilePath>
             </File>
             <File>
-              <FileName>app_suotar.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\..\..\..\..\..\sdk\app_modules\src\app_suotar\app_suotar.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_suotar_task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\..\..\..\..\..\sdk\app_modules\src\app_suotar\app_suotar_task.c</FilePath>
-            </File>
-            <File>
               <FileName>app_msg_utils.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\..\..\..\..\..\sdk\app_modules\src\app_common\app_msg_utils.c</FilePath>
@@ -837,6 +827,16 @@
               <FileName>app_customs_task.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\src\custom_profile\app_customs_task.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_suotar.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\custom_profile\app_suotar\app_suotar.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_suotar_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\custom_profile\app_suotar\app_suotar_task.c</FilePath>
             </File>
           </Files>
         </Group>

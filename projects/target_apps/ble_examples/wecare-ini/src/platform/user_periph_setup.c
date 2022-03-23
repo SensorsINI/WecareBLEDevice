@@ -82,9 +82,18 @@ void GPIO_reservations(void)
     // SPI Flash
     RESERVE_GPIO(SPI_EN, SPI_EN_PORT, SPI_EN_PIN, PID_SPI_EN);
     RESERVE_GPIO(SPI_CLK, SPI_CLK_PORT, SPI_CLK_PIN, PID_SPI_CLK);
-    RESERVE_GPIO(SPI_DO, SPI_DO_PORT, SPI_DO_PIN, PID_SPI_DO);
     RESERVE_GPIO(SPI_DI, SPI_DI_PORT, SPI_DI_PIN, PID_SPI_DI);
 #endif
+		
+		// Other SPI devices (IO, ADCs and DAC)
+    RESERVE_GPIO(SPI2_CLK, SPI2_CLK_PORT, SPI2_CLK_PIN, PID_SPI_CLK);
+    RESERVE_GPIO(SPI2_DO, SPI2_DO_PORT, SPI2_DO_PIN, PID_SPI_DO);
+    RESERVE_GPIO(SPI2_DI, SPI2_DI_PORT, SPI2_DI_PIN, PID_SPI_DI);
+		
+    RESERVE_GPIO(SPI2_IO_CS, SPI2_IO_CS_PORT, SPI2_IO_CS_PIN, PID_GPIO);
+		RESERVE_GPIO(SPI2_ADC1_CS, SPI2_ADC1_CS_PORT, SPI2_ADC1_CS_PIN, PID_SPI_EN1);
+		RESERVE_GPIO(SPI2_ADC2_CS, SPI2_ADC2_CS_PORT, SPI2_ADC2_CS_PIN, PID_SPI_EN);
+		RESERVE_GPIO(SPI2_DAC_CS, SPI2_DAC_CS_PORT, SPI2_DAC_CS_PIN, PID_GPIO);
 }
 
 #endif
@@ -115,30 +124,18 @@ void set_pad_functions(void)
     // SPI Flash
     GPIO_ConfigurePin(SPI_EN_PORT, SPI_EN_PIN, OUTPUT, PID_SPI_EN, true);
     GPIO_ConfigurePin(SPI_CLK_PORT, SPI_CLK_PIN, OUTPUT, PID_SPI_CLK, false);
-    GPIO_ConfigurePin(SPI_DO_PORT, SPI_DO_PIN, OUTPUT, PID_SPI_DO, false);
     GPIO_ConfigurePin(SPI_DI_PORT, SPI_DI_PIN, INPUT, PID_SPI_DI, false);
 #endif
-
     // Configure SPI2 Pad
-//#if DEVELOPMENT_DEBUG
-//    RESERVE_GPIO(SPI2_CLK, SPI2_CLK_PORT, SPI2_CLK_PIN, PID_SPI_CLK);
-//    RESERVE_GPIO(SPI2_DO, SPI2_DO_PORT, SPI2_DO_PIN, PID_SPI_DO);
-//    RESERVE_GPIO(SPI2_DI, SPI2_DI_PORT, SPI2_DI_PIN, PID_SPI_DI);
-//		
-//    RESERVE_GPIO(SPI2_IO_CS, SPI2_IO_CS_PORT, SPI2_IO_CS_PIN, PID_GPIO);
-//		RESERVE_GPIO(SPI2_ADC1_CS, SPI2_ADC1_CS_PORT, SPI2_ADC1_CS_PIN, PID_SPI_EN1);
-//		RESERVE_GPIO(SPI2_ADC2_CS, SPI2_ADC2_CS_PORT, SPI2_ADC2_CS_PIN, PID_SPI_EN);
-//		RESERVE_GPIO(SPI2_DAC_CS, SPI2_DAC_CS_PORT, SPI2_DAC_CS_PIN, PID_GPIO);		
-//#endif
-//    GPIO_ConfigurePin(SPI2_CLK_PORT, SPI2_CLK_PIN, OUTPUT, PID_SPI_CLK, false);
-//    GPIO_ConfigurePin(SPI2_DO_PORT, SPI2_DO_PIN, OUTPUT, PID_SPI_DO, false);
-//    GPIO_ConfigurePin(SPI2_DI_PORT, SPI2_DI_PIN, INPUT, PID_SPI_DI, false);
-//		
-//		// Configure SPI extra CS
-//		GPIO_ConfigurePin(SPI2_IO_CS_PORT, SPI2_IO_CS_PIN, OUTPUT, PID_GPIO, true);
-//		GPIO_ConfigurePin(SPI2_ADC1_CS_PORT, SPI2_ADC1_CS_PIN, OUTPUT, PID_SPI_EN1, true);
-//		GPIO_ConfigurePin(SPI2_ADC2_CS_PORT, SPI2_ADC2_CS_PIN, OUTPUT, PID_SPI_EN, true);
-//		GPIO_ConfigurePin(SPI2_DAC_CS_PORT, SPI2_DAC_CS_PIN, OUTPUT, PID_GPIO, true);
+    GPIO_ConfigurePin(SPI2_CLK_PORT, SPI2_CLK_PIN, OUTPUT, PID_SPI_CLK, false);
+    GPIO_ConfigurePin(SPI2_DO_PORT, SPI2_DO_PIN, OUTPUT, PID_SPI_DO, false);
+    GPIO_ConfigurePin(SPI2_DI_PORT, SPI2_DI_PIN, INPUT, PID_SPI_DI, false);
+		
+		// Configure SPI extra CS
+		GPIO_ConfigurePin(SPI2_IO_CS_PORT, SPI2_IO_CS_PIN, OUTPUT, PID_GPIO, true);
+		GPIO_ConfigurePin(SPI2_ADC1_CS_PORT, SPI2_ADC1_CS_PIN, OUTPUT, PID_SPI_EN1, true);
+		GPIO_ConfigurePin(SPI2_ADC2_CS_PORT, SPI2_ADC2_CS_PIN, OUTPUT, PID_SPI_EN, true);
+		GPIO_ConfigurePin(SPI2_DAC_CS_PORT, SPI2_DAC_CS_PIN, OUTPUT, PID_GPIO, true);
 }
 
 #if defined (CFG_PRINTF_UART2)
@@ -230,10 +227,10 @@ void periph_init(void)
  
 #if defined (CFG_SPI_FLASH_ENABLE)
     // Configure SPI Flash environment
-    spi_flash_configure_env(&spi_flash_cfg);
+//    spi_flash_configure_env(&spi_flash_cfg);
 
-    // Initialize SPI
-    spi_initialize(&spi_cfg);
+//    // Initialize SPI
+//    spi_initialize(&spi_cfg);
 #endif
 
 	  // Disable P0 used as Reset (default function)
@@ -247,7 +244,7 @@ void periph_init(void)
     GPIO_set_pad_latch_en(true);
 		
 		// Disable debugger
-		// SetBits16(SYS_CTRL_REG, DEBUGGER_ENABLE, NO_SWD);   
+		SetBits16(SYS_CTRL_REG, DEBUGGER_ENABLE, NO_SWD);   
 		
 		timer0_setup(25);
 }
