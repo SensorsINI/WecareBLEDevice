@@ -389,7 +389,7 @@ void user_app_db_init_complete(void)
 		// app_spi2_adc1_timer_used = app_easy_timer(50, spi2_adc1_ctrl);		
 		
 		// Turn on a LED to show that the board is running
-		spi2_led_ctrl(true, false);
+		// spi2_led_ctrl(true, false);
 		
     user_app_adv_start();
 }
