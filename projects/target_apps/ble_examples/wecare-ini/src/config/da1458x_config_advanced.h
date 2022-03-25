@@ -392,7 +392,7 @@
 /*             supportedMaxTxTime = (supportedMaxTxOctets + 11 + 3 ) * 8                                        */
 /*         Range: 328 - 2120 usec.                                                                              */
 /****************************************************************************************************************/
-#define CFG_MAX_TX_PACKET_LENGTH        (251)
+#define CFG_MAX_TX_PACKET_LENGTH        (101)
 
 /****************************************************************************************************************/
 /* Maximum supported RX data packet length (supportedMaxRxOctets value, as defined in 4.2 Specification).       */
@@ -404,7 +404,7 @@
 /*             supportedMaxRxTime = (supportedMaxRxOctets + 11 + 3 ) * 8                                        */
 /*         Range: 328 - 2120 usec.                                                                              */
 /****************************************************************************************************************/
-#define CFG_MAX_RX_PACKET_LENGTH        (251)
+#define CFG_MAX_RX_PACKET_LENGTH        (101)
 
 /****************************************************************************************************************/
 /* Select external application/host transport layer:                                                            */

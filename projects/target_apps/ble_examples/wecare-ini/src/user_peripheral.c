@@ -67,7 +67,7 @@
 #include "DAC70508M.h"
 #include "MCR35614R.h"
 #include "utils.h"
-// #include "da14531_printf.h"
+#include "da14531_printf.h"
 
 #include "app_diss_task.h" 
 
@@ -436,7 +436,7 @@ void user_catch_rest_hndl(ke_msg_id_t const msgid,
 	  // printf_string(UART1, "The message id is:");
     // print_word(UART1, msgid);
     // printf_string(UART1, ".\r\n");
-//	  da14531_printf("Receive unhandled message from sdk app layer. The message type is: 0x%x.\r\n", msgid);
+	  da14531_printf("Receive unhandled message from sdk app layer. The message type is: 0x%x.\r\n", msgid);
     switch(msgid)
     {
         case CUSTS1_VAL_WRITE_IND:
@@ -563,7 +563,7 @@ void user_catch_rest_hndl(ke_msg_id_t const msgid,
 								
 
         default:
-					  // da14531_printf("Caught message not handled by any function. The message type is: 0x%x\r\n", msgid);
+					  da14531_printf("Caught message not handled by any function. The message type is: 0x%x\r\n", msgid);
             break;
     }
 }
