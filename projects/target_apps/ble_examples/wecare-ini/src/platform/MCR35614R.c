@@ -1,5 +1,5 @@
 #include "user_periph_setup.h"
-// #include "da14531_printf.h"
+#include "da14531_printf.h"
 
 /**
  ****************************************************************************************
@@ -137,7 +137,7 @@ void spi2_adc1_init(void)
 		// Read CONFIG0 register.
 		spi2_adc_static_read_register(CONFIG0, receiveBuf, CONFIG0_BYTES);	
 		regVal = swapBufToRealVal(receiveBuf, CONFIG0_BYTES);
-		// da14531_printf("CONFIG0 register data of ADC1 is: 0x%x.\r\n", regVal);
+		da14531_printf("CONFIG0 register data of ADC1 is: 0x%x.\r\n", regVal);
 }
 
 
@@ -201,7 +201,7 @@ void spi2_adc2_init(void)
 		// Read CONFIG0 register.
 		spi2_adc_static_read_register(CONFIG0, receiveBuf, CONFIG0_BYTES);	
 		regVal = swapBufToRealVal(receiveBuf, CONFIG0_BYTES);
-		// da14531_printf("CONFIG0 register data of ADC2 is: 0x%x.\r\n", regVal);
+		da14531_printf("CONFIG0 register data of ADC2 is: 0x%x.\r\n", regVal);
 }
 
 /**
@@ -234,7 +234,7 @@ void spi2_adc1_readout(uint32_t *ADCReadValBuf)
 //		GLOBAL_INT_STOP();	
 		
 		adcConversionCount++;
-		// da14531_printf("Start the %dth ADC1 conversion. \r\n", adcConversionCount);
+		da14531_printf("Start the %dth ADC1 conversion. \r\n", adcConversionCount);
 		
 		// Start ADC conversion
 		spi2_adc_fast_command(FAST_CMD_START_CONVERSION);
@@ -274,11 +274,11 @@ void spi2_adc1_readout(uint32_t *ADCReadValBuf)
 				regVal = (regVal & 0xFFFFFFF) + (((regVal >> 24) & 0xF) << 28);
 				int32_t voltageVal = (int32_t)(regVal);
 				voltage[i] = voltageVal/(0x800000 * gainFactor) * 2.4;    // The internal reference voltage is 2.4V
-				// da14531_printf("The voltage of ADC1 channel ID %d is: %.4fV.\r\n",  channelID, voltage[i]);
+				da14531_printf("The voltage of ADC1 channel ID %d is: %.4fV.\r\n",  channelID, voltage[i]);
 				
 				if ((channelID + i) != 11)
 				{
-						// da14531_printf("ADC1 conversion error.\r\n");
+						da14531_printf("ADC1 conversion error.\r\n");
 						validFlg = false;
 				}
 		}
@@ -297,7 +297,7 @@ void spi2_adc1_readout(uint32_t *ADCReadValBuf)
 		// Shutdown ADC to save power after conversion
 		spi2_adc_fast_command(FAST_CMD_ADC_SHUTDOWN);
 		
-		// da14531_printf("ADC1 conversion error count is %d.\r\n", errorCnt);
+		da14531_printf("ADC1 conversion error count is %d.\r\n", errorCnt);
 		
 //		// restore interrupts
 //		GLOBAL_INT_START();		
@@ -336,7 +336,7 @@ void spi2_adc2_readout(uint32_t *ADCReadValBuf)
 //		GLOBAL_INT_STOP();	
 		
 		adc2ConversionCount++;
-		// da14531_printf("Start the %dth ADC2 conversion. \r\n", adc2ConversionCount);
+		da14531_printf("Start the %dth ADC2 conversion. \r\n", adc2ConversionCount);
 		
 		// Start ADC conversion
 		spi2_adc_fast_command(FAST_CMD_START_CONVERSION);
@@ -376,11 +376,11 @@ void spi2_adc2_readout(uint32_t *ADCReadValBuf)
 				regVal = (regVal & 0xFFFFFFF) + (((regVal >> 24) & 0xF) << 28);
 				int32_t voltageVal = (int32_t)(regVal);
 				voltage[i] = voltageVal/(0x800000 * gainFactor) * 2.4;    // The internal reference voltage is 2.4V
-				// da14531_printf("The voltage of ADC2 channel ID %d is: %.4fV.\r\n",  channelID, voltage[i]);
+				da14531_printf("The voltage of ADC2 channel ID %d is: %.4fV.\r\n",  channelID, voltage[i]);
 				
 				if ((channelID + i) != 7)
 				{
-						// da14531_printf("ADC2 conversion error.\r\n");
+						da14531_printf("ADC2 conversion error.\r\n");
 						validFlg = false;
 				}
 		}
@@ -399,7 +399,7 @@ void spi2_adc2_readout(uint32_t *ADCReadValBuf)
 		// Shutdown ADC to save power after conversion
 		spi2_adc_fast_command(FAST_CMD_ADC_SHUTDOWN);
 		
-		// da14531_printf("ADC2 conversion error count is %d.\r\n", errorCntADC2);
+		da14531_printf("ADC2 conversion error count is %d.\r\n", errorCntADC2);
 		
 //		// restore interrupts
 //		GLOBAL_INT_START();		

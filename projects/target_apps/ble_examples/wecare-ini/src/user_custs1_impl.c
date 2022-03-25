@@ -47,7 +47,7 @@
 #include "user_periph_setup.h"
 #include "uart_utils.h"
 
-// #include "da14531_printf.h"
+#include "da14531_printf.h"
 #include "MCR35614R.h"
 
 /*
@@ -131,7 +131,7 @@ void user_svc1_dac_val_cfg_ind_handler(ke_msg_id_t const msgid,
                                            ke_task_id_t const src_id)
 {
 
-	  // da14531_printf("user_svc1_dac_val_cfg_ind_handler is called. And the parameter value 0 is: %x.\r\n", param->value[0]);
+	  da14531_printf("user_svc1_dac_val_cfg_ind_handler is called. And the parameter value 0 is: %x.\r\n", param->value[0]);
 	
     // Generate indication when the central subscribes to it
     if (param->value[0])
@@ -175,7 +175,7 @@ void user_svc1_dac_val_wr_ind_handler(ke_msg_id_t const msgid,
 		uint32_t sweepModeADCValBuf[16] = {0};
 		
 		memcpy(localDACValBuf, &param->value[0], param->length);
-		// da14531_printf("The value from the host to set DAC is: 0x%x.\r\n", localDACValBuf[0]);
+		da14531_printf("The value from the host to set DAC is: 0x%x.\r\n", localDACValBuf[0]);
 		// Set the DAC
 		spi2_dac_set_data(localDACValBuf);
 		// Read the ADC output data
@@ -208,7 +208,7 @@ void user_svc1_dac_val_wr_ind_handler(ke_msg_id_t const msgid,
                                                               DEF_SVC1_ADC_VAL_1_CHAR_LEN);
 
 		uint32_t valToSend = sweepModeADCValBuf[0];
-		// da14531_printf("The raw voltage data sent from ADC is: 0x%x.\r\n",  valToSend);
+		da14531_printf("The raw voltage data sent from ADC is: 0x%x.\r\n",  valToSend);
 
     //req->conhdl = app_env->conhdl;
     req->handle = SVC1_IDX_ADC_VAL_1_VAL;
@@ -350,7 +350,7 @@ void app_adcval1_timer_cb_handler()
                                                               DEF_SVC1_ADC_VAL_1_CHAR_LEN);
 
 		uint32_t valToSend = timerModeADCValBuf[0];
-		// da14531_printf("The raw voltage data sent from ADC is: 0x%x.\r\n",  valToSend);
+		da14531_printf("The raw voltage data sent from ADC is: 0x%x.\r\n",  valToSend);
 
     //req->conhdl = app_env->conhdl;
     req->handle = SVC1_IDX_ADC_VAL_1_VAL;

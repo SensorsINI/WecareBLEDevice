@@ -1,4 +1,4 @@
-;#<FEEDBACK># ARM Linker, 5060750: Last Updated: Wed Mar 23 20:23:24 2022
+;#<FEEDBACK># ARM Linker, 5060750: Last Updated: Fri Mar 25 22:08:14 2022
 ;VERSION 0.2
 ;FILE adc_531.o
 adc_correct_sample <= USED 0
@@ -72,8 +72,6 @@ battery_get_lvl <= USED 0
 battery_get_voltage <= USED 0
 ;FILE ble_arp.o
 ;FILE da14531_printf.o
-da14531_printf <= USED 0
-outfloat <= USED 0
 ;FILE dac70508m.o
 ;FILE gpio.o
 GPIO_ConfigurePinPower <= USED 0
@@ -251,9 +249,6 @@ user_svc3_read_non_db_val_handler <= USED 0
 ;FILE user_periph_setup.o
 ;FILE user_peripheral.o
 ;FILE utils.o
-ftoa <= USED 0
-intToStr <= USED 0
-reverse <= USED 0
 ;FILE wkupct_quadec.o
 quad_decoder_clear_irq <= USED 0
 quad_decoder_disable_irq <= USED 0

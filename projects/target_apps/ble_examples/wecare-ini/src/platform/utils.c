@@ -40,6 +40,17 @@ int intToStr(int x, char str[], int d)
 	str[i] = '\0';
 	return i;
 }
+
+uint64_t my10Pow (uint8_t powNum)
+{
+	uint64_t retVal = 1;
+	for (int i = 0; i < powNum; i++)
+	{
+			retVal *= 10;
+	}
+	return retVal;
+}
+
 // Converts a floating-point/double number to a string.
 void ftoa(float n_val, char* res, int afterpoint)
 {
@@ -54,9 +65,11 @@ void ftoa(float n_val, char* res, int afterpoint)
 	}
 	// Round n to its nearest float number with 'afterpoint' decimal places
 	// Such if afterpoint = 2, it will round 15.638 to 15.64	
-	n = round(n * pow(10, afterpoint));
-  n = n / pow(10, afterpoint);
-
+//	n = round(n * pow(10, afterpoint));
+//  n = n / pow(10, afterpoint);
+	n = round(n * my10Pow(afterpoint));
+	n = n / my10Pow(afterpoint);	
+	
 	// Extract integer part
 	int ipart = (int)n;
 	
@@ -73,7 +86,8 @@ void ftoa(float n_val, char* res, int afterpoint)
 		// Get the value of fraction part upto given no.
 		// of points after dot. The third parameter
 		// is needed to handle cases like 233.007
-		fpart = fpart * pow(10, afterpoint);
+//		fpart = fpart * pow(10, afterpoint);
+		fpart = fpart * my10Pow(afterpoint);
 
 		intToStr((int)fpart, res + i + 1, afterpoint);
 	}

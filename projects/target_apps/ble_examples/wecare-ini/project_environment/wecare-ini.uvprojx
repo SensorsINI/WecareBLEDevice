@@ -463,9 +463,9 @@
               <FilePath>.\..\..\..\..\..\sdk\platform\utilities\otp_hdr\otp_hdr.c</FilePath>
             </File>
             <File>
-              <FileName>da14531_with_heap_logging.lib</FileName>
+              <FileName>da14531.lib</FileName>
               <FileType>4</FileType>
-              <FilePath>..\..\..\..\..\sdk\platform\system_library\output\Keil_5\da14531_with_heap_logging.lib</FilePath>
+              <FilePath>..\..\..\..\..\sdk\platform\system_library\output\Keil_5\da14531.lib</FilePath>
             </File>
           </Files>
         </Group>
