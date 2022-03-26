@@ -120,12 +120,6 @@ void set_pad_functions(void)
 
     // GPIO_ConfigurePin(GPIO_LED_PORT, GPIO_LED_PIN, OUTPUT, PID_GPIO, false);
 
-#if defined (CFG_SPI_FLASH_ENABLE)
-    // SPI Flash
-    GPIO_ConfigurePin(SPI_EN_PORT, SPI_EN_PIN, OUTPUT, PID_SPI_EN, true);
-    GPIO_ConfigurePin(SPI_CLK_PORT, SPI_CLK_PIN, OUTPUT, PID_SPI_CLK, false);
-    GPIO_ConfigurePin(SPI_DI_PORT, SPI_DI_PIN, INPUT, PID_SPI_DI, false);
-#endif
     // Configure SPI2 Pad
     GPIO_ConfigurePin(SPI2_CLK_PORT, SPI2_CLK_PIN, OUTPUT, PID_SPI_CLK, false);
     GPIO_ConfigurePin(SPI2_DO_PORT, SPI2_DO_PIN, OUTPUT, PID_SPI_DO, false);
@@ -223,14 +217,6 @@ void periph_init(void)
 #if defined (CFG_PRINTF_UART2)
     // Initialize UART2
     uart_initialize(UART2, &uart_cfg);
-#endif
- 
-#if defined (CFG_SPI_FLASH_ENABLE)
-    // Configure SPI Flash environment
-//    spi_flash_configure_env(&spi_flash_cfg);
-
-//    // Initialize SPI
-//    spi_initialize(&spi_cfg);
 #endif
 
 	  // Disable P0 used as Reset (default function)
