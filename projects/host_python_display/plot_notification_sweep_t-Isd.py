@@ -14,7 +14,7 @@ from bleak.uuids import uuid16_dict
 
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.widgets import Button
+from matplotlib.widgets import Button, CheckButtons
 # from matplotlib import animation
 
 import struct
@@ -56,7 +56,7 @@ Vg = Vgs + Vs
 counter = 0
 ADC_NTF_cnt = 0
 errCounter = 0
-f_exit = False
+f_pause = False
 ADCConversionFinishFlg = False
 lines = []
 tdata = []
@@ -68,9 +68,20 @@ def convertDACVoltageToDACCode(voltage: float):
     return int(voltage * (2 ** 14 - 1) / 2.5) << 2
 
 
-def onclick_button_exit(event):
-    global f_exit
-    f_exit = True
+def onclick_button_pause(event):
+    global button_pause, f_pause
+    if f_pause:
+        f_pause = False
+        button_pause.label.set_text('Pause')
+    else:
+        f_pause = True
+        button_pause.label.set_text('Continue')
+
+
+def onclick_check_buttons(label):
+    global chkbtn_labels, lines
+    index = chkbtn_labels.index(label)
+    lines[index].set_visible(not lines[index].get_visible())
 
 
 def notification_handler(sender, data):
@@ -83,46 +94,48 @@ def notification_handler(sender, data):
     # https://stackoverflow.com/questions/10944621/dynamically-updating-plot-in-matplotlib
     floatADC = struct.unpack_from('<ffffffffffffIIII', data)
     print(floatADC)
-
     ADCConversionFinishFlg = True
-    rx_time = counter
-    tdata.append(time_now)
+    
+    if not f_pause:
+        rx_time = counter
+        tdata.append(time_now)
 
-    counter += 1
+        ydata_new = np.asarray(floatADC[8:12]).reshape((4, 1))   #   Channel 11 - 8
+        ydata = np.concatenate((ydata, ydata_new), axis=1)
 
-    ydata_new = np.asarray(floatADC[8:12]).reshape((4, 1))   #   Channel 11 - 8
-    ydata = np.concatenate((ydata, ydata_new), axis=1)
+        xdata_new = np.asarray([rx_time] * 4).reshape((4, 1))
+        xdata = np.concatenate((xdata, xdata_new), axis=1)
 
-    xdata_new = np.asarray([rx_time] * 4).reshape((4, 1))
-    xdata = np.concatenate((xdata, xdata_new), axis=1)
+        for ch in range(0, NUM_CHANNEL):
+            xdata_ch = xdata[ch]
+            ydata_ch = ydata[ch]/Rs*1000    # Isd
+            if PLOT_TYPE == 'line':
+                lines[ch].set_xdata(xdata_ch)
+                lines[ch].set_ydata(ydata_ch)
+            else:
+                lines[ch].set_offsets(np.column_stack([xdata_ch, ydata_ch]))
+        ax.set_xlim(0, rx_time+1)
+        # ax.set_ylim(np.min(floatADC[:12])-1, np.max(floatADC[:12])+1)
 
-    if SAVE_CSV:
-        if (counter % LOG_INTERVAL) == LOG_INTERVAL-1:
-            with open(FILENAME, mode='a', newline='') as csv_file:
-                csv_writer = csv.writer(csv_file)
-                for i in range(counter-LOG_INTERVAL, counter):
-                    row = []
-                    row.append(tdata[i])
-                    [row.append(ydata[ch, i]) for ch in range(NUM_CHANNEL)]
-                    csv_writer.writerow(row)
+        counter += 1
 
-    for ch in range(0, NUM_CHANNEL):
-        xdata_ch = xdata[ch]
-        ydata_ch = ydata[ch]/Rs*1000
-        if PLOT_TYPE == 'line':
-            lines[ch].set_xdata(xdata_ch)
-            lines[ch].set_ydata(ydata_ch)
-        else:
-            lines[ch].set_offsets(np.column_stack([xdata_ch, ydata_ch]))
-
-    ax.set_xlim(0, rx_time+1)
-    # ax.set_ylim(np.min(floatADC[:12])-1, np.max(floatADC[:12])+1)
+        if SAVE_CSV:
+            if (counter % LOG_INTERVAL) == LOG_INTERVAL-1:
+                with open(FILENAME, mode='a', newline='') as csv_file:
+                    csv_writer = csv.writer(csv_file)
+                    for i in range(counter-LOG_INTERVAL, counter):
+                        row = []
+                        row.append(tdata[i])
+                        [row.append(ydata[ch, i]/Rs*1000) for ch in range(NUM_CHANNEL)]
+                        csv_writer.writerow(row)
+    
     ax.figure.canvas.draw_idle()
 
 
 async def main(address, save_csv, plot_type):
     global SAVE_CSV, PLOT_TYPE
-    global fig, ax, lines, xdata, ydata, f_exit, counter, ADC_NTF_cnt, errCounter, ADCConversionFinishFlg
+    global fig, ax, lines, xdata, ydata, f_exit, counter, ADC_NTF_cnt, errCounter, ADCConversionFinishFlg, f_pause
+    global button_pause, chkbtn_labels
     SAVE_CSV, PLOT_TYPE = save_csv, plot_type
     
     client = BleakClient(address, timeout=10.0)
@@ -131,12 +144,12 @@ async def main(address, save_csv, plot_type):
             await client.connect()
         except Exception as exception:
             print("[WARNING!] BLE CONNECT TRIAL #{:d}: {}".format(connect_cnt, exception))
+            if connect_cnt >= NUM_CONNECT_TRIAL:
+                print("[ERROR!] BLE connection failed!")
+                return
             await asyncio.sleep(1.0)
         else:
             if client.is_connected: break
-    if connect_cnt >= NUM_CONNECT_TRIAL:
-        print("[ERROR!] BLE connection failed!")
-        return
     
     print(f"Connected: {client.is_connected}")
     # client._assign_mtu = 67
@@ -169,15 +182,12 @@ async def main(address, save_csv, plot_type):
         with open(FILENAME, mode='a', newline='') as csv_file:
             csv_writer = csv.writer(csv_file)
             row = ['time']
-            [row.append('Isd_CH{:d}'.format(ch)) for ch in range(0, NUM_CHANNEL)]
+            [row.append('Isd_CH{:d} (mA)'.format(ch)) for ch in range(0, NUM_CHANNEL)]
             csv_writer.writerow(row)
 
     fig, ax = plt.subplots()    # figsize=(16, 10)
-    xdata = np.empty((0,))
-    ydata = np.empty((0,))
-    ydata[:] = np.NaN
-    xdata = np.tile(xdata, (4, 1))
-    ydata = np.tile(ydata, (4, 1))
+    xdata = np.empty((4, 0))
+    ydata = np.empty((4, 0))
     for ch in range(0, NUM_CHANNEL):
         if PLOT_TYPE == 'line':
             line_ch = ax.plot(xdata[ch], ydata[ch], marker='.')[0]
@@ -188,25 +198,38 @@ async def main(address, save_csv, plot_type):
     ax.set_ylim(-0.1, 0.7)
     plt.xlabel('Samples')
     plt.ylabel('Isd (mA)')
-    ax_exit = plt.axes([0.77, 0.77, 0.1, 0.075])
-    button_exit = Button(ax_exit, 'Exit')
-    button_exit.on_clicked(onclick_button_exit)
+    ax_button_pause = plt.axes([0.77, 0.77, 0.1, 0.075])
+    button_pause = Button(ax_button_pause, 'Pause')
+    button_pause.on_clicked(onclick_button_pause)
 
-    await asyncio.sleep(3.0)
-    while (f_exit == False):
-        if ADCConversionFinishFlg:
-            # write_value = bytearray(struct.pack('HHHHHHHH', DACCode_Vs0, DACCode_Vs0, DACCode_Vs0, DACCode_Vs0, DACCode_Vg0, DACCode_Vg0, DACCode_Vg0, DACCode_Vg0))
-            # print("DAC[4] = {}".format(DACCode_Vg0))
-            # await client.write_gatt_char(CHAR_DAC_DATA_UUID, write_value, True)
-            ADCConversionFinishFlg = False
-            ADC_NTF_cnt = 0
-        else:
-            ADC_NTF_cnt += 1
-            if (ADC_NTF_cnt >= 6):
-                errCounter += 1
-                print("[WARNING!] ADC Notification Missed ({:d}) !".format(errCounter))
-                ADCConversionFinishFlg = True
+    rax = plt.axes([0.9, 0.4, 0.1, 0.2])
+    chkbtn_labels = ['CH0', 'CH1', 'CH2', 'CH3']
+    actives = [True] * 4
+    chk_btns = CheckButtons(rax, chkbtn_labels, actives)
+    colors = ['C0', 'C1', 'C2', 'C3']
+    for rect, line, label, color in zip(chk_btns.rectangles, chk_btns.lines, chk_btns.labels, colors):
+        rect.set_edgecolor(color)
+        [sub_line.set_color(color) for sub_line in line]
+        label.set_color(color)
+    chk_btns.on_clicked(onclick_check_buttons)
+
+    # await asyncio.sleep(3.0)
+    while (plt.fignum_exists(fig.number)):
+        if not f_pause:
+            if ADCConversionFinishFlg:
+                # write_value = bytearray(struct.pack('HHHHHHHH', DACCode_Vs0, DACCode_Vs0, DACCode_Vs0, DACCode_Vs0, DACCode_Vg0, DACCode_Vg0, DACCode_Vg0, DACCode_Vg0))
+                # print("DAC[4] = {}".format(DACCode_Vg0))
+                # await client.write_gatt_char(CHAR_DAC_DATA_UUID, write_value, True)
+                ADCConversionFinishFlg = False
                 ADC_NTF_cnt = 0
+            else:
+                ADC_NTF_cnt += 1
+                if (ADC_NTF_cnt >= 6):
+                    errCounter += 1
+                    print("[WARNING!] ADC Notification Missed ({:d}) !".format(errCounter))
+                    ADCConversionFinishFlg = True
+                    ADC_NTF_cnt = 0
+        
         await asyncio.sleep(0.11)
         ax.figure.canvas.flush_events()
     
