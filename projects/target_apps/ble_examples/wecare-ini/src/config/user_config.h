@@ -178,9 +178,6 @@ static const struct advertise_configuration user_adv_conf = {
                                     ADV_TYPE_COMPLETE_LIST_16BIT_SERVICE_IDS\
 																		ADV_UUID_SUOTAR_SERVICE\
                                     ADV_UUID_DEVICE_INFORMATION_SERVICE\
-																		"\x02" \
-																		ADV_TYPE_MANUFACTURER_SPECIFIC_DATA \
-																		"\x5a" \
                                     "\x11"\
                                     ADV_TYPE_COMPLETE_LIST_128BIT_SERVICE_IDS\
                                     "\x88\x88\x88\x88\x88\x8\x8\x88\x66\x66\x66\x66\x66\x66\x66\x66")
