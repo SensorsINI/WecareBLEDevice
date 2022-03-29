@@ -1,10 +1,4 @@
-<<<<<<< HEAD
-;#<FEEDBACK># ARM Linker, 5060960: Last Updated: Mon Mar 28 11:31:06 2022
-||||||| 96162c5
-;#<FEEDBACK># ARM Linker, 5060960: Last Updated: Thu Mar 17 11:48:50 2022
-=======
-;#<FEEDBACK># ARM Linker, 5060750: Last Updated: Tue Mar 29 13:39:04 2022
->>>>>>> suota
+;#<FEEDBACK># ARM Linker, 5060750: Last Updated: Tue Mar 29 14:32:14 2022
 ;VERSION 0.2
 ;FILE adc_531.o
 adc_correct_sample <= USED 0

@@ -370,7 +370,7 @@
 /* "da14531_with_heap_logging.lib" in project structure under sdk_arch. Developer must stop execution           */
 /* and type disp_heaplog in debugger's command window. Heap memory statistics will be displayed on window       */
 /****************************************************************************************************************/
-#define CFG_LOG_HEAP_USAGE
+#undef CFG_LOG_HEAP_USAGE
 
 /****************************************************************************************************************/
 /* Enables the BLE statistics measurement feature.                                                              */
@@ -392,7 +392,7 @@
 /*             supportedMaxTxTime = (supportedMaxTxOctets + 11 + 3 ) * 8                                        */
 /*         Range: 328 - 2120 usec.                                                                              */
 /****************************************************************************************************************/
-#define CFG_MAX_TX_PACKET_LENGTH        (101)
+#define CFG_MAX_TX_PACKET_LENGTH        (251)
 
 /****************************************************************************************************************/
 /* Maximum supported RX data packet length (supportedMaxRxOctets value, as defined in 4.2 Specification).       */
@@ -404,7 +404,7 @@
 /*             supportedMaxRxTime = (supportedMaxRxOctets + 11 + 3 ) * 8                                        */
 /*         Range: 328 - 2120 usec.                                                                              */
 /****************************************************************************************************************/
-#define CFG_MAX_RX_PACKET_LENGTH        (101)
+#define CFG_MAX_RX_PACKET_LENGTH        (251)
 
 /****************************************************************************************************************/
 /* Select external application/host transport layer:                                                            */

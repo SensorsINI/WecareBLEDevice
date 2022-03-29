@@ -274,7 +274,7 @@ void spi2_adc1_readout(uint32_t *ADCReadValBuf)
 				regVal = (regVal & 0xFFFFFFF) + (((regVal >> 24) & 0xF) << 28);
 				int32_t voltageVal = (int32_t)(regVal);
 				voltage[i] = voltageVal/(0x800000 * gainFactor) * 2.4;    // The internal reference voltage is 2.4V
-				da14531_printf("The voltage of ADC1 channel ID %d is: %.4fV.\r\n",  channelID, voltage[i]);
+				da14531_printf("V_ADC1 CH-%d is: %.4fV.\r\n",  channelID, voltage[i]);
 				
 				if ((channelID + i) != 11)
 				{
@@ -376,7 +376,7 @@ void spi2_adc2_readout(uint32_t *ADCReadValBuf)
 				regVal = (regVal & 0xFFFFFFF) + (((regVal >> 24) & 0xF) << 28);
 				int32_t voltageVal = (int32_t)(regVal);
 				voltage[i] = voltageVal/(0x800000 * gainFactor) * 2.4;    // The internal reference voltage is 2.4V
-				da14531_printf("The voltage of ADC2 channel ID %d is: %.4fV.\r\n",  channelID, voltage[i]);
+				da14531_printf("V_ADC2 CH-%d is: %.4fV.\r\n",  channelID, voltage[i]);
 				
 				if ((channelID + i) != 7)
 				{
