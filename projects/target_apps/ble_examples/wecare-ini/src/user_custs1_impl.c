@@ -131,7 +131,7 @@ void user_svc1_dac_val_cfg_ind_handler(ke_msg_id_t const msgid,
                                            ke_task_id_t const src_id)
 {
 
-	  // da14531_printf("user_svc1_dac_val_cfg_ind_handler is called. And the parameter value 0 is: %x.\r\n", param->value[0]);
+	  da14531_printf("user_svc1_dac_val_cfg_ind_handler is called. And the parameter value 0 is: %x.\r\n", param->value[0]);
 	
     // Generate indication when the central subscribes to it
     if (param->value[0])
@@ -146,7 +146,7 @@ void user_svc1_dac_val_cfg_ind_handler(ke_msg_id_t const msgid,
 
 	 
         req->conidx = app_env[conidx].conidx;
-        req->handle = SVC1_IDX_INDICATEABLE_VAL;
+        req->handle = SVC1_IDX_DAC_VALUE_VAL;
         req->length = sizeof(indication_counter);
         req->value[0] = (indication_counter >> 8) & 0xFF;
         req->value[1] = indication_counter & 0xFF;
@@ -208,7 +208,7 @@ void user_svc1_dac_val_wr_ind_handler(ke_msg_id_t const msgid,
                                                               DEF_SVC1_ADC_VAL_1_CHAR_LEN);
 
 		uint32_t valToSend = sweepModeADCValBuf[0];
-		// da14531_printf("The raw voltage data sent from ADC is: 0x%x.\r\n",  valToSend);
+		da14531_printf("The raw voltage data sent from ADC is: 0x%x.\r\n",  valToSend);
 
     //req->conhdl = app_env->conhdl;
     req->handle = SVC1_IDX_ADC_VAL_1_VAL;
@@ -350,7 +350,7 @@ void app_adcval1_timer_cb_handler()
                                                               DEF_SVC1_ADC_VAL_1_CHAR_LEN);
 
 		uint32_t valToSend = timerModeADCValBuf[0];
-		// da14531_printf("The raw voltage data sent from ADC is: 0x%x.\r\n",  valToSend);
+		da14531_printf("The raw voltage data sent from ADC is: 0x%x.\r\n",  valToSend);
 
     //req->conhdl = app_env->conhdl;
     req->handle = SVC1_IDX_ADC_VAL_1_VAL;

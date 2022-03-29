@@ -55,7 +55,7 @@
 #define MX25R2035F_PAGE 256               // SPI Flash memory page size in bytes
 
 #if !defined (__DA14586__)
-#define SPI_FLASH_DEV_SIZE          (256 * 1024)
+#define SPI_FLASH_DEV_SIZE          (128 * 1024)
 #endif
 
 //SPI initialization parameters

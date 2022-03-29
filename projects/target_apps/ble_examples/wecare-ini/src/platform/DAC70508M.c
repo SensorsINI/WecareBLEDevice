@@ -1,4 +1,5 @@
 #include "user_periph_setup.h"
+#include "da14531_printf.h"
 
 /**
  ****************************************************************************************
@@ -82,17 +83,17 @@ void spi2_dac_set_data(uint16_t *DACValBuf)
 
     if(!spi2_dac_read_register(DEVICE_ID, &regData)) 
 		{
-			  // da14531_printf("DEVICE ID is: 0x%x.\r\n", regData);			
+			  da14531_printf("DEVICE ID is: 0x%x.\r\n", regData);			
 		}
 
     if(!spi2_dac_read_register(GAIN, &regData)) 
 		{
-			  // da14531_printf("GAIN channel 4 register is: 0x%x.\r\n", regData);			
+			  da14531_printf("GAIN channel 4 register is: 0x%x.\r\n", regData);			
 		}
 
     if(!spi2_dac_read_register(STATUS, &regData))  
 		{
-			  // da14531_printf("STATUS channel 4 register is: 0x%x.\r\n", regData);			
+			  da14531_printf("STATUS channel 4 register is: 0x%x.\r\n", regData);			
 		}
 				
 //		// Reset the device
@@ -109,6 +110,7 @@ void spi2_dac_set_data(uint16_t *DACValBuf)
 		const uint8_t DAC_CHS[8] = {DAC0, DAC1, DAC2, DAC3, DAC4, DAC5, DAC6, DAC7};
 		for (int i = 0; i < 8; i++)
 		{
+				da14531_printf("The value to be set to DAC channel %d is: 0x%x.\r\n", i, DACValBuf[i]);
 				spi2_dac_write_register(DAC_CHS[i], DACValBuf[i]);
 		}
 }

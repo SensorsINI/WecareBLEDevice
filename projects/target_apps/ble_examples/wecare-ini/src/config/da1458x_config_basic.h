@@ -100,7 +100,7 @@
 /* SPI FLASH  (#define CFG_SPI_FLASH_ENABLE)                                                                    */
 /* I2C EEPROM (#define CFG_I2C_EEPROM_ENABLE)                                                                   */
 /****************************************************************************************************************/
-#undef CFG_SPI_FLASH_ENABLE
+#define CFG_SPI_FLASH_ENABLE
 #undef CFG_I2C_EEPROM_ENABLE
 
 /****************************************************************************************************************/
@@ -157,7 +157,7 @@
 /*      -   Enables Debug module and sets code execution in breakpoint in Hardfault and NMI (Watchdog) handlers.*/
 /*          It allows developer to hot attach debugger and get debug information                                */
 /****************************************************************************************************************/
-// #define CFG_DEVELOPMENT_DEBUG
+#define CFG_DEVELOPMENT_DEBUG
 
 /****************************************************************************************************************/
 /* UART Console Print. If CFG_PRINTF is defined, serial interface logging mechanism will be enabled.            */
@@ -181,7 +181,7 @@
 /* SPI FLASH  (#define CFG_SPI_FLASH_ENABLE)                                                                    */
 /* I2C EEPROM (#define CFG_I2C_EEPROM_ENABLE)                                                                   */
 /****************************************************************************************************************/
-#undef CFG_SPI_FLASH_ENABLE
+#define CFG_SPI_FLASH_ENABLE
 #undef CFG_I2C_EEPROM_ENABLE
 
 /****************************************************************************************************************/

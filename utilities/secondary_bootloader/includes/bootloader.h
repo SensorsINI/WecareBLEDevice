@@ -133,7 +133,7 @@ typedef struct __bootHeader585_i2c{
 /************** Dual Image bootloader section **************/
  
 // product header flags 
-#define PRODUCT_HEADER_POSITION     0x38000
+#define PRODUCT_HEADER_POSITION     0x1F000
 #define PRODUCT_HEADER_SIGNATURE1   0x70
 #define PRODUCT_HEADER_SIGNATURE2   0x52
 // image header flags 

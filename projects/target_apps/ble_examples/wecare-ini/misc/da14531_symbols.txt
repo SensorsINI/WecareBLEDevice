@@ -1097,14 +1097,14 @@
 0x07f22621 T custs1_prf_itf_get
 
 ; custs1_task.c (controlled by __EXCLUDE_ROM_CUSTS1__)
-# 0x07f226d3 T custs1_init_ccc_values
-# 0x07f2270b T custs1_set_ccc_value
+0x07f226d3 T custs1_init_ccc_values
+0x07f2270b T custs1_set_ccc_value
 0x07f22823 T gattc_cmp_evt_handler
 0x07f22837 T custs1_val_set_req_handler
 0x07f22857 T custs1_val_ntf_req_handler
 0x07f228b3 T custs1_val_ind_req_handler
 0x07f2290f T custs1_att_info_rsp_handler
-# 0x07f2294b T gattc_read_req_ind_handler
+0x07f2294b T gattc_read_req_ind_handler
 0x07f22b57 T gattc_att_info_req_ind_handler
 0x07f22b99 T custs1_value_req_rsp_handler
 

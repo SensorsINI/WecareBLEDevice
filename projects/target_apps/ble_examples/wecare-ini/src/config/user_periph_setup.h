@@ -135,6 +135,48 @@
     #define SPI_DI_PIN              GPIO_PIN_5
 #endif
 
+// Define SPI Configuration
+    #define SPI_MS_MODE             SPI_MS_MODE_MASTER
+    #define SPI_CP_MODE             SPI_CP_MODE_0
+    #define SPI_WSZ                 SPI_MODE_8BIT
+    #define SPI_CS                  SPI_CS_0
+
+#if defined (__DA14531__)
+    #define SPI_SPEED_MODE          SPI_SPEED_MODE_4MHz
+    #define SPI_EDGE_CAPTURE        SPI_MASTER_EDGE_CAPTURE
+#else // (DA14585, DA14586)
+    #define SPI_SPEED_MODE          SPI_SPEED_MODE_4MHz
+#endif
+
+
+/****************************************************************************************/
+/* SPI Flash configuration                                                              */
+/****************************************************************************************/
+#if !defined (__DA14586__)
+#define SPI_FLASH_DEV_SIZE          (128 * 1024)
+#endif
+
+#if defined (CFG_SPI_FLASH_ENABLE)
+// Configuration struct for SPI
+static const spi_cfg_t spi_cfg = {
+    .spi_ms = SPI_MS_MODE,
+    .spi_cp = SPI_CP_MODE,
+    .spi_speed = SPI_SPEED_MODE,
+    .spi_wsz = SPI_WSZ,
+    .spi_cs = SPI_CS,
+    .cs_pad.port = SPI_EN_PORT,
+    .cs_pad.pin = SPI_EN_PIN,
+#if defined (__DA14531__)
+    .spi_capture = SPI_EDGE_CAPTURE,
+#endif
+};
+
+// Configuration struct for SPI FLASH
+static const spi_flash_cfg_t spi_flash_cfg = {
+    .chip_size = SPI_FLASH_DEV_SIZE,
+};
+#endif
+
 /****************************************************************************************/
 /* SPI2 configuration (for IO, DAC and ADCs. MOSI, MISO and SCK are shared together)                                                                   */
 /****************************************************************************************/

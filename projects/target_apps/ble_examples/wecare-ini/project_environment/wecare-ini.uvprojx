@@ -10,7 +10,7 @@
       <TargetName>DA14531</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060960::V5.06 update 7 (build 960)::.\ARMCC</pCCUsed>
+      <pCCUsed>5060750::V5.06 update 6 (build 750)::ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -185,7 +185,6 @@
             <uocXRam>0</uocXRam>
             <RvdsVP>0</RvdsVP>
             <RvdsMve>0</RvdsMve>
-            <RvdsCdeCp>0</RvdsCdeCp>
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
@@ -352,7 +351,7 @@
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
             <useXO>0</useXO>
-            <ClangAsOpt>4</ClangAsOpt>
+            <uClangAs>0</uClangAs>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define></Define>
@@ -454,11 +453,6 @@
               <FilePath>.\..\..\..\..\..\third_party\hash\hash.c</FilePath>
             </File>
             <File>
-              <FileName>da14531.lib</FileName>
-              <FileType>4</FileType>
-              <FilePath>.\..\..\..\..\..\sdk\platform\system_library\output\Keil_5\da14531.lib</FilePath>
-            </File>
-            <File>
               <FileName>otp_cs.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\..\..\..\..\..\sdk\platform\utilities\otp_cs\otp_cs.c</FilePath>
@@ -467,6 +461,11 @@
               <FileName>otp_hdr.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\..\..\..\..\..\sdk\platform\utilities\otp_hdr\otp_hdr.c</FilePath>
+            </File>
+            <File>
+              <FileName>da14531.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\..\..\..\sdk\platform\system_library\output\Keil_5\da14531.lib</FilePath>
             </File>
           </Files>
         </Group>
@@ -699,6 +698,16 @@
               <FileType>1</FileType>
               <FilePath>..\src\custom_profile\custs1_task.c</FilePath>
             </File>
+            <File>
+              <FileName>suotar.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\sdk\ble_stack\profiles\suota\suotar\src\suotar.c</FilePath>
+            </File>
+            <File>
+              <FileName>suotar_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\sdk\ble_stack\profiles\suota\suotar\src\suotar_task.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -753,16 +762,6 @@
               <FileName>app_proxr_task.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\..\..\..\..\..\sdk\app_modules\src\app_proxr\app_proxr_task.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_suotar.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\..\..\..\..\..\sdk\app_modules\src\app_suotar\app_suotar.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_suotar_task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\..\..\..\..\..\sdk\app_modules\src\app_suotar\app_suotar_task.c</FilePath>
             </File>
             <File>
               <FileName>app_msg_utils.c</FileName>
@@ -828,6 +827,16 @@
               <FileName>app_customs_task.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\src\custom_profile\app_customs_task.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_suotar.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\custom_profile\app_suotar\app_suotar.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_suotar_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\custom_profile\app_suotar\app_suotar_task.c</FilePath>
             </File>
           </Files>
         </Group>

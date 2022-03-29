@@ -126,7 +126,7 @@
 /// @name SUOTAR definitions for image manipulation
 ///@{
 /** SUOTAR definition for image manipulation */
-#define PRODUCT_HEADER_POSITION     0x38000
+#define PRODUCT_HEADER_POSITION     0x1F000
 #define PRODUCT_HEADER_SIGNATURE1   0x70
 #define PRODUCT_HEADER_SIGNATURE2   0x52
 #define IMAGE_HEADER_SIGNATURE1     0x70

@@ -70,6 +70,11 @@
 #include "da14531_printf.h"
 
 #include "app_diss_task.h" 
+
+#if (BLE_SUOTA_RECEIVER)
+#include "app_suotar.h"
+#endif
+
 // Outside value
 extern uint16_t globalDACValBuf[8];
 extern uint32_t globalADCValBuf[16];
@@ -331,7 +336,6 @@ void user_app_db_init_complete(void)
 
 		// Need to include: "custs1.h" "prf_utils.h" "attm_db.h"
 		struct custs1_env_tag *custs1_env = PRF_ENV_GET(CUSTS1, custs1);
-		attmdb_att_set_value(custs1_env->shdl + SVC1_IDX_ADC_VAL_2_VAL, DEF_SVC1_ADC_VAL_2_CHAR_LEN, 0, (uint8_t *)&sample);
 		static uint16_t dacInitVal = 0x1FFF;
 		attmdb_att_set_value(custs1_env->shdl + SVC1_IDX_DAC_VALUE_VAL, DEF_SVC1_DAC_VALUE_CHAR_LEN, 0, (uint8_t *)&dacInitVal);
 		static char * dacDescName = "DAC";
@@ -402,6 +406,24 @@ void user_app_disconnect(struct gapc_disconnect_ind const *param)
     mnf_data_update();
     // Restart Advertising
     user_app_adv_start();
+		
+    default_app_on_disconnect(NULL);
+
+		#if (BLE_BATT_SERVER)
+				app_batt_poll_stop();
+		#endif
+
+		#if (BLE_SUOTA_RECEIVER)
+				// Issue a platform reset when it is requested by the suotar procedure
+				if (suota_state.reboot_requested)
+				{
+						// Reboot request will be served
+						suota_state.reboot_requested = 0;
+
+						// Platform reset
+						platform_reset(RESET_AFTER_SUOTA_UPDATE);
+				}
+		#endif
 }
 
 void user_catch_rest_hndl(ke_msg_id_t const msgid,
@@ -414,7 +436,7 @@ void user_catch_rest_hndl(ke_msg_id_t const msgid,
 	  // printf_string(UART1, "The message id is:");
     // print_word(UART1, msgid);
     // printf_string(UART1, ".\r\n");
-//	  da14531_printf("Receive unhandled message from sdk app layer. The message type is: 0x%x.\r\n", msgid);
+	  da14531_printf("Receive unhandled message from sdk app layer. The message type is: 0x%x.\r\n", msgid);
     switch(msgid)
     {
         case CUSTS1_VAL_WRITE_IND:
@@ -433,14 +455,6 @@ void user_catch_rest_hndl(ke_msg_id_t const msgid,
 
                 case SVC1_IDX_ADC_VAL_1_NTF_CFG:
                     user_svc1_adc_val_1_cfg_ind_handler(msgid, msg_param, dest_id, src_id);
-                    break;
-
-                case SVC1_IDX_BUTTON_STATE_NTF_CFG:
-                    user_svc1_button_cfg_ind_handler(msgid, msg_param, dest_id, src_id);
-                    break;
-
-                case SVC1_IDX_INDICATEABLE_IND_CFG:
-                    user_svc1_dac_val_cfg_ind_handler(msgid, msg_param, dest_id, src_id);
                     break;
 
                 case SVC1_IDX_DAC_VALUE_NTF_CFG:
@@ -468,12 +482,6 @@ void user_catch_rest_hndl(ke_msg_id_t const msgid,
                 case SVC1_IDX_ADC_VAL_1_VAL:
                     break;
 
-                case SVC1_IDX_BUTTON_STATE_VAL:
-                    break;
-
-                case SVC1_IDX_DAC_VALUE_VAL:
-                    break;
-
                 default:
                     break;
             }
@@ -485,9 +493,6 @@ void user_catch_rest_hndl(ke_msg_id_t const msgid,
 
             switch (msg_param->handle)
             {
-                case SVC1_IDX_INDICATEABLE_VAL:
-                    break;
-
                 default:
                     break;
              }
@@ -529,11 +534,6 @@ void user_catch_rest_hndl(ke_msg_id_t const msgid,
 
             switch (msg_param->att_idx)
             {
-                case SVC3_IDX_READ_4_VAL:
-                {
-                    user_svc3_read_non_db_val_handler(msgid, msg_param, dest_id, src_id);
-                } break;
-
                 default:
                 {
                     // Send Error message
@@ -690,5 +690,32 @@ void spi2_led_ctrl(bool redLed, bool greenLed)
     spi_send(&reg_val_ledGreen, 1, SPI_OP_BLOCKING);
     spi_cs_high();
 }
+
+
+#if (BLE_SUOTA_RECEIVER)
+void on_suotar_status_change(const uint8_t suotar_event)
+{
+#if (!SUOTAR_SPI_DISABLE)
+    uint8_t dev_id;
+
+    // Release the SPI flash memory from power down
+    spi_flash_release_from_power_down();
+
+    // Disable the SPI flash memory protection (unprotect all sectors)
+    spi_flash_configure_memory_protection(SPI_FLASH_MEM_PROT_NONE);
+
+    // Try to auto-detect the SPI flash memory
+    spi_flash_auto_detect(&dev_id);
+
+    if (suotar_event == SUOTAR_END)
+    {
+        // Power down the SPI flash memory
+        spi_flash_power_down();
+    }
+#endif
+}
+#endif
+
+
 
 /// @} APP

@@ -178,7 +178,17 @@ void spi2_led_ctrl(bool redLed, bool greenLed);
  ****************************************************************************************
 */														
 void spi2_led_toggle(void);													
-	
+
+#if (BLE_SUOTA_RECEIVER)
+/**
+ ****************************************************************************************
+ * @brief Function called when the SUOTAR status changes.
+ * @param[in] suotar_event SUOTAR_START or SUOTAR_STOP
+ ****************************************************************************************
+ */
+void on_suotar_status_change(const uint8_t suotar_event);
+#endif // BLE_SUOTA_RECEIVER
+													
 /// @} APP
 
 #endif // _USER_PERIPHERAL_H_
