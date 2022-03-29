@@ -153,7 +153,7 @@
 /* SPI Flash configuration                                                              */
 /****************************************************************************************/
 #if !defined (__DA14586__)
-#define SPI_FLASH_DEV_SIZE          (256 * 1024)
+#define SPI_FLASH_DEV_SIZE          (128 * 1024)
 #endif
 
 #if defined (CFG_SPI_FLASH_ENABLE)
