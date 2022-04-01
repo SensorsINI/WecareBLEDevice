@@ -47,8 +47,8 @@ LOG_INTERVAL = 64
 
 Rs = 100
 Vd = 0.5
-# Vds = -0.4 # real sensor
-Vds = -1.4   # fake sensor
+Vds = -0.4 # real sensor
+# Vds = -1.4   # fake sensor
 Vgs = 0.1
 Vs = Vd - Vds
 Vg = Vgs + Vs
@@ -100,7 +100,7 @@ def notification_handler(sender, data):
         rx_time = counter
         tdata.append(time_now)
 
-        ydata_new = np.asarray(floatADC[8:12]).reshape((4, 1))   #   Channel 11 - 8
+        ydata_new = np.asarray(floatADC[11:7:-1]).reshape((4, 1))   #   Channel 11 - 8
         ydata = np.concatenate((ydata, ydata_new), axis=1)
 
         xdata_new = np.asarray([rx_time] * 4).reshape((4, 1))
@@ -224,13 +224,28 @@ async def main(address, save_csv, plot_type):
                 ADC_NTF_cnt = 0
             else:
                 ADC_NTF_cnt += 1
-                if (ADC_NTF_cnt >= 6):
+                if (ADC_NTF_cnt >= 3):
                     errCounter += 1
                     print("[WARNING!] ADC Notification Missed ({:d}) !".format(errCounter))
                     ADCConversionFinishFlg = True
                     ADC_NTF_cnt = 0
+                    while (not client.is_connected):
+                        print("Trying to reconnect ...")
+                        try:
+                            await client.connect()
+                        except Exception as exception:
+                            print("[WARNING!] BLE CONNECT TRIAL #{:d}: {}".format(connect_cnt, exception))
+                            await asyncio.sleep(1.0)
+                        else:
+                            if client.is_connected:
+                                await client.write_gatt_char(CHAR_CONTROL_POINT_UUID, b'\x01', True)
+                                print("Control point characteristic written (1)")
+                                await client.start_notify(CHAR_ADC_VAL_1_UUID, notification_handler)
+                                print("ADC value 1 characteristic notification enabled")
+                                await client.write_gatt_char(CHAR_DAC_DATA_UUID, write_value, True)
+                                break
         
-        await asyncio.sleep(0.11)
+        await asyncio.sleep(0.33)
         ax.figure.canvas.flush_events()
     
     await client.stop_notify(CHAR_ADC_VAL_1_UUID)

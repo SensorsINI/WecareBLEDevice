@@ -47,8 +47,8 @@ LOG_INTERVAL = 64
 
 Rs = 100
 Vd = 0.5
-# Vds = -0.4 # real sensor
-Vds = -1.4   # fake sensor
+Vds = -0.4 # real sensor
+# Vds = -1.4   # fake sensor
 Vs = Vd - Vds
 
 counter = 0
@@ -94,7 +94,7 @@ def notification_handler(sender, data):
         DACTargetVoltage = DAC_Vg0[counter]
         # tdata.append(time_now)
         
-        ydata_new = np.asarray(floatADC[8:12]).reshape((4, 1))   #   Channel 11 - 8
+        ydata_new = np.asarray(floatADC[11:7:-1]).reshape((4, 1))   #   Channel 11 - 8
         ydata = np.concatenate((ydata, ydata_new), axis=1)
 
         xdata_new = np.asarray([DACTargetVoltage] * 4).reshape((4, 1))
@@ -173,8 +173,9 @@ async def main(address, save_csv, plot_type):
     print("ADC value 1 characteristic notification enabled")
 
     DAC_Vs0 = Vs
-    DAC_Vg0 = np.concatenate([np.arange(0.5, 2.5+0.001, 0.05), np.arange(2.5, 0.5-0.001, -0.05)])
-    # DAC_Vg0 = np.concatenate([np.arange(0.7, 1.7 + 0.001, 0.05), np.arange(1.7, 0.7 - 0.001, -0.05)])# fake sensor
+    # DAC_Vg0 = np.concatenate([np.arange(0.5, 2.5+0.001, 0.05), np.arange(2.5, 0.5-0.001, -0.05)]) # fake sensor
+    # DAC_Vg0 = np.concatenate([np.arange(0.7, 1.7 + 0.001, 0.05), np.arange(1.7, 0.7 - 0.001, -0.05)])
+    DAC_Vg0 = np.arange(0.7, 1.7 + 0.001, 0.05)
     DACCode_Vs0 = convertDACVoltageToDACCode(DAC_Vs0)
     DACCode_Vg0 = convertDACVoltageToDACCode(DAC_Vg0[counter])
     write_value = bytearray(struct.pack('HHHHHHHH', DACCode_Vs0, DACCode_Vs0, DACCode_Vs0, DACCode_Vs0, DACCode_Vg0, DACCode_Vg0, DACCode_Vg0, DACCode_Vg0))
@@ -196,7 +197,7 @@ async def main(address, save_csv, plot_type):
         else:
             line_ch = ax.scatter(xdata[ch], ydata[ch], s=5)
         lines.append(line_ch)
-    ax.set_xlim(-1.5, 0.7)  # (-0.3, 0.9) # Vgs voltage sweep range
+    ax.set_xlim(-0.3, 0.9)  # (-0.3, 0.9) # Vgs voltage sweep range
     ax.set_ylim(-0.1, 1.0)
     plt.xlabel('Vgs sweep voltage (V)')
     plt.ylabel('Isd (mA)')
@@ -228,13 +229,13 @@ async def main(address, save_csv, plot_type):
                 ADC_NTF_cnt = 0
             else:
                 ADC_NTF_cnt += 1
-                if (ADC_NTF_cnt >= 4):
+                if (ADC_NTF_cnt >= 2):
                     errCounter += 1
                     print("[WARNING!] ADC Notification Missed ({:d}) !".format(errCounter))
                     ADCConversionFinishFlg = True
                     ADC_NTF_cnt = 0
         
-        await asyncio.sleep(0.11)
+        await asyncio.sleep(0.33)
         ax.figure.canvas.flush_events()
     
     await client.stop_notify(CHAR_ADC_VAL_1_UUID)

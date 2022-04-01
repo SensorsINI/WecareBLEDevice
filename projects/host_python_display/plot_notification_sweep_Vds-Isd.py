@@ -46,9 +46,11 @@ NUM_CHANNEL = 4
 LOG_INTERVAL = 64
 
 Rs = 100
+# Vgs in [-0.5, 1.1]
+# Vds in [-1.9, 0.5]
 Vgs_start = -0.5
-Vgs_step = 0.5#0.25
-Vgs_stop = 0.5#1.0
+Vgs_step = 0.25 #0.25
+Vgs_stop = 1.0 #1.0
 Vgs = Vgs_start
 Vd = 0.5
 
@@ -97,7 +99,7 @@ def notification_handler(sender, data):
         # DACTargetVoltage_Channel4 = DAC_Vg0
         # tdata.append(time_now)
 
-        ydata_new = np.asarray(floatADC[8:12]).reshape((4, 1))   #   Channel 11 - 8
+        ydata_new = np.asarray(floatADC[11:7:-1]).reshape((4, 1))   #   Channel 11 - 8
         ydata = np.concatenate((ydata, ydata_new), axis=1)
 
         xdata_new = np.asarray([DACTargetVoltage_Channel0] * 4).reshape((4, 1))
@@ -190,6 +192,7 @@ async def main(address, save_csv, plot_type):
     Vs_step = 0.02
     DAC_Vs0 = np.concatenate([np.arange(Vs_start, Vs_stop+0.001, Vs_step), np.arange(Vs_stop, Vs_start-0.001, -Vs_step)])
     DAC_Vg0 = DAC_Vs0[counter] + Vgs
+    print(DAC_Vs0, DAC_Vg0)
     DACCode_Vs0 = convertDACVoltageToDACCode(DAC_Vs0[counter])
     DACCode_Vg0 = convertDACVoltageToDACCode(DAC_Vg0)
     write_value = bytearray(struct.pack('HHHHHHHH', DACCode_Vs0, DACCode_Vs0, DACCode_Vs0, DACCode_Vs0, DACCode_Vg0, DACCode_Vg0, DACCode_Vg0, DACCode_Vg0))
@@ -246,13 +249,13 @@ async def main(address, save_csv, plot_type):
                 ADC_NTF_cnt = 0
             else:
                 ADC_NTF_cnt += 1
-                if (ADC_NTF_cnt >= 4):
+                if (ADC_NTF_cnt >= 2):
                     errCounter += 1
                     print("[WARNING!] ADC Notification Missed ({:d}) !".format(errCounter))
                     ADCConversionFinishFlg = True
                     ADC_NTF_cnt = 0
 
-        await asyncio.sleep(0.11)
+        await asyncio.sleep(0.33)
         ax.figure.canvas.flush_events()
 
     await client.stop_notify(CHAR_ADC_VAL_1_UUID)
