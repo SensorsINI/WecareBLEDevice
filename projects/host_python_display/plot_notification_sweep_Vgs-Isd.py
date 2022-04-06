@@ -37,7 +37,7 @@ CHAR_ADC_VAL_1_UUID = "15005991-b131-3396-014c-664c9867b917"
 CHAR_LED_STATE_UUID = "5a87b4ef-3bfa-76a8-e642-92933c31434f"
 CHAR_DAC_DATA_UUID = "772ae377-b3d2-4f8e-4042-5481d1e0098c"
 
-FILENAME = "sensor_Isd-Vgs.csv"
+FILENAME = "sensor_Isd-Vgs_" + datetime.now().strftime("%Y%m%d_%H%M%S") + ".csv"
 SAVE_CSV = True
 PLOT_TYPE = 'line'      # 'line', 'scatter'
 
@@ -45,11 +45,23 @@ NUM_CONNECT_TRIAL = 3
 NUM_CHANNEL = 4
 LOG_INTERVAL = 64
 
+Vdac_min = 0.0
+Vdac_max = 2.4
 Rs = 100
 Vd = 0.5
-Vds = -0.4 # real sensor
-# Vds = -1.4   # fake sensor
+# DEFAULT VALUE Vds
+Vds = -0.4
 Vs = Vd - Vds
+# DEFAULT VALUE Vgs range
+Vgs_start = -0.2
+Vgs_stop = 0.8
+Vgs_step = 0.05
+# DEFAULT VALUE oneway_sweep
+oneway_sweep = True
+# DEFAULT VALUE y_min, y_max
+y_min, y_max = -0.1, 1.5
+# DEFAULT VALUE x_min, x_max
+x_min, x_max = -0.3, 0.9
 
 counter = 0
 ADC_NTF_cnt = 0
@@ -75,6 +87,16 @@ def onclick_check_buttons(label):
     global chkbtn_labels, lines
     index = chkbtn_labels.index(label)
     lines[index].set_visible(not lines[index].get_visible())
+
+
+def on_enter(event):
+    global ax_button_restart
+    ax_button_restart.set_visible(True)
+
+
+def on_leave(event):
+    global ax_button_restart
+    ax_button_restart.set_visible(False)
 
 
 def notification_handler(sender, data):
@@ -121,6 +143,7 @@ def notification_handler(sender, data):
                     for i in range(len(DAC_Vg0)):
                         row = []
                         row.append(xdata[0, i] - Vs)
+                        row.append(Vds)
                         [row.append(ydata[ch, i]/Rs*1000) for ch in range(NUM_CHANNEL)]
                         csv_writer.writerow(row)
             
@@ -136,9 +159,10 @@ def notification_handler(sender, data):
 async def main(address, save_csv, plot_type):
     global SAVE_CSV, PLOT_TYPE
     global fig, ax, lines, xdata, ydata, counter, ADC_NTF_cnt, errCounter, ADCConversionFinishFlg, f_finish
-    global chkbtn_labels, DAC_Vg0
+    global ax_button_restart, chkbtn_labels, DAC_Vg0
     SAVE_CSV, PLOT_TYPE = save_csv, plot_type
     
+    print("Connecting to BLE device ({})...".format(address))
     client = BleakClient(address, timeout=10.0)
     for connect_cnt in range(1, NUM_CONNECT_TRIAL+1):
         try:
@@ -148,7 +172,7 @@ async def main(address, save_csv, plot_type):
             if connect_cnt >= NUM_CONNECT_TRIAL:
                 print("[ERROR!] BLE connection failed!")
                 return
-            await asyncio.sleep(1.0)
+            await asyncio.sleep(3.0)
         else:
             if client.is_connected: break
     
@@ -172,10 +196,16 @@ async def main(address, save_csv, plot_type):
     await client.start_notify(CHAR_ADC_VAL_1_UUID, notification_handler)
     print("ADC value 1 characteristic notification enabled")
 
+    x_min = min(Vgs_start, Vgs_stop) - 0.1
+    x_max = max(Vgs_start, Vgs_stop) + 0.1
     DAC_Vs0 = Vs
     # DAC_Vg0 = np.concatenate([np.arange(0.5, 2.5+0.001, 0.05), np.arange(2.5, 0.5-0.001, -0.05)]) # fake sensor
     # DAC_Vg0 = np.concatenate([np.arange(0.7, 1.7 + 0.001, 0.05), np.arange(1.7, 0.7 - 0.001, -0.05)])
-    DAC_Vg0 = np.arange(0.7, 1.7 + 0.001, 0.05)
+    Vgs = np.arange(Vgs_start, Vgs_stop+Vgs_step, Vgs_step)
+    Vg = Vgs + Vs
+    DAC_Vg0 = Vg
+    if not oneway_sweep:
+        DAC_Vg0 = np.concatenate([DAC_Vg0, np.flip(DAC_Vg0)])
     DACCode_Vs0 = convertDACVoltageToDACCode(DAC_Vs0)
     DACCode_Vg0 = convertDACVoltageToDACCode(DAC_Vg0[counter])
     write_value = bytearray(struct.pack('HHHHHHHH', DACCode_Vs0, DACCode_Vs0, DACCode_Vs0, DACCode_Vs0, DACCode_Vg0, DACCode_Vg0, DACCode_Vg0, DACCode_Vg0))
@@ -185,6 +215,7 @@ async def main(address, save_csv, plot_type):
         with open(FILENAME, mode='a', newline='') as csv_file:
             csv_writer = csv.writer(csv_file)
             row = ['Vgs (V)']
+            row.append('Vds (V)')
             [row.append('Isd_CH{:d} (mA)'.format(ch)) for ch in range(0, NUM_CHANNEL)]
             csv_writer.writerow(row)
 
@@ -197,14 +228,17 @@ async def main(address, save_csv, plot_type):
         else:
             line_ch = ax.scatter(xdata[ch], ydata[ch], s=5)
         lines.append(line_ch)
-    ax.set_xlim(-0.3, 0.9)  # (-0.3, 0.9) # Vgs voltage sweep range
-    ax.set_ylim(-0.1, 1.0)
+    ax.set_xlim(x_min, x_max)  # (-0.3, 0.9) # Vgs voltage sweep range
+    ax.set_ylim(y_min, y_max)
     plt.xlabel('Vgs sweep voltage (V)')
     plt.ylabel('Isd (mA)')
     
     ax_button_restart = plt.axes([0.77, 0.77, 0.1, 0.075])
     button_restart = Button(ax_button_restart, 'Restart')
     button_restart.on_clicked(onclick_button_restart)
+    ax_button_restart.set_visible(False)
+    plt.connect("axes_enter_event", on_enter)
+    plt.connect("axes_leave_event", on_leave)
     
     rax = plt.axes([0.9, 0.4, 0.1, 0.2])
     chkbtn_labels = ['CH0', 'CH1', 'CH2', 'CH3']
@@ -229,13 +263,28 @@ async def main(address, save_csv, plot_type):
                 ADC_NTF_cnt = 0
             else:
                 ADC_NTF_cnt += 1
-                if (ADC_NTF_cnt >= 2):
+                if (ADC_NTF_cnt >= 7):
                     errCounter += 1
                     print("[WARNING!] ADC Notification Missed ({:d}) !".format(errCounter))
                     ADCConversionFinishFlg = True
                     ADC_NTF_cnt = 0
+                    while (not client.is_connected):
+                        print("Trying to reconnect ...")
+                        try:
+                            await client.connect()
+                        except Exception as exception:
+                            print("[WARNING!] BLE CONNECT TRIAL #{:d}: {}".format(connect_cnt, exception))
+                            await asyncio.sleep(3.0)
+                        else:
+                            if client.is_connected:
+                                await client.write_gatt_char(CHAR_CONTROL_POINT_UUID, b'\x00', True)
+                                print("Control point characteristic written (0)")
+                                await client.start_notify(CHAR_ADC_VAL_1_UUID, notification_handler)
+                                print("ADC value 1 characteristic notification enabled")
+                                await client.write_gatt_char(CHAR_DAC_DATA_UUID, write_value, True)
+                                break
         
-        await asyncio.sleep(0.33)
+        await asyncio.sleep(0.11)
         ax.figure.canvas.flush_events()
     
     await client.stop_notify(CHAR_ADC_VAL_1_UUID)
@@ -247,6 +296,94 @@ async def main(address, save_csv, plot_type):
 
 
 if __name__ == "__main__":
+    
+    # Default parameters
+    params = [Vds, Vgs_start, Vgs_stop, Vgs_step, oneway_sweep, y_min, y_max]
+    params_name = ['Vds', 'Vgs_start', 'Vgs_stop', 'Vgs_step', 'oneway_sweep', 'axis_y_min', 'axis_y_max']
+    
+    print("Default parameters:")
+    for param, param_name in zip(params, params_name):
+        print("{} = {}".format(param_name, param))
+    
+    input_str = input("Use default parameters? [Y/n] ")
+    while input_str not in ["", "Y", "y", "N", "n"]:
+        print("Please type \'Y\' or \'N\'.")
+        input_str = input("Use default parameters? [Y/n] ")
+    if input_str in ["", "Y", "y"]:
+        pass
+    else:
+        print("Setting custom parameters...")
+        
+        # Input Vds
+        Vds_min = Vd - Vdac_max
+        Vds_max = Vd - Vdac_min
+        input_Vds = input("Vds (range {} .. {}, default to {}) = ".format(Vds_min, Vds_max, Vds))
+        if input_Vds == "":
+            print("Use default value {}".format(Vds))
+        else:
+            input_Vds = float(input_Vds)
+            while not (Vds_min <= input_Vds <= Vds_max):
+                print("Out of range! Please specify again..")
+                input_Vds = float(input("Vds (range {} .. {}, default to {}) = ".format(Vds_min, Vds_max, Vds)))
+            Vds = input_Vds
+        
+        # Input Vgs range
+        Vs = Vd - Vds
+        Vgs_min = Vdac_min - Vs
+        Vgs_max = Vdac_max - Vs
+        
+        input_Vgs_start = input("Vgs_start (range {} .. {}, default to {}) = ".format(Vgs_min, Vgs_max, Vgs_start))
+        if input_Vgs_start == "":
+            print("Use default value {}".format(Vgs_start))
+        else:
+            input_Vgs_start = float(input_Vgs_start)
+            while not (Vgs_min <= input_Vgs_start <= Vgs_max):
+                print("Out of range! Please specify again..")
+                input_Vgs_start = float(input("Vgs_start (range {} .. {}, default to {}) = ".format(Vgs_min, Vgs_max, Vgs_start)))
+            Vgs_start = input_Vgs_start
+        
+        input_Vgs_stop = input("Vgs_stop (range {} .. {}, default to {}) = ".format(Vgs_min, Vgs_max, Vgs_stop))
+        if input_Vgs_stop == "":
+            print("Use default value {}".format(Vgs_stop))
+        else:
+            input_Vgs_stop = float(input_Vgs_stop)
+            while not (Vgs_min <= input_Vgs_stop <= Vgs_max):
+                print("Out of range! Please specify again..")
+                input_Vgs_stop = float(input("Vgs_stop (range {} .. {}, default to {}) = ".format(Vgs_min, Vgs_max, Vgs_stop)))
+            Vgs_stop = input_Vgs_stop
+        
+        input_Vgs_step = input("Vgs_step (default to {}) = ".format(Vgs_step))
+        if input_Vgs_step == "":
+            print("Use default value {}".format(Vgs_step))
+        else:
+            Vgs_step = float(input_Vgs_step)
+        Vgs_step = abs(Vgs_step) if Vgs_start < Vgs_stop else -abs(Vgs_step)
+        
+        # Input oneway_sweep
+        input_oneway_sweep = input("oneway_sweep ('Y'=unidirectional / 'N'=bidirectional, default to {}) ? ".format('Y' if oneway_sweep else 'N'))
+        while input_oneway_sweep not in ["", "Y", "y", "N", "n"]:
+            print("Please type \'Y\' or \'N\'.")
+            input_oneway_sweep = input("oneway_sweep ('Y'=unidirectional / 'N'=bidirectional, default to {}) ? ".format('Y' if oneway_sweep else 'N'))
+        if input_oneway_sweep == "":
+            print("Use default value {}".format('Y' if oneway_sweep else 'N'))
+        else:
+            oneway_sweep = True if input_oneway_sweep in ["Y", "y"] else False
+        
+        # Input axis_y_min
+        input_y_min = input("axis_y_min (default to {}) = ".format(y_min))
+        if input_y_min == "":
+            print("Use default value {}".format(y_min))
+        else:
+            y_min = float(input_y_min)
+
+        # Input axis_y_max
+        input_y_max = input("axis_y_max (default to {}) = ".format(y_max))
+        if input_y_max == "":
+            print("Use default value {}".format(y_max))
+        else:
+            y_max = float(input_y_max)
+    
+    # Run main function
     asyncio.run(
         main(
             sys.argv[1] if len(sys.argv) > 1 else ADDRESS,
