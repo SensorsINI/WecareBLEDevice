@@ -82,6 +82,8 @@
 // LEDs on the wecare board which is controlled by a SPI chip (MAX3717).
 #define RED_LED_PORT 2
 #define GREEN_LED_PORT 3
+#define DRAIN_REF_PORT 7
+#define DRAIN_GND_PORT 8
 
 /*
  * TYPE DEFINITIONS
@@ -170,6 +172,16 @@ void user_catch_rest_hndl(ke_msg_id_t const msgid,
  ****************************************************************************************
 */													
 void spi2_led_ctrl(bool redLed, bool greenLed);
+
+													/**
+ ****************************************************************************************
+ * @brief Wecare board LED control
+ * @param[in] ctrl_drain_ref low/high
+ * @param[in] ctrl_drain_gnd low/high										
+ * @return void
+ ****************************************************************************************
+*/													
+void spi2_Vd_ctrl(bool drainRef, bool drainGnd);
 
 /**
  ****************************************************************************************

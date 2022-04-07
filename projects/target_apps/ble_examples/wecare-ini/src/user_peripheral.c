@@ -390,6 +390,8 @@ void user_app_db_init_complete(void)
 		
 		// Turn on a LED to show that the board is running
 		spi2_led_ctrl(true, false);
+		// Set drain ref and gnd to 0 so Vd could stay around 0.5V constantly
+		spi2_Vd_ctrl(false, false);
 		
     user_app_adv_start();
 }
@@ -663,6 +665,34 @@ static void spi2_adc2_ctrl()
  * @brief API functions export
  ****************************************************************************************
 */
+void spi2_Vd_ctrl(bool drainRef, bool drainGnd)
+{
+		// Disable LED controll from the timer first
+		if (app_spi2_led_timer_used != EASY_TIMER_INVALID_TIMER)
+		{
+				app_easy_timer_cancel(app_spi2_led_timer_used);
+				app_spi2_led_timer_used = EASY_TIMER_INVALID_TIMER;
+		}
+						
+		GPIO_ConfigurePin(SPI2_IO_CS_PORT, SPI2_IO_CS_PIN, OUTPUT, PID_SPI_EN, true);  // Enable IO
+		GPIO_ConfigurePin(SPI2_DAC_CS_PORT, SPI2_DAC_CS_PIN, OUTPUT, PID_GPIO, true); // Disable DAC
+		GPIO_ConfigurePin(SPI2_ADC2_CS_PORT, SPI2_ADC2_CS_PIN, OUTPUT, PID_GPIO, true); //Disable ADC2
+    spi_initialize(&spi2_cfg);
+
+    uint16_t reg_val_drainRef = (DRAIN_REF_PORT << 8) + drainRef;
+    uint16_t reg_val_drainGnd = (DRAIN_GND_PORT << 8) + drainGnd;
+
+	  // For the red LED
+    spi_cs_low();
+	  spi_send(&reg_val_drainRef, 1, SPI_OP_BLOCKING);
+    spi_cs_high();
+		  
+    // For the green LED
+    spi_cs_low();
+    spi_send(&reg_val_drainGnd, 1, SPI_OP_BLOCKING);
+    spi_cs_high();
+}
+
 void spi2_led_ctrl(bool redLed, bool greenLed)
 {
 		// Disable LED controll from the timer first
