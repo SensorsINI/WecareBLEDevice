@@ -168,7 +168,6 @@ void user_svc1_dac_val_wr_ind_handler(ke_msg_id_t const msgid,
                                           ke_task_id_t const dest_id,
                                           ke_task_id_t const src_id)
 {
-		static uint32_t errorCnt = 0;
 		uint16_t localDACValBuf[8] = {0};
 		uint32_t ADC1ValBuf[16] = {0};
 		uint32_t ADC2ValBuf[16] = {0};		
@@ -206,9 +205,6 @@ void user_svc1_dac_val_wr_ind_handler(ke_msg_id_t const msgid,
                                                               TASK_APP,
                                                               custs1_val_set_req,
                                                               DEF_SVC1_ADC_VAL_1_CHAR_LEN);
-
-		uint32_t valToSend = sweepModeADCValBuf[0];
-		// da14531_printf("The raw voltage data sent from ADC is: 0x%x.\r\n",  valToSend);
 
     //req->conhdl = app_env->conhdl;
     req->handle = SVC1_IDX_ADC_VAL_1_VAL;
@@ -318,24 +314,9 @@ void user_svc1_rest_att_info_req_handler(ke_msg_id_t const msgid,
 void app_adcval1_timer_cb_handler()
 {
 		uint32_t ADC1ValBuf[16] = {0};
-		uint32_t ADC2ValBuf[16] = {0};		
-		uint32_t timerModeADCValBuf[16] = {0};
 		
 		// Read the ADC output data
 		spi2_adc1_readout(ADC1ValBuf);
-	  // Read the ADC output data
-		spi2_adc2_readout(ADC2ValBuf);
-
-		for(int i = 0; i < 16; i++)
-		{
-				timerModeADCValBuf[i] =  ADC2ValBuf[i];
-		}		
-
-		// replace the lower 4 data from ADC1
-		for(int i = 0; i < 4; i++)
-		{
-				timerModeADCValBuf[8 + i] =  ADC1ValBuf[i];
-		}		
 		
     struct custs1_val_ntf_ind_req *req = KE_MSG_ALLOC_DYN(CUSTS1_VAL_NTF_REQ,
                                                           prf_get_task_from_id(TASK_ID_CUSTS1),
@@ -349,20 +330,17 @@ void app_adcval1_timer_cb_handler()
                                                               custs1_val_set_req,
                                                               DEF_SVC1_ADC_VAL_1_CHAR_LEN);
 
-		uint32_t valToSend = timerModeADCValBuf[0];
-		// da14531_printf("The raw voltage data sent from ADC is: 0x%x.\r\n",  valToSend);
-
     //req->conhdl = app_env->conhdl;
     req->handle = SVC1_IDX_ADC_VAL_1_VAL;
     req->length = DEF_SVC1_ADC_VAL_1_CHAR_LEN;
     req->notification = true;
-    memcpy(req->value, timerModeADCValBuf, DEF_SVC1_ADC_VAL_1_CHAR_LEN);
+    memcpy(req->value, ADC1ValBuf, DEF_SVC1_ADC_VAL_1_CHAR_LEN);
 
     ke_msg_send(req);
 
     req_set->handle = SVC1_IDX_ADC_VAL_1_VAL;
     req_set->length = DEF_SVC1_ADC_VAL_1_CHAR_LEN;
-    memcpy(req_set->value, timerModeADCValBuf, DEF_SVC1_ADC_VAL_1_CHAR_LEN);
+    memcpy(req_set->value, ADC1ValBuf, DEF_SVC1_ADC_VAL_1_CHAR_LEN);
     ke_msg_send(req_set);
 
     if (ke_state_get(TASK_APP) == APP_CONNECTED)

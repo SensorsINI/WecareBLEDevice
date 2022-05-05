@@ -3606,9 +3606,9 @@
       <ActiveTab>18</ActiveTab>
       <Doc>
         <Name>..\src\user_peripheral.c</Name>
-        <ColumnNumber>18</ColumnNumber>
-        <TopLine>713</TopLine>
-        <CurrentLine>405</CurrentLine>
+        <ColumnNumber>0</ColumnNumber>
+        <TopLine>525</TopLine>
+        <CurrentLine>563</CurrentLine>
         <Folding>1</Folding>
         <ContractedFolders></ContractedFolders>
         <PaneID>0</PaneID>
@@ -3768,9 +3768,9 @@
       </Doc>
       <Doc>
         <Name>..\src\user_custs1_impl.c</Name>
-        <ColumnNumber>19</ColumnNumber>
-        <TopLine>317</TopLine>
-        <CurrentLine>326</CurrentLine>
+        <ColumnNumber>0</ColumnNumber>
+        <TopLine>161</TopLine>
+        <CurrentLine>171</CurrentLine>
         <Folding>1</Folding>
         <ContractedFolders></ContractedFolders>
         <PaneID>0</PaneID>
@@ -3858,9 +3858,9 @@
       </Doc>
       <Doc>
         <Name>..\src\platform\MCR35614R.c</Name>
-        <ColumnNumber>0</ColumnNumber>
-        <TopLine>106</TopLine>
-        <CurrentLine>86</CurrentLine>
+        <ColumnNumber>61</ColumnNumber>
+        <TopLine>251</TopLine>
+        <CurrentLine>272</CurrentLine>
         <Folding>1</Folding>
         <ContractedFolders></ContractedFolders>
         <PaneID>0</PaneID>
